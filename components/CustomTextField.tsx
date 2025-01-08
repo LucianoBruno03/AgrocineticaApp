@@ -1,3 +1,4 @@
+import { InputType } from "@/types/types";
 import { FieldError, Noop } from "react-hook-form";
 import {
   StyleSheet,
@@ -6,7 +7,7 @@ import {
   TextInputProps,
   View,
 } from "react-native";
-import { InputType } from "../types";
+
 
 interface CustomTextFieldProps {
   onBlur: Noop;

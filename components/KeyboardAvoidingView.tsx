@@ -1,11 +1,11 @@
-import { Keyboard, KeyboardAvoidingView, Platform } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
+
 
 export const KeyboardView = ({ children }: { children: React.ReactNode }) => (
   <KeyboardAvoidingView
     style={{
       flex: 1,
-      backgroundColor: "#fff",
+  
     }}
     behavior={Platform.OS === "ios" ? "padding" : "height"}
   >

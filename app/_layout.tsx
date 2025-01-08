@@ -33,11 +33,12 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
+      <Stack >
         <Stack.Screen
           name="(Drawer)"
           options={{
             headerShown: false,
+            
           }}
         />
         {/* <Stack.Screen name="tabs"  /> */}
@@ -46,6 +47,8 @@ export default function RootLayout() {
           options={{
             // headerBackButtonDisplayMode: "minimal",
             headerBackVisible: false,
+            headerShown: false,
+            headerTransparent: true,
           }}
         />
         <Stack.Screen name="logout" />
