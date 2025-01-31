@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Image, View } from "react-native";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { useRouter } from "expo-router";
 import { ThemedText } from "../ThemedText";
@@ -6,9 +6,11 @@ import { IconSymbol } from "../ui/IconSymbol";
 import { Switch } from "react-native-gesture-handler";
 import { Appearance } from "react-native";
 import { useState } from "react";
+import { useAuthStore } from "@/zustand/authStore";
 
 export default function CustomDrawer(props: any) {
   const router = useRouter();
+  const { user, decodedClaims } = useAuthStore();
 
   const [isDarkMode, setIsDarkMode] = useState(
     Appearance.getColorScheme() === "dark"
@@ -22,6 +24,28 @@ export default function CustomDrawer(props: any) {
   return (
     <View style={{ flex: 1, flexDirection: "column", flexGrow: 1 }}>
       <DrawerContentScrollView {...props}>
+        <View>
+          <Image
+            source={{
+              uri: process.env.EXPO_PUBLIC_WEB_URL! + decodedClaims?.image_url,
+            }}
+            style={{
+              width: 160,
+              height: 160,
+              borderRadius: "100%",
+              marginInline: "auto",
+            }}
+          />
+          <ThemedText
+            style={{
+              fontSize: 16,
+              textAlign: "center",
+              marginTop: 8,
+            }}
+          >
+            {decodedClaims?.fullName}
+          </ThemedText>
+        </View>
         <DrawerItem
           label={({ focused }) => {
             return (
@@ -30,12 +54,12 @@ export default function CustomDrawer(props: any) {
                   fontSize: 12,
                 }}
               >
-                Inicio
+                Negocios
               </ThemedText>
             );
           }}
           onPress={() => {
-            router.push("/");
+            router.push("/business");
           }}
           icon={({ focused, color, size }) => {
             return <IconSymbol size={28} name="house.fill" color={color} />;

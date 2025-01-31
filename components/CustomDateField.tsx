@@ -1,0 +1,319 @@
+import { Ionicons } from "@expo/vector-icons";
+import React, { useRef, useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+  Modal,
+  Platform,
+  Animated,
+  TextInputProps,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { FieldError, Noop } from "react-hook-form";
+import { Colors } from "@/constants/Colors";
+import { ThemedText } from "./ThemedText";
+import { useColorScheme } from "@/hooks/useColorScheme.web";
+
+interface CustomDateFieldProps {
+  label?: string;
+  value: Date | undefined;
+  onBlur: Noop;
+  onChange: (date: Date | undefined) => void;
+  error?: FieldError | undefined;
+  placeholder?: string;
+  endAdornment?: React.ReactNode;
+  startAdorment?: React.ReactNode;
+  inputProps?: TextInputProps;
+  type?: "date" | "time";
+}
+
+export const CustomDateField: React.FC<CustomDateFieldProps> = ({
+  label = "Fecha de nacimiento",
+  value = undefined,
+  onBlur,
+  onChange,
+  error,
+  placeholder,
+  endAdornment,
+  startAdorment,
+  inputProps,
+  type = "date",
+}) => {
+  const colorScheme = useColorScheme() ?? "light";
+
+  const TOP_POSITION = -8;
+  const CENTER_POSITION = 14;
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tempDate, setTempDate] = useState<Date | undefined>(value);
+  const [modalOpacity] = useState(new Animated.Value(0));
+
+  const animatedValue = useRef(
+    new Animated.Value(value ? TOP_POSITION : CENTER_POSITION)
+  ).current;
+
+  useEffect(() => {
+    Animated.timing(animatedValue, {
+      toValue: value ? TOP_POSITION : CENTER_POSITION,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [value]);
+
+  const handleFocus = () => {
+    Animated.timing(animatedValue, {
+      toValue: TOP_POSITION,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+    setShowDatePicker(true);
+    Animated.timing(modalOpacity, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleBlur = () => {
+    if (!value) {
+      Animated.timing(animatedValue, {
+        toValue: CENTER_POSITION,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    }
+    onBlur();
+  };
+
+  const openDatePicker = () => {
+    setShowDatePicker(true);
+    Animated.timing(modalOpacity, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    if (Platform.OS === "android") {
+      setShowDatePicker(false);
+      if (selectedDate) {
+        onChange(selectedDate);
+      }
+    } else {
+      setTempDate(selectedDate);
+    }
+  };
+
+  const handleAccept = () => {
+    onChange(tempDate);
+    setShowDatePicker(false);
+    Animated.timing(modalOpacity, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleCancel = () => {
+    setShowDatePicker(false);
+    Animated.timing(modalOpacity, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const labelStyle = {
+    top: animatedValue,
+    fontSize: animatedValue.interpolate({
+      inputRange: [TOP_POSITION, CENTER_POSITION],
+      outputRange: [14, 16],
+    }),
+  };
+
+  const styles = StyleSheet.create({
+    inputWrapper: {
+      position: "relative",
+      height: "100%",
+    },
+    inputContainer: {
+      height: 48,
+      borderRadius: 12,
+      width: "100%",
+      position: "relative",
+    },
+    input: {
+      flex: 1,
+      color: `${Colors.light.text}`,
+      fontSize: 16,
+      width: "100%",
+      // height: "100%",
+      // paddingHorizontal: 12,
+      // paddingTop: 16,
+      // paddingBottom: 8,
+
+      padding: 10,
+      paddingStart: 20,
+      height: 48,
+      borderRadius: 12,
+      backgroundColor: "#0093D110",
+    },
+    endAdornment: {
+      position: "absolute",
+      right: 8,
+      top: "50%",
+      transform: [{ translateY: -12 }],
+      zIndex: 5,
+    },
+    startAdornment: {
+      position: "absolute",
+      left: 8,
+      top: "50%",
+      transform: [{ translateY: -12 }],
+      zIndex: 5,
+    },
+    errorMessage: {
+      color: "red",
+      fontSize: 12,
+      marginTop: 4,
+    },
+    label: {
+      position: "absolute",
+      left: 12,
+      color: "#0093D1",
+      paddingHorizontal: 4,
+      fontWeight: "bold",
+      zIndex: 1,
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: "flex-end",
+      backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    modalContent: {
+      backgroundColor: `${
+        colorScheme === "light"
+          ? `${Colors.light.background}`
+          : `${Colors.dark.background}`
+      }`,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      paddingBottom: 20,
+    },
+    modalButtons: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      paddingVertical: 15,
+    },
+    modalButton: {
+      padding: 10,
+    },
+    dataPicker: {
+      backgroundColor: `${
+        colorScheme === "light"
+          ? `${Colors.light.background}`
+          : `${Colors.dark.background}`
+      }`,
+      marginInline: "auto",
+    },
+  });
+
+  return (
+    <>
+      <View style={[styles.inputContainer]}>
+        <View style={styles.inputWrapper}>
+          {Boolean(startAdorment) && (
+            <View style={styles.startAdornment}>{startAdorment}</View>
+          )}
+          <TouchableOpacity onPress={openDatePicker}>
+            <Animated.Text style={[styles.label, labelStyle]}>
+              {label}
+            </Animated.Text>
+          </TouchableOpacity>
+          <TextInput
+            style={[
+              styles.input,
+              Boolean(startAdorment) && { paddingLeft: 40 },
+              inputProps?.style,
+            ]}
+            value={
+              value
+                ? type === "date"
+                  ? value.toLocaleDateString("es-ES")
+                  : value.toLocaleTimeString("es-ES")
+                : ""
+            }
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onPress={openDatePicker}
+            editable={false}
+            placeholder=""
+          />
+          <TouchableOpacity
+            style={styles.endAdornment}
+            onPress={openDatePicker}
+          >
+            <Ionicons
+              name={type === "date" ? "calendar-outline" : "time-outline"}
+              size={24}
+              color="#0093D1"
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      {error && <Text style={styles.errorMessage}>{error.message}</Text>}
+
+      {Platform.OS === "ios" && showDatePicker && (
+        <Modal
+          transparent={true}
+          animationType="none"
+          visible={showDatePicker}
+          onRequestClose={handleCancel}
+        >
+          <Animated.View
+            style={[styles.modalContainer, { opacity: modalOpacity }]}
+          >
+            <View style={styles.modalContent}>
+              <View style={styles.dataPicker}>
+                <DateTimePicker
+                  value={tempDate || new Date()}
+                  mode={type}
+                  display="spinner"
+                  onChange={handleDateChange}
+                  textColor="#0093D1"
+                />
+              </View>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  onPress={handleCancel}
+                  style={styles.modalButton}
+                >
+                  <ThemedText>Cancelar</ThemedText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleAccept}
+                  style={styles.modalButton}
+                >
+                  <ThemedText>Aceptar</ThemedText>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Animated.View>
+        </Modal>
+      )}
+
+      {Platform.OS === "android" && showDatePicker && (
+        <DateTimePicker
+          value={tempDate || new Date()}
+          mode={type}
+          display="spinner"
+          onChange={handleDateChange}
+        />
+      )}
+    </>
+  );
+};

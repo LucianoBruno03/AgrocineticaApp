@@ -1,4 +1,4 @@
-import { InputType } from "@/types/types";
+import React, { useRef } from "react";
 import { FieldError, Noop } from "react-hook-form";
 import {
   StyleSheet,
@@ -6,21 +6,27 @@ import {
   TextInput,
   TextInputProps,
   View,
+  Animated,
+  TouchableOpacity,
 } from "react-native";
 
-
 interface CustomTextFieldProps {
+  label?: string;
+  value: string | undefined;
   onBlur: Noop;
   onChangeText: (...event: any[]) => void;
   error?: FieldError | undefined;
   placeholder?: string;
-  type?: InputType;
+  type?: "text" | "email" | "password" | "number" | "nombre";
   endAdornment?: React.ReactNode;
   startAdorment?: React.ReactNode;
   inputProps?: TextInputProps;
+  disabled?: boolean;
 }
 
 export const CustomTextField = ({
+  label,
+  value,
   placeholder,
   onBlur,
   onChangeText,
@@ -29,81 +35,154 @@ export const CustomTextField = ({
   endAdornment,
   startAdorment,
   inputProps,
+  disabled = false,
 }: CustomTextFieldProps) => {
+  const TOP_POSITION = -8; // Floating position
+  const CENTER_POSITION = 14; // Center position
+
+  const animatedValue = React.useRef(
+    new Animated.Value(value ? TOP_POSITION : CENTER_POSITION)
+  ).current;
+
+  const inputRef = useRef<TextInput>(null); // Reference to the TextInput
+
+  React.useLayoutEffect(() => {
+    animatedValue.setValue(value ? TOP_POSITION : CENTER_POSITION);
+  }, [value]);
+
+  const handleFocus = () => {
+    Animated.timing(animatedValue, {
+      toValue: TOP_POSITION,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const handleBlur = (e: any) => {
+    if (!value) {
+      Animated.timing(animatedValue, {
+        toValue: CENTER_POSITION,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    }
+    onBlur();
+  };
+
+  const focusInput = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
+  const labelStyle = {
+    top: animatedValue,
+    fontSize: animatedValue.interpolate({
+      inputRange: [TOP_POSITION, CENTER_POSITION],
+      outputRange: [12, 16],
+    }),
+  };
+
   return (
-    <View>
+    <React.Fragment>
       <View style={styles.inputContainer}>
-        {Boolean(startAdorment) && (
-          <View style={styles.startAdornment}>{startAdorment}</View>
-        )}
-        <TextInput
-          style={[styles.input, Boolean(startAdorment) && { paddingLeft: 40 }]}
-          secureTextEntry={type === "password"}
-          keyboardType={type === "email" ? "email-address" : "default"}
-          onChangeText={onChangeText}
-          onBlur={onBlur}
-          placeholder={placeholder}
-          {...inputProps}
-        />
-        {
-          // si hay un endAdornment se muestra
-          Boolean(endAdornment) && (
+        <View style={styles.inputWrapper}>
+          {Boolean(startAdorment) && (
+            <View style={styles.startAdornment}>{startAdorment}</View>
+          )}
+          <TouchableOpacity onPress={focusInput}>
+            <Animated.Text style={[styles.label, labelStyle]}>
+              {label || placeholder}
+            </Animated.Text>
+          </TouchableOpacity>
+          <TextInput
+            editable={!disabled}
+            ref={inputRef} // Attach the reference
+            secureTextEntry={type === "password"}
+            keyboardType={
+              type === "email"
+                ? "email-address"
+                : type === "number"
+                ? "numeric"
+                : "default"
+            }
+            onChangeText={(text) => {
+              if (type === "number") {
+                // Permitir solo números
+                const filteredText = text.replace(/[^0-9]/g, "");
+                onChangeText(filteredText);
+              } else {
+                onChangeText(text);
+              }
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            placeholder=""
+            {...inputProps}
+            style={[
+              styles.input,
+              Boolean(startAdorment) && { paddingLeft: 40 },
+              inputProps?.style || {},
+            ]}
+            value={value}
+          />
+          {Boolean(endAdornment) && (
             <View style={styles.endAdornment}>{endAdornment}</View>
-          )
-        }
+          )}
+        </View>
       </View>
-      {
-        // si hay un error se muestra
-        error && <Text style={styles.errorMessage}>{error.message}</Text>
-      }
-    </View>
+      {error && <Text style={styles.errorMessage}>{error.message}</Text>}
+    </React.Fragment>
   );
 };
 
 const styles = StyleSheet.create({
+  inputWrapper: {
+    position: "relative",
+    height: "100%",
+  },
   inputContainer: {
-    backgroundColor: "#ffff",
-    color: "#000",
     height: 48,
     borderRadius: 12,
-    overflow: "hidden",
     width: "100%",
     position: "relative",
-    display: "flex",
-    borderColor: "#000",
-    borderWidth: 1,
-  },
-  label: {
-    color: "#000",
-    position: "absolute",
-    left: 8,
   },
   input: {
     flex: 1,
     color: "#000",
     fontSize: 16,
     width: "100%",
-    height: "100%",
+    padding: 10,
+    paddingStart: 20,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: "#0093D110",
   },
   endAdornment: {
     position: "absolute",
     right: 8,
-    flex: 1,
+    top: "50%",
+    transform: [{ translateY: -12 }],
     zIndex: 5,
-    marginVertical: 12,
   },
   startAdornment: {
     position: "absolute",
     left: 8,
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    top: "50%",
+    transform: [{ translateY: -12 }],
     zIndex: 5,
-    marginVertical: 14,
   },
   errorMessage: {
     color: "red",
     fontSize: 12,
     marginTop: 4,
+  },
+  label: {
+    position: "absolute",
+    left: 12,
+    color: "#0093D1",
+    paddingHorizontal: 4,
+    fontWeight: "bold",
+    zIndex: -1,
   },
 });
