@@ -26,11 +26,83 @@ const _layout = (props: Props) => {
         options={{ gestureEnabled: false, title: "Editar negocio" }}
       />
       <Stack.Screen
-        name="ItemsSelected"
+        name="Items"
         options={{
           presentation: "card",
           animation: "slide_from_bottom",
           title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="BusinessCustomer"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="Customer"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="Gathering"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="Scales"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="Shipper"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="UnitTypes"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Selección",
+        }}
+      />
+
+      <Stack.Screen
+        name="LoadingPoints"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Selección",
+        }}
+      />
+
+      <Stack.Screen
+        name="UnloadingPoints"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Selección",
         }}
       />
     </Stack>

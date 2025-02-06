@@ -47,7 +47,6 @@ export const ItemsSelect: React.FC<ItemsSelectProps> = ({
   const color = colorScheme === "light" ? "black" : "white";
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  // Animation constants
   const TOP_POSITION = -8;
   const CENTER_POSITION = 14;
 

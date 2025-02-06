@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type Props = {};
 
-const bussines = (props: Props) => {
+const business = (props: Props) => {
   return (
     <View style={styles.formContainer}>
       <Pressable
@@ -26,7 +26,7 @@ const bussines = (props: Props) => {
   );
 };
 
-export default bussines;
+export default business;
 
 const styles = StyleSheet.create({
   formContainer: {
@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     padding: 20,
-    backgroundColor: "#19191920",
     width: "100%",
   },
   newButton: {

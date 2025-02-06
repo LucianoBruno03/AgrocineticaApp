@@ -1,5 +1,5 @@
 import { api } from "@/api/axios/api";
-import { SearchBusinessResponse } from "@/types/business/searchBusiness";
+import { SearchBusinessResponse } from "@/types/business/SearchBusiness";
 import { QueryKey } from "@tanstack/react-query";
 
 export const TENANT = process.env.EXPO_PUBLIC_TENANT;

@@ -31,7 +31,6 @@ export const BottomSheetWrapper: React.FC<BottomSheetWrapperProps> = ({
   const slideAnim = useRef(new Animated.Value(0)).current;
   const screenHeight = Dimensions.get("window").height;
 
-  // Convert height prop to number if it's a percentage
   const containerHeight =
     typeof height === "string" && height.includes("%")
       ? screenHeight * (parseInt(height) / 100)
@@ -50,10 +49,8 @@ export const BottomSheetWrapper: React.FC<BottomSheetWrapperProps> = ({
       },
       onPanResponderRelease: (_, gestureState) => {
         if (gestureState.dy > containerHeight * 0.2) {
-          // If dragged more than 20% of the height, close the bottom sheet
           closeBottomSheet();
         } else {
-          // Otherwise, snap back to original position
           Animated.spring(slideAnim, {
             toValue: 0,
             useNativeDriver: true,

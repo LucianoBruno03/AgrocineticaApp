@@ -3,7 +3,7 @@ import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { useEffect, useRef, useState } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { useQuery } from "@tanstack/react-query";
-import { fetchListLocalities } from "@/api/request/dropdown/LocalitiesDropdown";
+import { fetchListLocalities } from "@/api/request/search/LocalitiesDropdown";
 
 export interface LocalitiesDropdownData {
   id: string;
@@ -22,7 +22,6 @@ export default function LocalitiesDropdown({ form }: { form: any }) {
     form.getValues().localityId
   );
 
-  // Animation constants
   const TOP_POSITION = -8;
   const CENTER_POSITION = 14;
 

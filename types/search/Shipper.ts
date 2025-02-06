@@ -1,5 +1,5 @@
-export interface TransportRateListResponse {
-  data: TransportRate[];
+export interface ShipperListResponse {
+  data: Shipper[];
   currentPage: number;
   totalPages: number;
   totalCount: number;
@@ -8,7 +8,7 @@ export interface TransportRateListResponse {
   hasNextPage: boolean;
 }
 
-export interface TransportRate {
+export interface Shipper {
   id: string;
   incrementId: number;
   userId: any;

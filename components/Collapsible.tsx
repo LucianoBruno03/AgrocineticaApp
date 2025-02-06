@@ -1,89 +1,152 @@
-import { PropsWithChildren, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { type ViewProps } from 'react-native';
+import { PropsWithChildren, useRef, useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Animated,
+  Pressable,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+  View,
+} from "react-native";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { ThemedCard } from './ThemedCard';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { ThemedCard } from "./ThemedCard";
 
-export type ThemedViewProps = ViewProps & {
-  lightColor?: string;
-  darkColor?: string;
-};
+// Habilitar LayoutAnimation en Android
+if (Platform.OS === "android") {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 
-export function Collapsible({ children, title, ...otherProps }: PropsWithChildren & { title: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const animatedHeight = useRef(new Animated.Value(0)).current;
-  const theme = useColorScheme() ?? 'light';
+export interface CollapsibleProps extends PropsWithChildren {
+  title: string;
+  maxHeight?: number;
+  initiallyOpen?: boolean;
+  onToggle?: (isOpen: boolean) => void;
+}
+
+export function Collapsible({
+  children,
+  title,
+  maxHeight,
+  initiallyOpen = false,
+  onToggle,
+}: CollapsibleProps) {
+  const [isOpen, setIsOpen] = useState(initiallyOpen);
+  const [contentHeight, setContentHeight] = useState(0);
+  const contentRef = useRef<View>(null);
+  const theme = useColorScheme() ?? "light";
+
+  const measureContent = () => {
+    if (contentRef.current) {
+      contentRef.current.measure((x, y, width, height) => {
+        setContentHeight(height);
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Medir después de que el componente se monte
+    const timeout = setTimeout(measureContent, 100);
+    return () => clearTimeout(timeout);
+  }, []);
 
   const toggleCollapsible = () => {
+    LayoutAnimation.configureNext(
+      LayoutAnimation.create(
+        300,
+        LayoutAnimation.Types.easeInEaseOut,
+        LayoutAnimation.Properties.opacity
+      )
+    );
+
     setIsOpen((prev) => {
-      const newHeight = prev ? 0 : 1;
-
-      Animated.timing(animatedHeight, {
-        toValue: newHeight,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-
-      return !prev;
+      const newValue = !prev;
+      onToggle?.(newValue);
+      return newValue;
     });
   };
 
-  const maxHeight = 200;
-
-  const animatedStyle = {
-    height: animatedHeight.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, maxHeight],
-    }),
-    overflow: 'hidden' as 'hidden',
-  };
+  const finalHeight = maxHeight
+    ? Math.min(contentHeight, maxHeight)
+    : contentHeight;
 
   return (
-    <ThemedCard style={styles.Collapsible}>
-      <TouchableOpacity
+    <ThemedCard style={styles.collapsible}>
+      <Pressable
         style={styles.heading}
         onPress={toggleCollapsible}
-        activeOpacity={0.8}>
+        android_ripple={{ color: "rgba(0, 0, 0, 0.1)" }}
+      >
+        <ThemedText style={styles.title} type="defaultSemiBold">
+          {title}
+        </ThemedText>
 
-        <ThemedText type="defaultSemiBold">{title}</ThemedText>
+        <Animated.View
+          style={[
+            styles.iconContainer,
+            {
+              transform: [
+                {
+                  rotate: isOpen ? "90deg" : "0deg",
+                },
+              ],
+            },
+          ]}
+        >
+          <IconSymbol
+            name="chevron.right"
+            size={22}
+            weight="medium"
+            color={theme === "light" ? Colors.light.icon : Colors.dark.icon}
+          />
+        </Animated.View>
+      </Pressable>
 
-        <IconSymbol
-          name="chevron.right"
-          size={22}
-          weight="medium"
-          color={theme === 'light' ? Colors.light.icon : Colors.dark.icon}
-          style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }] }}
-        />
-
-      </TouchableOpacity>
-
-      <Animated.View style={animatedStyle}>
-        <ThemedView style={styles.content}>{children}</ThemedView>
-      </Animated.View>
-
+      {isOpen && (
+        <View
+          ref={contentRef}
+          style={[styles.content, maxHeight ? { maxHeight } : {}]}
+          onLayout={measureContent}
+        >
+          <ThemedView>{children}</ThemedView>
+        </View>
+      )}
     </ThemedCard>
   );
 }
 
 const styles = StyleSheet.create({
-  Collapsible:{
+  collapsible: {
     borderRadius: 8,
     padding: 12,
+    width: "100%",
   },
   heading: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    minHeight: 48,
+    paddingHorizontal: 4,
+  },
+  title: {
+    flex: 1,
+    marginRight: 8,
+  },
+  iconContainer: {
+    width: 22,
+    height: 22,
+    justifyContent: "center",
+    alignItems: "center",
   },
   content: {
     backgroundColor: "transparent",
-    marginTop: 6,
-    marginLeft: 24,
+    paddingHorizontal: 4,
+    paddingVertical: 8,
   },
 });

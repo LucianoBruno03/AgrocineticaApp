@@ -1,20 +1,17 @@
-import React, { useRef, useState, useEffect } from "react";
-import { StyleSheet, View, Animated, Text, Pressable } from "react-native";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
-import { useQuery } from "@tanstack/react-query";
-import { fetchListItems } from "@/api/request/dropdown/ItemsDropdown";
 import { useRouter } from "expo-router";
+import React, { useRef, useState } from "react";
+import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
-export default function SearchItemsAutocomplete({ form }: { form: any }) {
+export default function UnitTypesList({ form }: { form: any }) {
   const colorScheme = useColorScheme() ?? "light";
   const color = colorScheme === "light" ? "black" : "white";
   const router = useRouter();
 
   const [selectedValue, setSelectedValue] = useState<string | null>(
-    form.getValues().itemId
+    form.getValues().businessesUnitTypes.length > 0 ? "selected" : null
   );
 
-  // Animation constants
   const TOP_POSITION = -8;
   const CENTER_POSITION = 14;
 
@@ -24,7 +21,7 @@ export default function SearchItemsAutocomplete({ form }: { form: any }) {
 
   const handleSearch = () => {
     router.push({
-      pathname: "/business/ItemsSelected",
+      pathname: "/business/UnitTypes",
       params: {
         currentFormData: JSON.stringify(form.getValues()),
       },
@@ -42,9 +39,13 @@ export default function SearchItemsAutocomplete({ form }: { form: any }) {
   return (
     <View style={styles.container}>
       <Pressable style={styles.inputWrapper} onPress={handleSearch}>
-        <Animated.Text style={[styles.label, labelStyle]}>Item</Animated.Text>
-        <Text style={styles.content}>
-          {form.getValues().itemName ? form.getValues().itemName : ""}
+        <Animated.Text style={[styles.label, labelStyle]}>
+          Tipos de Unidades
+        </Animated.Text>
+        <Text style={[styles.content, { color }]}>
+          {form.getValues().businessesUnitTypes.length > 0
+            ? `${form.getValues().businessesUnitTypes.length} seleccionado/s`
+            : ""}
         </Text>
       </Pressable>
     </View>
@@ -75,7 +76,6 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   content: {
-    fontSize: 14,
-    marginTop: 8,
+    fontSize: 16,
   },
 });

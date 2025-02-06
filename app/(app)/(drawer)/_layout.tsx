@@ -44,15 +44,13 @@ const getUserInfo = async () => {
 
     const claimsDecoded = jwtDecode(token) as IUserInfo;
 
-    console.log(claimsDecoded);
-
     useAuthStore.getState().setDecodedClaims(claimsDecoded);
 
-    const userResponse = await getInfoData(
-      `${claimsDecoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]}`
-    );
+    // const userResponse = await getInfoData(
+    //   `${claimsDecoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]}`
+    // );
 
-    useAuthStore.getState().setUser(userResponse);
+    // useAuthStore.getState().setUser(userResponse);
 
     // return await response.data;
     // try {
@@ -127,7 +125,6 @@ const getUserInfo = async () => {
 
     return true;
   } catch (error) {
-    console.log(error);
     return false;
   }
 };

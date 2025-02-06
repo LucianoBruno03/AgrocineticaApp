@@ -1,5 +1,5 @@
-export interface CustomerRateListResponse {
-  data: CustomerRate[];
+export interface BusinessCustomerListResponse {
+  data: BusinessCustomer[];
   currentPage: number;
   totalPages: number;
   totalCount: number;
@@ -8,7 +8,7 @@ export interface CustomerRateListResponse {
   hasNextPage: boolean;
 }
 
-export interface CustomerRate {
+export interface BusinessCustomer {
   id: string;
   userName: string;
   firstName: string;

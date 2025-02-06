@@ -3,7 +3,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchListCountries } from "@/api/request/dropdown/CountriesDropdown";
+import { fetchListCountries } from "@/api/request/search/CountriesDropdown";
 
 export interface CountriesDropdownData {
   id: string;
@@ -22,7 +22,6 @@ export default function CountriesDropdown({ form }: { form: any }) {
     form.getValues().countryId
   );
 
-  // Animation constants
   const TOP_POSITION = -8;
   const CENTER_POSITION = 14;
 

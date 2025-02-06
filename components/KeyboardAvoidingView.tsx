@@ -9,7 +9,7 @@ export const KeyboardView = ({ children }: { children: React.ReactNode }) => (
   <KeyboardAvoidingView
     style={{
       flex: 1,
-      backgroundColor: "#fff",
+      backgroundColor: "transparent",
     }}
     behavior={Platform.OS === "ios" ? "padding" : undefined}
     keyboardVerticalOffset={0}

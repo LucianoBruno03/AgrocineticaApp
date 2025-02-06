@@ -9,7 +9,7 @@ export const fetchListItems = async ({ queryKey }: { queryKey: QueryKey }) => {
   const raw = {
     resource: "Negocios",
     pageNumber: 0,
-    pageSize: 10,
+    pageSize: 100,
     advancedSearch: {
       fields: ["name"],
       keyword: searchedWord || "",
@@ -21,8 +21,6 @@ export const fetchListItems = async ({ queryKey }: { queryKey: QueryKey }) => {
       tenant: TENANT,
     },
   });
-
-  console.log("peticision");
 
   return response.data;
 };

@@ -1,25 +1,27 @@
 import { api } from "@/api/axios/api";
-import { CustomerRateListResponse } from "@/types/dropdown/CustomerRateDropdown";
+import { CustomerListResponse } from "@/types/search/Customer";
 import { QueryKey } from "@tanstack/react-query";
 
 export const TENANT = process.env.EXPO_PUBLIC_TENANT;
 
-export const fetchListCustomerRate = async ({
+export const fetchListCustomer = async ({
   queryKey,
 }: {
   queryKey: QueryKey;
-}): Promise<CustomerRateListResponse> => {
+}): Promise<CustomerListResponse> => {
+  const searchedWord = queryKey[1] as string;
+
   const raw = {
-    roles: ["Transporte", "Cliente", "Chofer"],
+    resource: "Negocios",
     pageNumber: 0,
     pageSize: 10,
     advancedSearch: {
-      fields: ["FullName"],
-      keyword: "",
+      fields: ["businessName"],
+      keyword: searchedWord || "",
     },
   };
 
-  const response = await api.post("users/search", raw, {
+  const response = await api.post("v1/entities/search", raw, {
     headers: {
       tenant: TENANT,
     },

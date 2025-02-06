@@ -21,7 +21,7 @@ interface CustomDateFieldProps {
   label?: string;
   value: Date | undefined;
   onBlur: Noop;
-  onChange: (date: Date | undefined) => void;
+  onChange: (date: Date | string | undefined) => void;
   error?: FieldError | undefined;
   placeholder?: string;
   endAdornment?: React.ReactNode;
@@ -48,7 +48,9 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
   const CENTER_POSITION = 14;
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [tempDate, setTempDate] = useState<Date | undefined>(value);
+  const [tempDate, setTempDate] = useState<Date | undefined>(
+    value ? value : new Date()
+  );
   const [modalOpacity] = useState(new Animated.Value(0));
 
   const animatedValue = useRef(
@@ -101,7 +103,9 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
     if (Platform.OS === "android") {
       setShowDatePicker(false);
       if (selectedDate) {
-        onChange(selectedDate);
+        // convertir a string
+        const date = selectedDate.toISOString();
+        onChange(date);
       }
     } else {
       setTempDate(selectedDate);
@@ -109,7 +113,10 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
   };
 
   const handleAccept = () => {
-    onChange(tempDate);
+    const date = tempDate!.toISOString();
+    onChange(date);
+
+    // onChange(tempDate);
     setShowDatePicker(false);
     Animated.timing(modalOpacity, {
       toValue: 0,

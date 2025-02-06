@@ -1,5 +1,5 @@
-export interface GatheringListResponse {
-  data: Gathering[];
+export interface UnloadingPointsListResponse {
+  data: UnloadingPoints[];
   currentPage: number;
   totalPages: number;
   totalCount: number;
@@ -8,17 +8,18 @@ export interface GatheringListResponse {
   hasNextPage: boolean;
 }
 
-export interface Gathering {
+export interface UnloadingPoints {
   id: string;
-  entityId: string;
   name: string;
-  entityBusinessName: string;
+  email?: string;
+  phone?: string;
   countryId: string;
   provinceId: string;
   locationId: string;
   locationName: string;
   address: string;
-  startDate?: string;
+  administrativeSchedule: any;
+  startDate: string;
   endDate: any;
   geoLatitude: number;
   geoLongitude: number;

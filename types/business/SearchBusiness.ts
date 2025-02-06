@@ -17,7 +17,7 @@ export interface Business {
   unloadTime: any;
   itemId: string;
   itemName: string;
-  customerRate: number;
+  BusinessCustomer: number;
   transportRate: number;
   quantity: number;
   businessUserId: string;

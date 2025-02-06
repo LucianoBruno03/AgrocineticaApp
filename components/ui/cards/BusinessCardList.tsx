@@ -69,7 +69,7 @@ const BusinessCardList = ({ item }: { item: Business }) => {
 
       <View style={styles.infoContainer}>
         <ThemedLabel>Tarifa cliente</ThemedLabel>
-        <ThemedText style={styles.value}>{item.customerRate}</ThemedText>
+        <ThemedText style={styles.value}>{item.BusinessCustomer}</ThemedText>
       </View>
 
       <View style={styles.infoContainer}>

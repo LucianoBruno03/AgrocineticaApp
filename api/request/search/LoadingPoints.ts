@@ -1,27 +1,29 @@
 import { api } from "@/api/axios/api";
-import { TransportRateListResponse } from "@/types/dropdown/TransportRateDropdown";
+import { LoadingPointsListResponse } from "@/types/search/LoadingPoints";
 import { QueryKey } from "@tanstack/react-query";
 
 export const TENANT = process.env.EXPO_PUBLIC_TENANT;
 
-export const fetchListTransportRate = async ({
+export const fetchListLoadingPoints = async ({
   queryKey,
 }: {
   queryKey: QueryKey;
-}): Promise<TransportRateListResponse> => {
+}): Promise<LoadingPointsListResponse> => {
   const searchedWord = queryKey[1] as string;
+  const entityId = queryKey[2] as string;
 
   const raw = {
-    resource: "Negocios",
-    pageNumber: 0,
-    pageSize: 10,
     advancedSearch: {
-      fields: ["businessName"],
+      fields: [],
       keyword: searchedWord || "",
     },
+
+    pageNumber: 1,
+    pageSize: 100,
+    entityId: entityId,
   };
 
-  const response = await api.post("v1/entities/search", raw, {
+  const response = await api.post("v1/loadingpoints/search", raw, {
     headers: {
       tenant: TENANT,
     },

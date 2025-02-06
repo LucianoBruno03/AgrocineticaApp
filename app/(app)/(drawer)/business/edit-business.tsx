@@ -16,7 +16,7 @@ const EditBusiness = (props: Props) => {
       }}
     >
       <Text>EditBusiness</Text>
-      <Link href={"/new-business"}>Edit Bussisness</Link>
+      <Link href={"/business/new-business"}>Edit Business</Link>
       <Link href={"/"}>Home</Link>
     </View>
   );

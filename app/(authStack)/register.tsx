@@ -47,7 +47,6 @@ export default function Register() {
   const mutationAfip = useMutation({
     mutationFn: fetchAfipQuery,
     onSuccess: (data) => {
-      console.log(data);
       form.setValue("businessName", data.fullName);
       form.setValue("categoryTypeId", data.taxpayerTypeId);
       form.setValue(

@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   imageContainer: {
-    width: width * 0.8, // 80% of the screen width
+    width: width * 0.8,
     height: undefined,
-    aspectRatio: 1, // Adjust the aspect ratio as needed
+    aspectRatio: 1,
   },
 });

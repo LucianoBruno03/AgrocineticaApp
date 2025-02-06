@@ -1,5 +1,5 @@
 import { api } from "@/api/axios/api";
-import { CountriesListResponse } from "@/types/dropdown/CountriesDropdown";
+import { CountriesListResponse } from "@/types/search/CountriesDropdown";
 import { QueryKey } from "@tanstack/react-query";
 
 export const fetchListCountries = async ({

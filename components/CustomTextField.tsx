@@ -12,7 +12,7 @@ import {
 
 interface CustomTextFieldProps {
   label?: string;
-  value: string | undefined;
+  value: string | number | undefined;
   onBlur: Noop;
   onChangeText: (...event: any[]) => void;
   error?: FieldError | undefined;
@@ -37,14 +37,14 @@ export const CustomTextField = ({
   inputProps,
   disabled = false,
 }: CustomTextFieldProps) => {
-  const TOP_POSITION = -8; // Floating position
-  const CENTER_POSITION = 14; // Center position
+  const TOP_POSITION = -8;
+  const CENTER_POSITION = 14;
 
   const animatedValue = React.useRef(
     new Animated.Value(value ? TOP_POSITION : CENTER_POSITION)
   ).current;
 
-  const inputRef = useRef<TextInput>(null); // Reference to the TextInput
+  const inputRef = useRef<TextInput>(null);
 
   React.useLayoutEffect(() => {
     animatedValue.setValue(value ? TOP_POSITION : CENTER_POSITION);
@@ -97,7 +97,7 @@ export const CustomTextField = ({
           </TouchableOpacity>
           <TextInput
             editable={!disabled}
-            ref={inputRef} // Attach the reference
+            ref={inputRef}
             secureTextEntry={type === "password"}
             keyboardType={
               type === "email"
@@ -108,9 +108,9 @@ export const CustomTextField = ({
             }
             onChangeText={(text) => {
               if (type === "number") {
-                // Permitir solo números
-                const filteredText = text.replace(/[^0-9]/g, "");
-                onChangeText(filteredText);
+                // Convert to number, handling empty string and invalid inputs
+                const numValue = text === "" ? undefined : Number(text);
+                onChangeText(numValue);
               } else {
                 onChangeText(text);
               }
@@ -124,7 +124,7 @@ export const CustomTextField = ({
               Boolean(startAdorment) && { paddingLeft: 40 },
               inputProps?.style || {},
             ]}
-            value={value}
+            value={value !== undefined ? String(value) : ""}
           />
           {Boolean(endAdornment) && (
             <View style={styles.endAdornment}>{endAdornment}</View>

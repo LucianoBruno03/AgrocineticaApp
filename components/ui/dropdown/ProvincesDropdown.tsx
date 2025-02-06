@@ -3,7 +3,7 @@ import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { useEffect, useRef, useState } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { useQuery } from "@tanstack/react-query";
-import { fetchListProvinces } from "@/api/request/dropdown/ProvincesDropdown";
+import { fetchListProvinces } from "@/api/request/search/ProvincesDropdown";
 
 export interface ProvincesDropdownData {
   id: string;
@@ -22,7 +22,6 @@ export default function ProvincesDropdown({ form }: { form: any }) {
     form.getValues().provinceId
   );
 
-  // Animation constants
   const TOP_POSITION = -8;
   const CENTER_POSITION = 14;
 

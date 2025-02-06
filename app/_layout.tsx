@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AxiosInterceptor } from "@/api/axios/axios.interceptors";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import Toast from "react-native-toast-message";
 
 AxiosInterceptor();
 
@@ -119,6 +120,7 @@ export default function RootLayout() {
           <StatusBar backgroundColor="transparent" style="auto" />
         </GestureHandlerRootView>
       </QueryClientProvider>
+      <Toast />
     </ThemeProvider>
   );
 }
