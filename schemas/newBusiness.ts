@@ -79,5 +79,5 @@ export const BusinessSchema = z
   .refine((data) => data.customerRate <= data.transportRate, {
     message:
       "La tarifa cliente debe ser igual o menor a la tarifa de transporte",
-    path: ["BusinessCustomer"],
+    path: ["customerRate"],
   });

@@ -16,12 +16,13 @@ import { FieldError, Noop } from "react-hook-form";
 import { Colors } from "@/constants/Colors";
 import { ThemedText } from "./ThemedText";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
+import dayjs from "dayjs";
 
 interface CustomDateFieldProps {
   label?: string;
-  value: Date | undefined;
+  value: string | undefined;
   onBlur: Noop;
-  onChange: (date: Date | string | undefined) => void;
+  onChange: (date: string | undefined) => void;
   error?: FieldError | undefined;
   placeholder?: string;
   endAdornment?: React.ReactNode;
@@ -31,7 +32,7 @@ interface CustomDateFieldProps {
 }
 
 export const CustomDateField: React.FC<CustomDateFieldProps> = ({
-  label = "Fecha de nacimiento",
+  label = "Fecha",
   value = undefined,
   onBlur,
   onChange,
@@ -48,8 +49,8 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
   const CENTER_POSITION = 14;
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [tempDate, setTempDate] = useState<Date | undefined>(
-    value ? value : new Date()
+  const [tempDate, setTempDate] = useState<Date>(
+    value ? new Date(value) : new Date()
   );
   const [modalOpacity] = useState(new Animated.Value(0));
 
@@ -100,23 +101,47 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
   };
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
-    if (Platform.OS === "android") {
-      setShowDatePicker(false);
-      if (selectedDate) {
-        // convertir a string
-        const date = selectedDate.toISOString();
-        onChange(date);
+    if (selectedDate) {
+      if (type === "time") {
+        const localDate = new Date();
+        localDate.setHours(
+          selectedDate.getHours(),
+          selectedDate.getMinutes(),
+          0,
+          0
+        );
+        setTempDate(localDate);
+      } else {
+        setTempDate(selectedDate);
       }
+
+      if (Platform.OS === "android") {
+        setShowDatePicker(false);
+        onChange(formatDate(selectedDate));
+      }
+    }
+  };
+
+  const formatDate = (date: Date): string => {
+    if (type === "date") {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}T00:00:00`;
     } else {
-      setTempDate(selectedDate);
+      // Asegurar que la hora se maneje correctamente sin conversión a UTC
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+        2,
+        "0"
+      )}:00`;
     }
   };
 
   const handleAccept = () => {
-    const date = tempDate!.toISOString();
-    onChange(date);
-
-    // onChange(tempDate);
+    const formattedDate = formatDate(tempDate);
+    onChange(formattedDate);
     setShowDatePicker(false);
     Animated.timing(modalOpacity, {
       toValue: 0,
@@ -158,11 +183,6 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
       color: `${Colors.light.text}`,
       fontSize: 16,
       width: "100%",
-      // height: "100%",
-      // paddingHorizontal: 12,
-      // paddingTop: 16,
-      // paddingBottom: 8,
-
       padding: 10,
       paddingStart: 20,
       height: 48,
@@ -250,8 +270,8 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
             value={
               value
                 ? type === "date"
-                  ? value.toLocaleDateString("es-ES")
-                  : value.toLocaleTimeString("es-ES")
+                  ? dayjs(value).format("DD/MM/YYYY")
+                  : new Date(`2000-01-01T${value}`).toString().slice(16, 21)
                 : ""
             }
             onFocus={handleFocus}
@@ -287,7 +307,7 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
             <View style={styles.modalContent}>
               <View style={styles.dataPicker}>
                 <DateTimePicker
-                  value={tempDate || new Date()}
+                  value={tempDate}
                   mode={type}
                   display="spinner"
                   onChange={handleDateChange}
@@ -315,7 +335,7 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
 
       {Platform.OS === "android" && showDatePicker && (
         <DateTimePicker
-          value={tempDate || new Date()}
+          value={tempDate}
           mode={type}
           display="spinner"
           onChange={handleDateChange}

@@ -37,17 +37,17 @@ import Toast from "react-native-toast-message";
 import { z } from "zod";
 
 const mock = {
-  loadDate: "2025-02-06T00:00:00",
-  loadTime: null,
-  unloadDate: "2025-02-07T00:00:00",
-  unloadTime: null,
-  itemId: "22962b56-193f-4726-f11b-08dd3718932d",
-  itemName: "GRANOS ESPECIALES - POROTO NEGRO",
+  loadDate: "2025-02-08T00:00:00",
+  loadTime: "18:00:00",
+  unloadDate: "2025-02-09T00:00:00",
+  unloadTime: "21:00:00",
+  itemId: "01554ca7-29e8-496f-f114-08dd3718932d",
+  itemName: "COMMODITIES -  SOJA",
   customerRate: 2000,
   transportRate: 1000,
   quantity: 1,
-  businessUserId: "fbca2de3-1dc1-4593-b76b-1e601dc019e8",
-  businessUserName: "Lucio Martino Boronat",
+  businessUserId: "f957d086-0608-4044-ab6c-eeaadc4d0128",
+  businessUserName: "Stefania Monte",
   userId: "60cf87a7-189d-4a4e-b22a-3fa894a3140a",
   userName: "Daniela Centeno",
   entityId: "2412f341-b093-44d5-a41e-08dcec436b13",
@@ -60,21 +60,20 @@ const mock = {
   isWeightScaleOrigin: true,
   isWeightScaleDestination: true,
   isPhysicalPapers: true,
-  gatheringId: "4e07c2df-5111-41f1-8fad-08dd370845cd",
+  gatheringId: "f71808a5-b6ce-439c-9af9-ea03a1bf2943",
   scaleId: "372476a5-b5e4-46b7-48c5-08dceeb41867",
   isScale: true,
   showOnWeb: true,
-
   businessesUnitTypes: [
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      typeUnitId: "af5dd8e9-e0c3-4216-db12-08dcdd60457e",
-      typeUnitName: "BATEA",
-    },
     {
       businessId: "00000000-0000-0000-0000-000000000000",
       typeUnitId: "a84ccd37-5baf-46ab-db11-08dcdd60457e",
       typeUnitName: "ACOPLADO",
+    },
+    {
+      businessId: "00000000-0000-0000-0000-000000000000",
+      typeUnitId: "af5dd8e9-e0c3-4216-db12-08dcdd60457e",
+      typeUnitName: "BATEA",
     },
   ],
   businessesLoadingPoints: [
@@ -85,8 +84,18 @@ const mock = {
     },
     {
       businessId: "00000000-0000-0000-0000-000000000000",
-      loadingPointId: "c7a5b8ab-2bce-4168-b2eb-4303ff18b39f",
+      loadingPointId: "897defdc-9dfc-4568-af6e-64a4b4b39b5a",
       order: 2,
+    },
+    {
+      businessId: "00000000-0000-0000-0000-000000000000",
+      loadingPointId: "c7a5b8ab-2bce-4168-b2eb-4303ff18b39f",
+      order: 3,
+    },
+    {
+      businessId: "00000000-0000-0000-0000-000000000000",
+      loadingPointId: "16f0a3c0-c627-4c3f-9be0-4b568046f0f7",
+      order: 4,
     },
   ],
   businessesUnloadingPoint: [
@@ -97,8 +106,33 @@ const mock = {
     },
     {
       businessId: "00000000-0000-0000-0000-000000000000",
-      unloadingPointId: "6ba3e523-70df-44c4-b31f-08dd16190ff0",
+      unloadingPointId: "66d62900-142b-4004-4704-08dd0efbfd55",
       order: 2,
+    },
+    {
+      businessId: "00000000-0000-0000-0000-000000000000",
+      unloadingPointId: "a42758cf-af84-4755-ced1-08dcf35f3ee7",
+      order: 3,
+    },
+    {
+      businessId: "00000000-0000-0000-0000-000000000000",
+      unloadingPointId: "c253ec19-f5a6-49fd-ced0-08dcf35f3ee7",
+      order: 4,
+    },
+    {
+      businessId: "00000000-0000-0000-0000-000000000000",
+      unloadingPointId: "c0038a04-2943-4995-cecf-08dcf35f3ee7",
+      order: 5,
+    },
+    {
+      businessId: "00000000-0000-0000-0000-000000000000",
+      unloadingPointId: "3b3aa232-e21a-4ea9-cece-08dcf35f3ee7",
+      order: 6,
+    },
+    {
+      businessId: "00000000-0000-0000-0000-000000000000",
+      unloadingPointId: "cdbf8848-05eb-4bf4-cecd-08dcf35f3ee7",
+      order: 7,
     },
   ],
 };
@@ -132,9 +166,9 @@ const NewBusiness = (props: Props) => {
   const form = useForm<z.infer<typeof BusinessSchema>>({
     defaultValues: {
       loadDate: parsedForm?.loadDate || mock.loadDate,
-      loadTime: parsedForm?.loadTime || "",
+      loadTime: parsedForm?.loadTime || mock.loadTime,
       unloadDate: parsedForm?.unloadDate || mock.unloadDate,
-      unloadTime: parsedForm?.unloadTime || "",
+      unloadTime: parsedForm?.unloadTime || mock.unloadTime,
       itemId: parsedForm?.itemId || mock.itemId,
       itemName: parsedForm?.itemName || mock.itemName,
       customerRate: parsedForm?.customerRate || mock.customerRate,
@@ -183,6 +217,11 @@ const NewBusiness = (props: Props) => {
     },
     resolver: zodResolver(BusinessSchema),
   });
+
+  console.log(form.getValues().loadDate);
+  console.log(form.getValues().loadTime);
+  console.log(form.getValues().unloadDate);
+  console.log(form.getValues().unloadTime);
 
   const {
     control,
@@ -264,7 +303,7 @@ const NewBusiness = (props: Props) => {
               }) => (
                 <CustomDateField
                   label="Fecha de carga"
-                  value={value ? new Date(value) : undefined}
+                  value={value ? value : undefined}
                   onBlur={onBlur}
                   onChange={onChange}
                   error={error}
@@ -288,7 +327,7 @@ const NewBusiness = (props: Props) => {
               }) => (
                 <CustomDateField
                   label="Hora de carga"
-                  value={value ? new Date(value) : undefined}
+                  value={value ? value : undefined}
                   onBlur={onBlur}
                   onChange={onChange}
                   error={error}
@@ -313,7 +352,7 @@ const NewBusiness = (props: Props) => {
               }) => (
                 <CustomDateField
                   label="Fecha de descarga"
-                  value={value ? new Date(value) : undefined}
+                  value={value ? value : undefined}
                   onBlur={onBlur}
                   onChange={onChange}
                   error={error}
@@ -337,7 +376,7 @@ const NewBusiness = (props: Props) => {
               }) => (
                 <CustomDateField
                   label="Hora de descarga"
-                  value={value ? new Date(value) : undefined}
+                  value={value ? value : undefined}
                   onBlur={onBlur}
                   onChange={onChange}
                   error={error}
@@ -638,21 +677,7 @@ const NewBusiness = (props: Props) => {
                 newBusinessMutation.isPending && { opacity: 0.7 },
               ]}
               onPress={handleSubmit(onSubmit)}
-              // disabled={newBusinessMutation.isPending}
-            >
-              <ThemedText style={{ color: "#fff", fontWeight: "bold" }}>
-                Guardar
-              </ThemedText>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.SubmitButton,
-                newBusinessMutation.isPending && { opacity: 0.7 },
-              ]}
-              onPress={() => {
-                console.log(errors);
-              }}
-              // disabled={newBusinessMutation.isPending}
+              disabled={newBusinessMutation.isPending}
             >
               <ThemedText style={{ color: "#fff", fontWeight: "bold" }}>
                 Guardar
@@ -687,9 +712,9 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 20,
+    marginVertical: 16,
     backgroundColor: "#0093D1",
-    padding: 16,
-    borderRadius: 10,
+    padding: 12,
+    borderRadius: 12,
   },
 });

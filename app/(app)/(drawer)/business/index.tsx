@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
   },
   newButton: {
     position: "absolute",
-    bottom: 20,
-    right: 20,
+    bottom: 14,
+    right: 14,
     backgroundColor: "#ABCA48",
     borderRadius: 100,
     width: 60,

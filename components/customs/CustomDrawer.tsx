@@ -32,7 +32,7 @@ export default function CustomDrawer(props: any) {
             style={{
               width: 160,
               height: 160,
-              borderRadius: "100%",
+              borderRadius: 160,
               marginInline: "auto",
             }}
           />
