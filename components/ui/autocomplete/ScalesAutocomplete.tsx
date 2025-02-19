@@ -1,5 +1,5 @@
 import { useColorScheme } from "@/hooks/useColorScheme.web";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -9,6 +9,8 @@ export default function ScalesAutoComplete({ form }: { form: any }) {
     !form.getValues().isScale
   );
   const router = useRouter();
+
+  const currentRoute = usePathname();
 
   const [selectedValue, setSelectedValue] = useState<string | null>(
     form.getValues().scalesName
@@ -64,6 +66,7 @@ export default function ScalesAutoComplete({ form }: { form: any }) {
         pathname: "/business/Scales",
         params: {
           currentFormData: JSON.stringify(form.getValues()),
+          redirect: currentRoute,
         },
       });
     }

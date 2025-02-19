@@ -1,11 +1,13 @@
 import { useColorScheme } from "@/hooks/useColorScheme.web";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function LoadingPointsList({ form }: { form: any }) {
   const colorScheme = useColorScheme() ?? "light";
   const router = useRouter();
+
+  const currentRoute = usePathname();
 
   const [selectedValue, setSelectedValue] = useState<string | null>(
     form.getValues().businessesLoadingPoints.length > 0 ? "selected" : null
@@ -59,6 +61,7 @@ export default function LoadingPointsList({ form }: { form: any }) {
         pathname: "/business/LoadingPoints",
         params: {
           currentFormData: JSON.stringify(form.getValues()),
+          redirect: currentRoute,
         },
       });
     }

@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   },
   containerList: {
     width: "100%",
+    gap: 16,
   },
   searchButton: {
     position: "absolute",

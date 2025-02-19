@@ -20,8 +20,9 @@ import { useColorScheme } from "@/hooks/useColorScheme.web";
 export default function SearchScreen() {
   const colorScheme = useColorScheme() ?? "light";
   const router = useRouter();
-  const { currentFormData } = useLocalSearchParams<{
+  const { redirect, currentFormData } = useLocalSearchParams<{
     currentFormData: string;
+    redirect: string;
   }>();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const searchedWord = useDebounce(searchQuery, 500);
@@ -45,7 +46,7 @@ export default function SearchScreen() {
     router.back();
 
     router.replace({
-      pathname: "/business/new-business",
+      pathname: redirect as any,
       params: {
         currentFormData: newFormData,
       },

@@ -1,12 +1,23 @@
 import { useColorScheme } from "@/hooks/useColorScheme.web";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { FieldError } from "react-hook-form";
 
-export default function ItemsAutocomplete({ form }: { form: any }) {
+interface ItemsAutocompleteProps {
+  form: any;
+  error?: FieldError;
+}
+
+export default function ItemsAutocomplete({
+  form,
+  error,
+}: ItemsAutocompleteProps) {
   const colorScheme = useColorScheme() ?? "light";
   const color = colorScheme === "light" ? "black" : "white";
   const router = useRouter();
+
+  const currentRoute = usePathname();
 
   const [selectedValue, setSelectedValue] = useState<string | null>(
     form.getValues().itemId
@@ -24,6 +35,7 @@ export default function ItemsAutocomplete({ form }: { form: any }) {
       pathname: "/business/Items",
       params: {
         currentFormData: JSON.stringify(form.getValues()),
+        redirect: currentRoute,
       },
     });
   };
@@ -38,12 +50,20 @@ export default function ItemsAutocomplete({ form }: { form: any }) {
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.inputWrapper} onPress={handleSearch}>
-        <Animated.Text style={[styles.label, labelStyle]}>Item</Animated.Text>
+      <Pressable
+        style={[styles.inputWrapper, error && styles.inputError]}
+        onPress={handleSearch}
+      >
+        <Animated.Text
+          style={[styles.label, labelStyle, error && styles.labelError]}
+        >
+          Item
+        </Animated.Text>
         <Text style={[styles.content, { color }]}>
           {form.getValues().itemName ? form.getValues().itemName : ""}
         </Text>
       </Pressable>
+      {error && <Text style={styles.errorMessage}>{error.message}</Text>}
     </View>
   );
 }
@@ -51,6 +71,7 @@ export default function ItemsAutocomplete({ form }: { form: any }) {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    gap: 4,
   },
   inputWrapper: {
     height: 48,
@@ -62,6 +83,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     position: "relative",
   },
+  inputError: {
+    backgroundColor: "#FF000015",
+    borderWidth: 1,
+    borderColor: "#FF0000",
+  },
   label: {
     position: "absolute",
     left: 12,
@@ -71,7 +97,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
     backgroundColor: "transparent",
   },
+  labelError: {
+    color: "#FF0000",
+  },
   content: {
     fontSize: 16,
+  },
+  errorMessage: {
+    color: "#FF0000",
+    fontSize: 12,
+    marginLeft: 12,
   },
 });

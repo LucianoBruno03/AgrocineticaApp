@@ -49,9 +49,20 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
   const CENTER_POSITION = 14;
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [tempDate, setTempDate] = useState<Date>(
-    value ? new Date(value) : new Date()
-  );
+  // const [tempDate, setTempDate] = useState<Date>(
+  //   value ? new Date(value) : new Date()
+  // );
+  const [tempDate, setTempDate] = useState<Date>(() => {
+    if (!value) return new Date(); // Si no hay valor, usa la fecha actual
+    if (type === "time") {
+      const [hours, minutes, seconds] = value.split(":").map(Number);
+      const date = new Date(); // Tomamos la fecha actual
+      date.setHours(hours, minutes, seconds || 0, 0); // Seteamos la hora manualmente
+      return date;
+    }
+    return new Date(value); // Si es una fecha, convertir directamente
+  });
+
   const [modalOpacity] = useState(new Animated.Value(0));
 
   const animatedValue = useRef(
@@ -206,7 +217,7 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
     errorMessage: {
       color: "red",
       fontSize: 12,
-      marginTop: 4,
+      marginTop: 0,
     },
     label: {
       position: "absolute",
@@ -250,7 +261,7 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
   });
 
   return (
-    <>
+    <View style={{ width: "100%", gap: 10 }}>
       <View style={[styles.inputContainer]}>
         <View style={styles.inputWrapper}>
           {Boolean(startAdorment) && (
@@ -310,6 +321,7 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
                   value={tempDate}
                   mode={type}
                   display="spinner"
+                  locale="es-ES"
                   onChange={handleDateChange}
                   textColor="#0093D1"
                 />
@@ -338,9 +350,10 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
           value={tempDate}
           mode={type}
           display="spinner"
+          locale="es-ES"
           onChange={handleDateChange}
         />
       )}
-    </>
+    </View>
   );
 };

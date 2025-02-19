@@ -37,106 +37,106 @@ import { useAuthStore } from "@/zustand/authStore";
 import { ParsedForm } from "@/types/business/NewBusiness";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const mock = {
-  loadDate: "2025-02-08T00:00:00",
-  loadTime: "18:00:00",
-  unloadDate: "2025-02-09T00:00:00",
-  unloadTime: "21:00:00",
-  itemId: "01554ca7-29e8-496f-f114-08dd3718932d",
-  itemName: "COMMODITIES -  SOJA",
-  customerRate: 2000,
-  transportRate: 1000,
-  quantity: 1,
-  businessUserId: "f957d086-0608-4044-ab6c-eeaadc4d0128",
-  businessUserName: "Stefania Monte",
-  userId: "60cf87a7-189d-4a4e-b22a-3fa894a3140a",
-  userName: "Daniela Centeno",
-  entityId: "2412f341-b093-44d5-a41e-08dcec436b13",
-  shipperId: "2412f341-b093-44d5-a41e-08dcec436b13",
-  commission: 8,
-  isKilograms: true,
-  isKilometers: false,
-  isOrigin: false,
-  isDestination: true,
-  isWeightScaleOrigin: true,
-  isWeightScaleDestination: true,
-  isPhysicalPapers: true,
-  gatheringId: "f71808a5-b6ce-439c-9af9-ea03a1bf2943",
-  scaleId: "372476a5-b5e4-46b7-48c5-08dceeb41867",
-  isScale: true,
-  showOnWeb: true,
-  businessesUnitTypes: [
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      typeUnitId: "a84ccd37-5baf-46ab-db11-08dcdd60457e",
-      typeUnitName: "ACOPLADO",
-    },
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      typeUnitId: "af5dd8e9-e0c3-4216-db12-08dcdd60457e",
-      typeUnitName: "BATEA",
-    },
-  ],
-  businessesLoadingPoints: [
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      loadingPointId: "090fdf81-0078-4c27-b143-479d3bcc4906",
-      order: 1,
-    },
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      loadingPointId: "897defdc-9dfc-4568-af6e-64a4b4b39b5a",
-      order: 2,
-    },
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      loadingPointId: "c7a5b8ab-2bce-4168-b2eb-4303ff18b39f",
-      order: 3,
-    },
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      loadingPointId: "16f0a3c0-c627-4c3f-9be0-4b568046f0f7",
-      order: 4,
-    },
-  ],
-  businessesUnloadingPoint: [
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      unloadingPointId: "cc43da4b-81cf-47d7-01ba-08dd370057b5",
-      order: 1,
-    },
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      unloadingPointId: "66d62900-142b-4004-4704-08dd0efbfd55",
-      order: 2,
-    },
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      unloadingPointId: "a42758cf-af84-4755-ced1-08dcf35f3ee7",
-      order: 3,
-    },
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      unloadingPointId: "c253ec19-f5a6-49fd-ced0-08dcf35f3ee7",
-      order: 4,
-    },
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      unloadingPointId: "c0038a04-2943-4995-cecf-08dcf35f3ee7",
-      order: 5,
-    },
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      unloadingPointId: "3b3aa232-e21a-4ea9-cece-08dcf35f3ee7",
-      order: 6,
-    },
-    {
-      businessId: "00000000-0000-0000-0000-000000000000",
-      unloadingPointId: "cdbf8848-05eb-4bf4-cecd-08dcf35f3ee7",
-      order: 7,
-    },
-  ],
-};
+// const mock = {
+//   loadDate: "2025-02-08T00:00:00",
+//   loadTime: "18:00:00",
+//   unloadDate: "2025-02-09T00:00:00",
+//   unloadTime: "21:00:00",
+//   itemId: "01554ca7-29e8-496f-f114-08dd3718932d",
+//   itemName: "COMMODITIES -  SOJA",
+//   customerRate: 2000,
+//   transportRate: 1000,
+//   quantity: 1,
+//   businessUserId: "f957d086-0608-4044-ab6c-eeaadc4d0128",
+//   businessUserName: "Stefania Monte",
+//   userId: "60cf87a7-189d-4a4e-b22a-3fa894a3140a",
+//   userName: "Daniela Centeno",
+//   entityId: "2412f341-b093-44d5-a41e-08dcec436b13",
+//   shipperId: "2412f341-b093-44d5-a41e-08dcec436b13",
+//   commission: 8,
+//   isKilograms: true,
+//   isKilometers: false,
+//   isOrigin: false,
+//   isDestination: true,
+//   isWeightScaleOrigin: true,
+//   isWeightScaleDestination: true,
+//   isPhysicalPapers: true,
+//   gatheringId: "f71808a5-b6ce-439c-9af9-ea03a1bf2943",
+//   scaleId: "372476a5-b5e4-46b7-48c5-08dceeb41867",
+//   isScale: true,
+//   showOnWeb: true,
+//   businessesUnitTypes: [
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       typeUnitId: "a84ccd37-5baf-46ab-db11-08dcdd60457e",
+//       typeUnitName: "ACOPLADO",
+//     },
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       typeUnitId: "af5dd8e9-e0c3-4216-db12-08dcdd60457e",
+//       typeUnitName: "BATEA",
+//     },
+//   ],
+//   businessesLoadingPoints: [
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       loadingPointId: "090fdf81-0078-4c27-b143-479d3bcc4906",
+//       order: 1,
+//     },
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       loadingPointId: "897defdc-9dfc-4568-af6e-64a4b4b39b5a",
+//       order: 2,
+//     },
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       loadingPointId: "c7a5b8ab-2bce-4168-b2eb-4303ff18b39f",
+//       order: 3,
+//     },
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       loadingPointId: "16f0a3c0-c627-4c3f-9be0-4b568046f0f7",
+//       order: 4,
+//     },
+//   ],
+//   businessesUnloadingPoint: [
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       unloadingPointId: "cc43da4b-81cf-47d7-01ba-08dd370057b5",
+//       order: 1,
+//     },
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       unloadingPointId: "66d62900-142b-4004-4704-08dd0efbfd55",
+//       order: 2,
+//     },
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       unloadingPointId: "a42758cf-af84-4755-ced1-08dcf35f3ee7",
+//       order: 3,
+//     },
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       unloadingPointId: "c253ec19-f5a6-49fd-ced0-08dcf35f3ee7",
+//       order: 4,
+//     },
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       unloadingPointId: "c0038a04-2943-4995-cecf-08dcf35f3ee7",
+//       order: 5,
+//     },
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       unloadingPointId: "3b3aa232-e21a-4ea9-cece-08dcf35f3ee7",
+//       order: 6,
+//     },
+//     {
+//       businessId: "00000000-0000-0000-0000-000000000000",
+//       unloadingPointId: "cdbf8848-05eb-4bf4-cecd-08dcf35f3ee7",
+//       order: 7,
+//     },
+//   ],
+// };
 
 type Props = {};
 
@@ -151,6 +151,9 @@ export type ThemedViewProps = ViewProps & {
 
 const EditBusiness = (props: Props) => {
   const colorScheme = useColorScheme() ?? "light";
+  const { id } = useLocalSearchParams<{ id: string }>();
+
+  console.log({ idedit: id });
 
   const color = colorScheme === "light" ? "#000" : "#fff";
 
@@ -166,58 +169,110 @@ const EditBusiness = (props: Props) => {
 
   const form = useForm<z.infer<typeof BusinessSchema>>({
     defaultValues: {
-      loadDate: parsedForm?.loadDate || mock.loadDate,
-      loadTime: parsedForm?.loadTime || mock.loadTime,
-      unloadDate: parsedForm?.unloadDate || mock.unloadDate,
-      unloadTime: parsedForm?.unloadTime || mock.unloadTime,
-      itemId: parsedForm?.itemId || mock.itemId,
-      itemName: parsedForm?.itemName || mock.itemName,
-      customerRate: parsedForm?.customerRate || mock.customerRate,
-      transportRate: parsedForm?.transportRate || mock.transportRate,
-      quantity: parsedForm?.quantity || mock.quantity,
-      businessUserId: parsedForm?.businessUserId || mock.businessUserId,
-      businessUserName: parsedForm?.businessUserName || mock.businessUserName,
+      loadDate: parsedForm?.loadDate || "",
+      loadTime: parsedForm?.loadTime || "",
+      unloadDate: parsedForm?.unloadDate || "",
+      unloadTime: parsedForm?.unloadTime || "",
+      itemId: parsedForm?.itemId || "",
+      itemName: parsedForm?.itemName || "",
+      customerRate: parsedForm?.customerRate || undefined,
+      transportRate: parsedForm?.transportRate || undefined,
+      quantity: parsedForm?.quantity || 1,
+      businessUserId: parsedForm?.businessUserId || "",
+      businessUserName: parsedForm?.businessUserName || "",
 
       userId:
         decodedClaims?.[
           "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ] || "",
-      userName: decodedClaims!.fullName || "",
+        ] ||
+        "" ||
+        "",
+      userName: decodedClaims!.fullName || "" || "",
 
-      entityId: parsedForm?.entityId || mock.entityId,
-      entityBusinessName: parsedForm?.entityBusinessName || "",
+      entityId: parsedForm?.entityId || "",
+      entityBusinessName: parsedForm?.entityBusinessName || "" || "",
 
-      shipperId: parsedForm?.shipperId || mock.shipperId,
-      shipperName: parsedForm?.shipperName || "",
+      shipperId: parsedForm?.shipperId || "",
+      shipperName: parsedForm?.shipperName || "" || "",
 
-      commission: parsedForm?.commission || mock.commission,
-      isKilograms: parsedForm?.isKilograms || mock.isKilograms,
-      isKilometers: parsedForm?.isKilometers || mock.isKilometers,
-      isOrigin: parsedForm?.isOrigin || mock.isOrigin,
-      isDestination: parsedForm?.isDestination || mock.isDestination,
-      isWeightScaleOrigin:
-        parsedForm?.isWeightScaleOrigin || mock.isWeightScaleOrigin,
-      isWeightScaleDestination:
-        parsedForm?.isWeightScaleDestination || mock.isWeightScaleDestination,
-      isPhysicalPapers: parsedForm?.isPhysicalPapers || mock.isPhysicalPapers,
-      gatheringId: parsedForm?.gatheringId || mock.gatheringId,
-      gatheringName: parsedForm?.gatheringName || "",
-      scaleId: parsedForm?.scaleId || mock.scaleId,
+      commission: parsedForm?.commission || 8,
+      isKilograms: parsedForm?.isKilograms || false,
+      isKilometers: parsedForm?.isKilometers || false,
+      isOrigin: parsedForm?.isOrigin || false,
+      isDestination: parsedForm?.isDestination || false,
+      isWeightScaleOrigin: parsedForm?.isWeightScaleOrigin || false,
+      isWeightScaleDestination: parsedForm?.isWeightScaleDestination || false,
+      isPhysicalPapers: parsedForm?.isPhysicalPapers || false,
+      gatheringId: parsedForm?.gatheringId || "",
+      gatheringName: parsedForm?.gatheringName || "" || "",
+      scaleId: parsedForm?.scaleId || "",
       scaleName: parsedForm?.scaleName || "",
-      isScale: parsedForm?.isScale || mock.isScale,
+      isScale: parsedForm?.isScale || false,
 
       cancellationReasonId: null,
 
-      showOnWeb: parsedForm?.showOnWeb || mock.showOnWeb,
-      businessesUnitTypes:
-        parsedForm?.businessesUnitTypes || mock.businessesUnitTypes,
-      businessesLoadingPoints:
-        parsedForm?.businessesLoadingPoints || mock.businessesLoadingPoints,
-      businessesUnloadingPoint:
-        parsedForm?.businessesUnloadingPoint || mock.businessesUnloadingPoint,
+      showOnWeb: parsedForm?.showOnWeb || false,
+      businessesUnitTypes: parsedForm?.businessesUnitTypes || [],
+      businessesLoadingPoints: parsedForm?.businessesLoadingPoints || [],
+      businessesUnloadingPoint: parsedForm?.businessesUnloadingPoint || [],
     },
     resolver: zodResolver(BusinessSchema),
   });
+
+  // const form = useForm<z.infer<typeof BusinessSchema>>({
+  //   defaultValues: {
+  //     loadDate: parsedForm?.loadDate || mock.loadDate,
+  //     loadTime: parsedForm?.loadTime || mock.loadTime,
+  //     unloadDate: parsedForm?.unloadDate || mock.unloadDate,
+  //     unloadTime: parsedForm?.unloadTime || mock.unloadTime,
+  //     itemId: parsedForm?.itemId || mock.itemId,
+  //     itemName: parsedForm?.itemName || mock.itemName,
+  //     customerRate: parsedForm?.customerRate || mock.customerRate,
+  //     transportRate: parsedForm?.transportRate || mock.transportRate,
+  //     quantity: parsedForm?.quantity || mock.quantity,
+  //     businessUserId: parsedForm?.businessUserId || mock.businessUserId,
+  //     businessUserName: parsedForm?.businessUserName || mock.businessUserName,
+
+  //     userId:
+  //       decodedClaims?.[
+  //         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+  //       ] || "",
+  //     userName: decodedClaims!.fullName || "",
+
+  //     entityId: parsedForm?.entityId || mock.entityId,
+  //     entityBusinessName: parsedForm?.entityBusinessName || "",
+
+  //     shipperId: parsedForm?.shipperId || mock.shipperId,
+  //     shipperName: parsedForm?.shipperName || "",
+
+  //     commission: parsedForm?.commission || mock.commission,
+  //     isKilograms: parsedForm?.isKilograms || mock.isKilograms,
+  //     isKilometers: parsedForm?.isKilometers || mock.isKilometers,
+  //     isOrigin: parsedForm?.isOrigin || mock.isOrigin,
+  //     isDestination: parsedForm?.isDestination || mock.isDestination,
+  //     isWeightScaleOrigin:
+  //       parsedForm?.isWeightScaleOrigin || mock.isWeightScaleOrigin,
+  //     isWeightScaleDestination:
+  //       parsedForm?.isWeightScaleDestination || mock.isWeightScaleDestination,
+  //     isPhysicalPapers: parsedForm?.isPhysicalPapers || mock.isPhysicalPapers,
+  //     gatheringId: parsedForm?.gatheringId || mock.gatheringId,
+  //     gatheringName: parsedForm?.gatheringName || "",
+  //     scaleId: parsedForm?.scaleId || mock.scaleId,
+  //     scaleName: parsedForm?.scaleName || "",
+  //     isScale: parsedForm?.isScale || mock.isScale,
+
+  //     cancellationReasonId: null,
+
+  //     showOnWeb: parsedForm?.showOnWeb || mock.showOnWeb,
+  //     businessesUnitTypes:
+  //       parsedForm?.businessesUnitTypes || mock.businessesUnitTypes,
+  //     businessesLoadingPoints:
+  //       parsedForm?.businessesLoadingPoints || mock.businessesLoadingPoints,
+  //     businessesUnloadingPoint:
+  //       parsedForm?.businessesUnloadingPoint || mock.businessesUnloadingPoint,
+  //   },
+  //   resolver: zodResolver(BusinessSchema),
+  // });
 
   console.log(form.getValues().loadDate);
   console.log(form.getValues().loadTime);
@@ -293,6 +348,8 @@ const EditBusiness = (props: Props) => {
       <ThemedView style={{ flex: 1 }}>
         <ScrollView>
           <View style={styles.formContainer}>
+            <Text style={{ color: color }}>Editar negocio {id}</Text>
+
             <Controller
               control={control}
               rules={{

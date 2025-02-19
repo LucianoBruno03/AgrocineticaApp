@@ -81,11 +81,12 @@ export const CustomTextField = ({
       inputRange: [TOP_POSITION, CENTER_POSITION],
       outputRange: [12, 16],
     }),
+    color: error ? "#FF0000" : "#0093D1",
   };
 
   return (
-    <React.Fragment>
-      <View style={styles.inputContainer}>
+    <View style={styles.container}>
+      <View style={[styles.inputContainer, error && styles.inputError]}>
         <View style={styles.inputWrapper}>
           {Boolean(startAdorment) && (
             <View style={styles.startAdornment}>{startAdorment}</View>
@@ -108,7 +109,6 @@ export const CustomTextField = ({
             }
             onChangeText={(text) => {
               if (type === "number") {
-                // Convert to number, handling empty string and invalid inputs
                 const numValue = text === "" ? undefined : Number(text);
                 onChangeText(numValue);
               } else {
@@ -132,11 +132,15 @@ export const CustomTextField = ({
         </View>
       </View>
       {error && <Text style={styles.errorMessage}>{error.message}</Text>}
-    </React.Fragment>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    gap: 4,
+  },
   inputWrapper: {
     position: "relative",
     height: "100%",
@@ -146,6 +150,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     width: "100%",
     position: "relative",
+    backgroundColor: "#0093D120",
+  },
+  inputError: {
+    backgroundColor: "#FF000015",
+    borderWidth: 1,
+    borderColor: "#FF0000",
   },
   input: {
     flex: 1,
@@ -156,7 +166,7 @@ const styles = StyleSheet.create({
     paddingStart: 20,
     height: 48,
     borderRadius: 12,
-    backgroundColor: "#0093D110",
+    backgroundColor: "transparent",
   },
   endAdornment: {
     position: "absolute",
@@ -173,14 +183,13 @@ const styles = StyleSheet.create({
     zIndex: 5,
   },
   errorMessage: {
-    color: "red",
+    color: "#FF0000",
     fontSize: 12,
-    marginTop: 4,
+    marginLeft: 12,
   },
   label: {
     position: "absolute",
     left: 12,
-    color: "#0093D1",
     paddingHorizontal: 4,
     fontWeight: "bold",
     zIndex: -1,

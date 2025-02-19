@@ -1,5 +1,5 @@
 import { useColorScheme } from "@/hooks/useColorScheme.web";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -7,6 +7,8 @@ export default function UnloadingPointsList({ form }: { form: any }) {
   const colorScheme = useColorScheme() ?? "light";
   const color = colorScheme === "light" ? "black" : "white";
   const router = useRouter();
+
+  const currentRoute = usePathname();
 
   const [selectedValue, setSelectedValue] = useState<string | null>(
     form.getValues().businessesUnloadingPoint.length > 0 ? "selected" : null
@@ -24,6 +26,7 @@ export default function UnloadingPointsList({ form }: { form: any }) {
       pathname: "/business/UnloadingPoints",
       params: {
         currentFormData: JSON.stringify(form.getValues()),
+        redirect: currentRoute,
       },
     });
   };

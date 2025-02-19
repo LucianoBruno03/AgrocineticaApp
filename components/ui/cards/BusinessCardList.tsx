@@ -1,19 +1,21 @@
-import { Button, StyleSheet, Text, TextStyle, View } from "react-native";
-import React from "react";
-import { Pressable } from "react-native";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
-import { router } from "expo-router";
+import React from "react";
+import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 
 import { Colors } from "@/constants/Colors";
-import business from "@/app/(app)/(drawer)/business";
 import { Business } from "@/types/business/SearchBusiness";
 import dayjs from "dayjs";
+import { router } from "expo-router";
 
 const BusinessCardList = ({ item }: { item: Business }) => {
   const colorScheme = useColorScheme() ?? "light";
   const [showButtons, setShowButtons] = React.useState(false);
+
+  const handleEdit = () => {
+    router.navigate(`/business/edit/${item.id}`);
+  };
 
   return (
     <View style={styles.cardContainer}>
@@ -158,8 +160,13 @@ const BusinessCardList = ({ item }: { item: Business }) => {
         <View style={styles.buttonContainer}>
           <View style={styles.buttonList}>
             <Button title="Ver" onPress={() => alert("Editar")} />
-            <Button title="Eliminar" onPress={() => alert("Eliminar")} />
-            <Button title="Cerrar" onPress={() => setShowButtons(false)} />
+            <Button title="Compartir ruta" onPress={() => alert("Compartir")} />
+            <Button title="Editar" onPress={handleEdit} />
+            <Button
+              title="Cerrar"
+              onPress={() => setShowButtons(false)}
+              color={"red"}
+            />
           </View>
         </View>
       )}
@@ -174,7 +181,7 @@ export default BusinessCardList;
 const styles = StyleSheet.create({
   cardContainer: {
     position: "relative", // Asegura que el botón flotante se posicione relativo a este contenedor
-    marginBottom: 16,
+    overflow: "hidden", // Para que el botón flotante no se vea fuera del contenedor
   },
   // businessCard: {
   //   padding: 16,
@@ -214,6 +221,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 10,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: 12,
   },
   buttonList: {
     width: "80%",
@@ -235,7 +243,6 @@ const styles = StyleSheet.create({
     //     : Colors.dark.background,
     padding: 16,
     borderRadius: 12,
-    marginBottom: 16,
     gap: 8,
   },
 

@@ -2,22 +2,22 @@ import { z } from "zod";
 
 export const BusinessSchema = z
   .object({
-    loadDate: z.string().datetime(),
+    loadDate: z.string().nullable(),
     // .nonempty("La fecha de carga es requerida")
-    loadTime: z.string().datetime(),
-    unloadDate: z.string().datetime(),
-    unloadTime: z.string().datetime(),
-    itemId: z.string().nonempty("El item es requerido"),
+    loadTime: z.string().nullable(),
+    unloadDate: z.string().nullable(),
+    unloadTime: z.string().nullable(),
+    itemId: z.string().nonempty("El item es requerido"), //Campo obligatorio.
     itemName: z.string().nonempty("El nombre del item es requerido"),
     customerRate: z.preprocess(
-      (val) => (val === "" ? null : val),
+      (val) => (val === undefined ? 0 : val),
       z.number().min(1, "La tarifa cliente es requerida")
     ),
     transportRate: z.preprocess(
-      (val) => (val === "" ? null : val),
+      (val) => (val === undefined ? 0 : val),
       z.number().min(1, "La tarifa transporte es requerida")
     ),
-    quantity: z.number(),
+    quantity: z.number().min(1, "La cantidad es requerida"),
     businessUserId: z.string().nonempty("El usuario es requerido"),
     businessUserName: z.string().nonempty("El nombre del usuario es requerido"),
     userId: z.string(),
@@ -25,9 +25,9 @@ export const BusinessSchema = z
     entityId: z.string().nonempty("La entidad es requerida"),
     entityBusinessName: z.string().nullable(),
     // customerId: z.string(),
-    shipperId: z.string(),
+    shipperId: z.string().nonempty("El transportista es requerido"),
     shipperName: z.string(),
-    commission: z.number(),
+    commission: z.number().min(0, "La comisión es requerida"),
     isKilograms: z.boolean(),
     isKilometers: z.boolean(),
     isOrigin: z.boolean(),
@@ -76,7 +76,7 @@ export const BusinessSchema = z
       })
     ),
   })
-  .refine((data) => data.customerRate <= data.transportRate, {
+  .refine((data) => data.transportRate >= data.customerRate, {
     message:
       "La tarifa cliente debe ser igual o menor a la tarifa de transporte",
     path: ["customerRate"],

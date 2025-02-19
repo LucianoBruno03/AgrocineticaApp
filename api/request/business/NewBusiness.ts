@@ -11,10 +11,10 @@ export const fetchNewBusiness = async (
   data: z.infer<typeof BusinessSchema>
 ): Promise<ParsedForm> => {
   // transformar loq ue haya que transformar
-  data.loadTime = dayjs(data.loadTime).format("HH:mm:ss");
-  data.unloadTime = dayjs(data.unloadTime).format("HH:mm:ss");
-  data.customerRate = parseFloat(data.customerRate as any);
-  data.transportRate = parseFloat(data.transportRate as any);
+  // data.loadTime = dayjs(data.loadTime).format("HH:mm:ss");
+  // data.unloadTime = dayjs(data.unloadTime).format("HH:mm:ss");
+  // data.customerRate = parseFloat(data.customerRate as any);
+  // data.transportRate = parseFloat(data.transportRate as any);
 
   // colocar solo las keys necesarias a cambiar
   const formatedData = {
