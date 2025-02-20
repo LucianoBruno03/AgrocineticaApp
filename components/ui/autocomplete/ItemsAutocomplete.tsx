@@ -1,17 +1,19 @@
 import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { usePathname, useRouter } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { FieldError } from "react-hook-form";
 
 interface ItemsAutocompleteProps {
   form: any;
   error?: FieldError;
+  disabled?: boolean;
 }
 
 export default function ItemsAutocomplete({
   form,
   error,
+  disabled = false,
 }: ItemsAutocompleteProps) {
   const colorScheme = useColorScheme() ?? "light";
   const color = colorScheme === "light" ? "black" : "white";
@@ -29,6 +31,17 @@ export default function ItemsAutocomplete({
   const animatedValue = useRef(
     new Animated.Value(selectedValue ? TOP_POSITION : CENTER_POSITION)
   ).current;
+
+  useEffect(() => {
+    const newValue = form.getValues().itemId;
+    setSelectedValue(newValue);
+
+    Animated.timing(animatedValue, {
+      toValue: newValue ? TOP_POSITION : CENTER_POSITION,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [form.watch("itemId")]);
 
   const handleSearch = () => {
     router.push({

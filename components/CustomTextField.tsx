@@ -1,13 +1,14 @@
+import { useColorScheme } from "@/hooks/useColorScheme.web";
 import React, { useRef } from "react";
 import { FieldError, Noop } from "react-hook-form";
 import {
+  Animated,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
   TextInputProps,
   View,
-  Animated,
-  TouchableOpacity,
 } from "react-native";
 
 interface CustomTextFieldProps {
@@ -37,6 +38,8 @@ export const CustomTextField = ({
   inputProps,
   disabled = false,
 }: CustomTextFieldProps) => {
+  const colorScheme = useColorScheme() ?? "light";
+
   const TOP_POSITION = -8;
   const CENTER_POSITION = 14;
 
@@ -79,23 +82,32 @@ export const CustomTextField = ({
     top: animatedValue,
     fontSize: animatedValue.interpolate({
       inputRange: [TOP_POSITION, CENTER_POSITION],
-      outputRange: [12, 16],
+      outputRange: [14, 16],
     }),
     color: error ? "#FF0000" : "#0093D1",
   };
 
   return (
     <View style={styles.container}>
-      <View style={[styles.inputContainer, error && styles.inputError]}>
+      <View style={[styles.inputContainer, (error && styles.inputError) || {}]}>
         <View style={styles.inputWrapper}>
           {Boolean(startAdorment) && (
             <View style={styles.startAdornment}>{startAdorment}</View>
           )}
-          <TouchableOpacity onPress={focusInput}>
-            <Animated.Text style={[styles.label, labelStyle]}>
+          <Pressable onPress={focusInput}>
+            <Animated.Text
+              style={[
+                styles.label,
+                labelStyle,
+                disabled && {
+                  color: colorScheme === "light" ? "#28282880" : "#555555",
+                  zIndex: 1,
+                },
+              ]}
+            >
               {label || placeholder}
             </Animated.Text>
-          </TouchableOpacity>
+          </Pressable>
           <TextInput
             editable={!disabled}
             ref={inputRef}
@@ -122,7 +134,12 @@ export const CustomTextField = ({
             style={[
               styles.input,
               Boolean(startAdorment) && { paddingLeft: 40 },
-              inputProps?.style || {},
+              inputProps?.style || styles.input || {},
+              disabled && {
+                backgroundColor:
+                  colorScheme === "light" ? "#33333325" : "#AAAAAA20",
+                zIndex: 1,
+              },
             ]}
             value={value !== undefined ? String(value) : ""}
           />
@@ -150,7 +167,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     width: "100%",
     position: "relative",
-    backgroundColor: "#0093D120",
+    // backgroundColor: "#0093D120",
   },
   inputError: {
     backgroundColor: "#FF000015",
@@ -166,7 +183,8 @@ const styles = StyleSheet.create({
     paddingStart: 20,
     height: 48,
     borderRadius: 12,
-    backgroundColor: "transparent",
+    backgroundColor: "#0093D120",
+    zIndex: 1,
   },
   endAdornment: {
     position: "absolute",

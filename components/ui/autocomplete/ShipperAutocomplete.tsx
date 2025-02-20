@@ -1,7 +1,7 @@
 import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { usePathname } from "expo-router";
 import { useRouter } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function ShipperAutoComplete({ form }: { form: any }) {
@@ -14,6 +14,17 @@ export default function ShipperAutoComplete({ form }: { form: any }) {
   const [selectedValue, setSelectedValue] = useState<string | null>(
     form.getValues().shipperName
   );
+
+  useEffect(() => {
+    const newValue = form.getValues().shipperName;
+    setSelectedValue(newValue);
+
+    Animated.timing(animatedValue, {
+      toValue: newValue ? TOP_POSITION : CENTER_POSITION,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [form.watch("shipperName")]);
 
   const TOP_POSITION = -8;
   const CENTER_POSITION = 14;

@@ -146,8 +146,6 @@ export default function Register() {
 
   const submitForm = () => {
     // registerMutation.mutate(form.getValues());
-
-    console.log(form.getValues());
   };
 
   // const registerMutation = useMutation({

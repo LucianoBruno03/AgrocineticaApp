@@ -9,9 +9,12 @@ export const fetchSearchBusiness = async ({
 }: {
   queryKey: QueryKey;
 }): Promise<SearchBusinessResponse> => {
+  const [, searchWord] = queryKey;
+
   const raw = {
+    keyword: searchWord || "",
     pageNumber: 1,
-    pageSize: 10,
+    pageSize: 100,
     orderBy: [],
   };
 

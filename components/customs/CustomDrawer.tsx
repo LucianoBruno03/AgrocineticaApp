@@ -74,6 +74,26 @@ export default function CustomDrawer(props: any) {
                   fontSize: 12,
                 }}
               >
+                Ordenes de carga
+              </ThemedText>
+            );
+          }}
+          onPress={() => {
+            router.push("/business");
+          }}
+          icon={({ focused, color, size }) => {
+            return <IconSymbol size={28} name="house.fill" color={color} />;
+          }}
+        />
+
+        {/* <DrawerItem
+          label={({ focused }) => {
+            return (
+              <ThemedText
+                style={{
+                  fontSize: 12,
+                }}
+              >
                 Explore
               </ThemedText>
             );
@@ -86,7 +106,7 @@ export default function CustomDrawer(props: any) {
               <IconSymbol size={28} name="paperplane.fill" color={color} />
             );
           }}
-        />
+        /> */}
 
         <DrawerItem
           label={({ focused }) => {

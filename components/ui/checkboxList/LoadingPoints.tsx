@@ -2,45 +2,47 @@ import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { usePathname, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { FieldError } from "react-hook-form";
 
-export default function LoadingPointsList({ form }: { form: any }) {
+interface LoadingPointsListProps {
+  form: any;
+  error?: FieldError;
+}
+
+export default function LoadingPointsList({
+  form,
+  error,
+}: LoadingPointsListProps) {
   const colorScheme = useColorScheme() ?? "light";
   const router = useRouter();
 
+  console.log(form.getValues());
   const currentRoute = usePathname();
 
+  // Asegurar que siempre haya un array
+  const loadingPoints = form.getValues().businessesLoadingPoints ?? [];
+
+  // Estado inicial basado en si hay puntos de carga seleccionados
   const [selectedValue, setSelectedValue] = useState<string | null>(
-    form.getValues().businessesLoadingPoints.length > 0 ? "selected" : null
+    loadingPoints.length > 0 ? "selected" : null
   );
 
-  // Determine if component should be disabled
+  // Determinar si el componente debe estar deshabilitado
   const isDisabled = !form.getValues().entityId;
 
-  // Color schemes for different states
+  // Esquema de colores
   const colors = {
     light: {
-      enabled: {
-        text: "black",
-        background: "#0093D120",
-        label: "#0093D1",
-      },
+      enabled: { text: "black", background: "#0093D120", label: "#0093D1" },
       disabled: {
         text: "#888888",
-        background: "#AAAAAA50", //E0E0E0
+        background: "#AAAAAA50",
         label: "#28282880",
       },
     },
     dark: {
-      enabled: {
-        text: "white",
-        background: "#0093D150",
-        label: "#0093D1",
-      },
-      disabled: {
-        text: "#666666",
-        background: "#333333",
-        label: "#555555",
-      },
+      enabled: { text: "white", background: "#0093D120", label: "#0093D1" },
+      disabled: { text: "#666666", background: "#333333", label: "#555555" },
     },
   };
 
@@ -82,29 +84,29 @@ export default function LoadingPointsList({ form }: { form: any }) {
         style={[
           styles.inputWrapper,
           { backgroundColor: currentColorScheme.background },
+          error && styles.inputError, // Aplica estilos de error si existe un error
         ]}
         onPress={handleSearch}
         disabled={isDisabled}
       >
-        <Animated.Text style={[styles.label, labelStyle]}>
+        <Animated.Text
+          style={[styles.label, labelStyle, error && styles.labelError]}
+        >
           Puntos de Carga
         </Animated.Text>
         <Text style={[styles.content, { color: currentColorScheme.text }]}>
-          {form.getValues().businessesLoadingPoints.length > 0
-            ? `${
-                form.getValues().businessesLoadingPoints.length
-              } seleccionado/s`
+          {loadingPoints.length > 0
+            ? `${loadingPoints.length} seleccionado/s`
             : ""}
         </Text>
       </Pressable>
+      {error && <Text style={styles.errorMessage}>{error.message}</Text>}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-  },
+  container: { width: "100%", gap: 4 },
   inputWrapper: {
     height: 48,
     justifyContent: "center",
@@ -114,6 +116,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     position: "relative",
   },
+  inputError: {
+    backgroundColor: "#FF000015",
+    borderWidth: 1,
+    borderColor: "#FF0000",
+  },
   label: {
     position: "absolute",
     left: 12,
@@ -122,7 +129,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     backgroundColor: "transparent",
   },
-  content: {
-    fontSize: 16,
-  },
+  labelError: { color: "#FF0000" },
+  content: { fontSize: 16 },
+  errorMessage: { color: "#FF0000", fontSize: 12, marginLeft: 12 },
 });

@@ -14,9 +14,6 @@ const _layout = (props: Props) => {
 
   const parsedForm = currentFormData ? JSON.parse(currentFormData) : {};
 
-  console.log("parsedForm", parsedForm);
-  console.log("currentFormData", currentFormData);
-
   return (
     <Stack>
       <Stack.Screen
@@ -30,6 +27,16 @@ const _layout = (props: Props) => {
       <Stack.Screen
         name="new-business"
         options={{ gestureEnabled: false, title: "Crear negocio" }}
+      />
+
+      <Stack.Screen
+        name="details/[idBusiness]"
+        options={{ gestureEnabled: false, title: "Detalles del negocio" }}
+      />
+
+      <Stack.Screen
+        name="details/viewById/[idBusinessDetail]"
+        options={{ gestureEnabled: false, title: "Detalles del negocio" }}
       />
 
       <Stack.Screen

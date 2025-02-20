@@ -1,9 +1,18 @@
 import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { usePathname, useRouter } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { FieldError } from "react-hook-form";
 
-export default function GatheringAutoComplete({ form }: { form: any }) {
+interface GatheringAutoCompleteProps {
+  form: any;
+  error?: FieldError;
+}
+
+export default function GatheringAutoComplete({
+  form,
+  error,
+}: GatheringAutoCompleteProps) {
   const colorScheme = useColorScheme() ?? "light";
   const router = useRouter();
 
@@ -12,6 +21,17 @@ export default function GatheringAutoComplete({ form }: { form: any }) {
   const [selectedValue, setSelectedValue] = useState<string | null>(
     form.getValues().gatheringName
   );
+
+  useEffect(() => {
+    const newValue = form.getValues().gatheringName;
+    setSelectedValue(newValue);
+
+    Animated.timing(animatedValue, {
+      toValue: newValue ? TOP_POSITION : CENTER_POSITION,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [form.watch("gatheringName")]);
 
   // Determine if component should be disabled
   const isDisabled = !form.getValues().entityId;
@@ -33,7 +53,7 @@ export default function GatheringAutoComplete({ form }: { form: any }) {
     dark: {
       enabled: {
         text: "white",
-        background: "#0093D150",
+        background: "#0093D120",
         label: "#0093D1",
       },
       disabled: {
@@ -82,15 +102,21 @@ export default function GatheringAutoComplete({ form }: { form: any }) {
         style={[
           styles.inputWrapper,
           { backgroundColor: currentColorScheme.background },
+          error && styles.inputError, // Show error style if there's an error
         ]}
         onPress={handleSearch}
         disabled={isDisabled}
       >
-        <Animated.Text style={[styles.label, labelStyle]}>Acopio</Animated.Text>
+        <Animated.Text
+          style={[styles.label, labelStyle, error && styles.labelError]}
+        >
+          Acopio
+        </Animated.Text>
         <Text style={[styles.content, { color: currentColorScheme.text }]}>
           {form.getValues().gatheringName ? form.getValues().gatheringName : ""}
         </Text>
       </Pressable>
+      {error && <Text style={styles.errorMessage}>{error.message}</Text>}
     </View>
   );
 }
@@ -98,6 +124,7 @@ export default function GatheringAutoComplete({ form }: { form: any }) {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    gap: 4,
   },
   inputWrapper: {
     height: 48,
@@ -108,6 +135,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     position: "relative",
   },
+  inputError: {
+    backgroundColor: "#FF000015",
+    borderWidth: 1,
+    borderColor: "#FF0000",
+  },
   label: {
     position: "absolute",
     left: 12,
@@ -116,7 +148,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
     backgroundColor: "transparent",
   },
+  labelError: {
+    color: "#FF0000",
+  },
   content: {
     fontSize: 16,
+  },
+  errorMessage: {
+    color: "#FF0000",
+    fontSize: 12,
+    marginLeft: 12,
   },
 });

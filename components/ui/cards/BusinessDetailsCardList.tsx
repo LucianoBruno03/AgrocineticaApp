@@ -15,8 +15,9 @@ import { Colors } from "@/constants/Colors";
 import { Business } from "@/types/business/SearchBusiness";
 import dayjs from "dayjs";
 import { router } from "expo-router";
+import { BusinessDetails } from "@/types/business/SearchBusinessDetails";
 
-const BusinessCardList = ({ item }: { item: Business }) => {
+const BusinessDetailsCardList = ({ item }: { item: BusinessDetails }) => {
   const colorScheme = useColorScheme() ?? "light";
   const [showButtons, setShowButtons] = React.useState(false);
 
@@ -25,7 +26,7 @@ const BusinessCardList = ({ item }: { item: Business }) => {
   };
 
   const handleView = () => {
-    router.navigate(`/business/details/${item.id}`);
+    router.navigate(`/business/details/viewById/${item.id}`);
   };
 
   const handleShare = () => {
@@ -40,7 +41,7 @@ const BusinessCardList = ({ item }: { item: Business }) => {
       <Pressable
         style={[
           styles.businessCard,
-          item.businessStatusName == "CANCELADO" && styles.disabledCard,
+          item.businessDetailStatusName == "CANCELADO" && styles.disabledCard,
           {
             backgroundColor:
               colorScheme === "light"
@@ -50,7 +51,7 @@ const BusinessCardList = ({ item }: { item: Business }) => {
         ]}
         key={item.id}
         onPress={() => setShowButtons(!showButtons)}
-        disabled={item.businessStatusName == "CANCELADO"}
+        disabled={item.businessDetailStatusName == "CANCELADO"}
       >
         <View
           style={[
@@ -74,78 +75,23 @@ const BusinessCardList = ({ item }: { item: Business }) => {
               borderColor: "#79797950",
               borderWidth: 0.5,
               backgroundColor:
-                item.businessStatusName == "CANCELADO"
+                item.businessDetailStatusName == "CANCELADO"
                   ? "red"
-                  : item.businessStatusName == "ACTIVO"
+                  : item.businessDetailStatusName == "ACTIVO"
                   ? "blue"
-                  : item.businessStatusName == "GENERADO"
+                  : item.businessDetailStatusName == "GENERADO"
                   ? "yellow"
-                  : item.businessStatusName == "ASIGNADO"
+                  : item.businessDetailStatusName == "ASIGNADO"
                   ? "orange"
-                  : item.businessStatusName == "CUBIERTO"
+                  : item.businessDetailStatusName == "CUBIERTO"
                   ? "green"
-                  : item.businessStatusName == "CUBIERTO PARCIAL"
+                  : item.businessDetailStatusName == "CUBIERTO PARCIAL"
                   ? "lightgreen"
-                  : item.businessStatusName == "CUBIERTO POR EL CLIENTE"
+                  : item.businessDetailStatusName == "CUBIERTO POR EL CLIENTE"
                   ? "darkgreen"
                   : "gray",
             }}
           ></View>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <ThemedLabel>Fecha de carga</ThemedLabel>
-          <ThemedText style={styles.value}>
-            {item.loadDate
-              ? dayjs(item.loadDate).format("DD/MM/YYYY")
-              : "Sin fecha"}
-            {`${
-              dayjs(item.loadDate).isSame(dayjs(), "day")
-                ? " (HOY)"
-                : dayjs(item.loadDate).isSame(dayjs().add(1, "day"), "day")
-                ? " (MAÑANA)"
-                : ""
-            }`}
-          </ThemedText>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <ThemedLabel>Origen</ThemedLabel>
-          <ThemedText style={styles.value}>{item.firstLoadingPoint}</ThemedText>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <ThemedLabel>Destino</ThemedLabel>
-          <ThemedText style={styles.value}>
-            {item.lastUnloadingPoint}
-          </ThemedText>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <ThemedLabel>Cliente</ThemedLabel>
-          <ThemedText style={styles.value}>
-            {item.entityBusinessName}
-          </ThemedText>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <ThemedLabel>Producto</ThemedLabel>
-          <ThemedText style={styles.value}>{item.itemName}</ThemedText>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <ThemedLabel>Tarifa transporte</ThemedLabel>
-          <ThemedText style={styles.value}>{item.transportRate}</ThemedText>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <ThemedLabel>Tarifa cliente</ThemedLabel>
-          <ThemedText style={styles.value}>{item.customerRate}</ThemedText>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <ThemedLabel>Comisión</ThemedLabel>
-          <ThemedText style={styles.value}>{item.commission}</ThemedText>
         </View>
 
         <View style={styles.infoContainer}>
@@ -154,21 +100,21 @@ const BusinessCardList = ({ item }: { item: Business }) => {
         </View>
 
         <View style={styles.infoContainer}>
-          <ThemedLabel>Cupos</ThemedLabel>
-          <ThemedText style={styles.value}>{item.quantity}</ThemedText>
+          <ThemedLabel>Cliente</ThemedLabel>
+          <ThemedText style={styles.value}>
+            {item.businessEntityBusinessName}
+          </ThemedText>
         </View>
 
         <View style={styles.infoContainer}>
-          <ThemedLabel>Cupos incompletos</ThemedLabel>
-          <ThemedText style={styles.value}>
-            {item.incompleteQuantity}
-          </ThemedText>
+          <ThemedLabel>Producto</ThemedLabel>
+          <ThemedText style={styles.value}>{item.businessItemName}</ThemedText>
         </View>
 
         <View style={styles.infoContainer}>
           <ThemedLabel>Estado</ThemedLabel>
           <ThemedText style={styles.value}>
-            {item.businessStatusName}
+            {item.businessDetailStatusName}
           </ThemedText>
         </View>
 
@@ -179,9 +125,9 @@ const BusinessCardList = ({ item }: { item: Business }) => {
       {showButtons && (
         <View style={styles.buttonContainer}>
           <View style={styles.buttonList}>
-            <Button title="Ver" onPress={handleView} />
-            <Button title="Compartir ruta" onPress={handleShare} />
-            <Button title="Editar" onPress={handleEdit} />
+            <Button title="Ver" onPress={() => handleView()} />
+            <Button title="Asignar" onPress={() => alert("Error")} />
+            <Button title="Editar estado" onPress={() => alert("Error")} />
             <Button
               title="Cerrar"
               onPress={() => setShowButtons(false)}
@@ -194,9 +140,7 @@ const BusinessCardList = ({ item }: { item: Business }) => {
   );
 };
 
-export default BusinessCardList;
-
-// const styles = StyleSheet.create({});
+export default BusinessDetailsCardList;
 
 const styles = StyleSheet.create({
   cardContainer: {

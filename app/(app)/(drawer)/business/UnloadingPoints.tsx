@@ -30,12 +30,30 @@ export default function SearchScreen() {
   }>();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedItems, setSelectedItems] = useState<UnloadingPoints[]>([]);
+  const [displayedItems, setDisplayedItems] = useState<UnloadingPoints[]>([]);
   const searchedWord = useDebounce(searchQuery, 500);
 
   const getUnloadingPointsQuery = useQuery<UnloadingPointsListResponse>({
     queryKey: ["getUnloadingPointsQuery", searchedWord],
     queryFn: fetchListUnloadingPoints,
   });
+
+  useEffect(() => {
+    if (searchedWord != "") {
+      setDisplayedItems(getUnloadingPointsQuery.data?.data || []);
+    } else {
+      // Agregar selectedItems al principio de getUnloadingPointsQuery.data?.data y luego filtrar los duplicados
+      getUnloadingPointsQuery.data?.data &&
+        setDisplayedItems(
+          selectedItems.concat(
+            getUnloadingPointsQuery.data?.data.filter(
+              (item) =>
+                !selectedItems.some((selected) => selected.id === item.id)
+            )
+          )
+        );
+    }
+  }, [getUnloadingPointsQuery.data?.data, searchedWord, selectedItems]);
 
   useEffect(() => {
     if (
@@ -72,7 +90,7 @@ export default function SearchScreen() {
     const newFormValues = {
       ...parsedForm,
       businessesUnloadingPoint: selectedItems.map((item, index) => ({
-        businessId: parsedForm.entityId,
+        businessId: item.businessId || "00000000-0000-0000-0000-000000000000",
         unloadingPointId: item.id,
         order: index + 1,
       })),
@@ -130,7 +148,7 @@ export default function SearchScreen() {
 
     return (
       <FlatList
-        data={getUnloadingPointsQuery.data?.data}
+        data={displayedItems}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <Fragment>

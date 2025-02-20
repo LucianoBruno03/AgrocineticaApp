@@ -1,6 +1,6 @@
 import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { usePathname, useRouter } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { FieldError } from "react-hook-form";
 
@@ -22,6 +22,17 @@ export default function CustomerAutoComplete({
   const [selectedValue, setSelectedValue] = useState<string | null>(
     form.getValues().entityBusinessName
   );
+
+  useEffect(() => {
+    const newValue = form.getValues().entityBusinessName;
+    setSelectedValue(newValue);
+
+    Animated.timing(animatedValue, {
+      toValue: newValue ? TOP_POSITION : CENTER_POSITION,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [form.watch("entityBusinessName")]);
 
   const TOP_POSITION = -8;
   const CENTER_POSITION = 14;

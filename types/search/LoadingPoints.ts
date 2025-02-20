@@ -27,4 +27,5 @@ export interface LoadingPoints {
   geoLongitude: number;
   observation: any;
   active: boolean;
+  businessId?: string;
 }

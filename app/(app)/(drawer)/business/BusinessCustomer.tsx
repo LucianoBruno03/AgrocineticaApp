@@ -35,9 +35,6 @@ export default function SearchScreen() {
     queryFn: fetchListBusinessCustomer,
   });
 
-  console.log("Volver a ");
-  console.log("Volver a ", redirect);
-
   const handleSelect = (item: BusinessCustomer) => {
     const parsedForm = JSON.parse(currentFormData);
 

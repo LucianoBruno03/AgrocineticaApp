@@ -1,43 +1,34 @@
-import { fetchSearchBusiness } from "@/api/request/business/SearchBusiness";
-import { CustomTextField } from "@/components/CustomTextField";
+import { fetchSearchBusinessDetails } from "@/api/request/business/SearchBusinessDetails";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
-import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { z } from "zod";
-import { IconSymbol } from "../IconSymbol";
-import BusinessCardList from "../cards/BusinessCardList";
 import useDebounce from "@/hooks/useDebounce";
+import { useQuery } from "@tanstack/react-query";
+import { useLocalSearchParams } from "expo-router";
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { z } from "zod";
+import BusinessDetailsCardList from "../cards/BusinessDetailsCardList";
 
 const SearchSchema = z.object({
   search: z.string().optional(),
   type: z.string().optional(),
 });
 
-const BusinessTableList = () => {
+const BusinessDetailsTableList = () => {
   const colorScheme = useColorScheme() ?? "light";
   const color = colorScheme === "light" ? "#000" : "#fff";
   const [searchQuery, setSearchQuery] = useState<string>("");
   const searchedWord = useDebounce(searchQuery, 500);
 
-  const getBusinessQuery = useQuery({
-    queryKey: ["getBusinessListQuery", searchedWord],
-    queryFn: fetchSearchBusiness,
-  });
+  const { idBusiness } = useLocalSearchParams<{ idBusiness: string }>();
 
-  const form = useForm<z.infer<typeof SearchSchema>>({
-    defaultValues: {
-      search: "",
-      type: "",
-    },
+  const getBusinessDetailsQuery = useQuery({
+    queryKey: ["getBusinessDetailsListQuery", idBusiness],
+    queryFn: fetchSearchBusinessDetails,
   });
-
-  const { control } = form;
 
   return (
     <>
-      <View style={styles.container}>
+      {/* <View style={styles.container}>
         <View style={styles.searcher}>
           <Controller
             control={control}
@@ -61,23 +52,24 @@ const BusinessTableList = () => {
               />
             )}
             name="search"
-          />
-          {/* <Pressable style={styles.searchButton} onPress={() => {}}>
+          /> */}
+      {/* <Pressable style={styles.searchButton} onPress={() => {}}>
             <IconSymbol size={28} name="magnifyingglass" color="white" />
           </Pressable> */}
-        </View>
-      </View>
+      {/* </View>
+      </View> */}
 
-      {getBusinessQuery.isLoading ? (
+      {getBusinessDetailsQuery.isLoading ? (
         <View style={styles.noDataContainer}>
           <Text style={styles.noDataText}>Cargando...</Text>
         </View>
       ) : (
         <ScrollView contentContainerStyle={styles.containerList}>
           <>
-            {getBusinessQuery.data && getBusinessQuery.data.data?.length > 0 ? (
-              getBusinessQuery.data.data.map((business: any) => (
-                <BusinessCardList key={business.id} item={business} />
+            {getBusinessDetailsQuery.data &&
+            getBusinessDetailsQuery.data.data?.length > 0 ? (
+              getBusinessDetailsQuery.data.data.map((business: any) => (
+                <BusinessDetailsCardList key={business.id} item={business} />
               ))
             ) : (
               <View style={styles.noDataContainer}>
@@ -93,7 +85,7 @@ const BusinessTableList = () => {
   );
 };
 
-export default BusinessTableList;
+export default BusinessDetailsTableList;
 
 const styles = StyleSheet.create({
   container: {

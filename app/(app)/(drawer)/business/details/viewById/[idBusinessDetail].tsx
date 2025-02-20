@@ -26,7 +26,7 @@ import { Pressable, ScrollView, StyleSheet, Switch, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { z } from "zod";
 
-const EditBusiness = () => {
+const ViewBusinessDetail = () => {
   const colorScheme = useColorScheme() ?? "light";
   const color = colorScheme === "light" ? "#000" : "#fff";
   const { idBusiness } = useLocalSearchParams<{ idBusiness: string }>();
@@ -229,6 +229,7 @@ const EditBusiness = () => {
                 fieldState: { error },
               }) => (
                 <CustomDateField
+                  disabled={true}
                   label="Fecha de carga"
                   value={value ? value : undefined}
                   onBlur={onBlur}
@@ -253,6 +254,7 @@ const EditBusiness = () => {
                 fieldState: { error },
               }) => (
                 <CustomDateField
+                  disabled={true}
                   label="Hora de carga"
                   value={value ? value : undefined}
                   onBlur={onBlur}
@@ -278,6 +280,7 @@ const EditBusiness = () => {
                 fieldState: { error },
               }) => (
                 <CustomDateField
+                  disabled={true}
                   label="Fecha de descarga"
                   value={value ? value : undefined}
                   onBlur={onBlur}
@@ -302,6 +305,7 @@ const EditBusiness = () => {
                 fieldState: { error },
               }) => (
                 <CustomDateField
+                  disabled={true}
                   label="Hora de descarga"
                   value={value ? value : undefined}
                   onBlur={onBlur}
@@ -339,6 +343,7 @@ const EditBusiness = () => {
                 fieldState: { error },
               }) => (
                 <CustomTextField
+                  disabled={true}
                   value={value ? value : ""}
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -363,6 +368,7 @@ const EditBusiness = () => {
                 fieldState: { error },
               }) => (
                 <CustomTextField
+                  disabled={true}
                   value={value ? value : ""}
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -387,6 +393,7 @@ const EditBusiness = () => {
                 fieldState: { error },
               }) => (
                 <CustomTextField
+                  disabled={true}
                   value={value ? value : ""}
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -411,6 +418,7 @@ const EditBusiness = () => {
                 fieldState: { error },
               }) => (
                 <CustomTextField
+                  disabled={true}
                   value={value ? String(value) : ""}
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -677,7 +685,7 @@ const EditBusiness = () => {
   );
 };
 
-export default EditBusiness;
+export default ViewBusinessDetail;
 
 const styles = StyleSheet.create({
   formContainer: {

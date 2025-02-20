@@ -20,6 +20,7 @@ import {
 } from "@/types/search/LoadingPoints";
 import Checkbox from "expo-checkbox";
 import { fetchListLoadingPoints } from "@/api/request/search/LoadingPoints";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function SearchScreen() {
   const colorScheme = useColorScheme() ?? "light";
@@ -30,6 +31,7 @@ export default function SearchScreen() {
   }>();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedItems, setSelectedItems] = useState<LoadingPoints[]>([]);
+  const [displayedItems, setDisplayedItems] = useState<LoadingPoints[]>([]);
   const searchedWord = useDebounce(searchQuery, 500);
 
   const entityId = JSON.parse(currentFormData).entityId;
@@ -39,6 +41,23 @@ export default function SearchScreen() {
     queryFn: fetchListLoadingPoints,
     enabled: !!entityId,
   });
+
+  useEffect(() => {
+    if (searchedWord != "") {
+      setDisplayedItems(getLoadingPointsQuery.data?.data || []);
+    } else {
+      // Agregar selectedItems al principio de getLoadingPointsQuery.data?.data y luego filtrar los duplicados
+      getLoadingPointsQuery.data?.data &&
+        setDisplayedItems(
+          selectedItems.concat(
+            getLoadingPointsQuery.data?.data.filter(
+              (item) =>
+                !selectedItems.some((selected) => selected.id === item.id)
+            )
+          )
+        );
+    }
+  }, [getLoadingPointsQuery.data?.data, searchedWord, selectedItems]);
 
   useEffect(() => {
     if (
@@ -75,7 +94,7 @@ export default function SearchScreen() {
     const newFormValues = {
       ...parsedForm,
       businessesLoadingPoints: selectedItems.map((item, index) => ({
-        businessId: parsedForm.entityId,
+        businessId: item.businessId || "00000000-0000-0000-0000-000000000000",
         loadingPointId: item.id,
         order: index + 1,
       })),
@@ -134,7 +153,7 @@ export default function SearchScreen() {
 
     return (
       <FlatList
-        data={getLoadingPointsQuery.data?.data}
+        data={displayedItems}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <Fragment>

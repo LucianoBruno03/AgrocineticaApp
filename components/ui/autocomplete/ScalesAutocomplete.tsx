@@ -13,7 +13,7 @@ export default function ScalesAutoComplete({ form }: { form: any }) {
   const currentRoute = usePathname();
 
   const [selectedValue, setSelectedValue] = useState<string | null>(
-    form.getValues().scalesName
+    form.getValues().scaleName
   );
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function ScalesAutoComplete({ form }: { form: any }) {
     dark: {
       enabled: {
         text: "white",
-        background: "#0093D150",
+        background: "#0093D120",
         label: "#0093D1",
       },
       disabled: {
@@ -59,6 +59,17 @@ export default function ScalesAutoComplete({ form }: { form: any }) {
   const animatedValue = useRef(
     new Animated.Value(selectedValue ? TOP_POSITION : CENTER_POSITION)
   ).current;
+
+  useEffect(() => {
+    const newValue = form.getValues().scaleName;
+    setSelectedValue(newValue);
+
+    Animated.timing(animatedValue, {
+      toValue: newValue ? TOP_POSITION : CENTER_POSITION,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [form.watch("scaleName")]);
 
   const handleSearch = () => {
     if (!isDisabled) {
@@ -95,7 +106,7 @@ export default function ScalesAutoComplete({ form }: { form: any }) {
           Balanza
         </Animated.Text>
         <Text style={[styles.content, { color: currentColorScheme.text }]}>
-          {form.getValues().scalesName ? form.getValues().scalesName : ""}
+          {form.getValues().scaleName ? form.getValues().scaleName : ""}
         </Text>
       </Pressable>
     </View>

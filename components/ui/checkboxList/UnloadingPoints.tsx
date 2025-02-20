@@ -2,8 +2,17 @@ import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { usePathname, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { FieldError } from "react-hook-form";
 
-export default function UnloadingPointsList({ form }: { form: any }) {
+interface UnloadingPointsListProps {
+  form: any;
+  error?: FieldError;
+}
+
+export default function UnloadingPointsList({
+  form,
+  error,
+}: UnloadingPointsListProps) {
   const colorScheme = useColorScheme() ?? "light";
   const color = colorScheme === "light" ? "black" : "white";
   const router = useRouter();
@@ -11,7 +20,7 @@ export default function UnloadingPointsList({ form }: { form: any }) {
   const currentRoute = usePathname();
 
   const [selectedValue, setSelectedValue] = useState<string | null>(
-    form.getValues().businessesUnloadingPoint.length > 0 ? "selected" : null
+    form.getValues().businessesUnloadingPoint!.length > 0 ? "selected" : null
   );
 
   const TOP_POSITION = -8;
@@ -37,11 +46,18 @@ export default function UnloadingPointsList({ form }: { form: any }) {
       inputRange: [TOP_POSITION, CENTER_POSITION],
       outputRange: [14, 16],
     }),
+    color: error ? "#FF0000" : "#0093D1", // Error color if exists
   };
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.inputWrapper} onPress={handleSearch}>
+      <Pressable
+        style={[
+          styles.inputWrapper,
+          error && styles.inputError, // Apply error styles if error exists
+        ]}
+        onPress={handleSearch}
+      >
         <Animated.Text style={[styles.label, labelStyle]}>
           Puntos de Descarga
         </Animated.Text>
@@ -53,6 +69,7 @@ export default function UnloadingPointsList({ form }: { form: any }) {
             : ""}
         </Text>
       </Pressable>
+      {error && <Text style={styles.errorMessage}>{error.message}</Text>}
     </View>
   );
 }
@@ -60,6 +77,7 @@ export default function UnloadingPointsList({ form }: { form: any }) {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    gap: 4,
   },
   inputWrapper: {
     height: 48,
@@ -71,10 +89,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     position: "relative",
   },
+  inputError: {
+    backgroundColor: "#FF000015",
+    borderWidth: 1,
+    borderColor: "#FF0000",
+  },
   label: {
     position: "absolute",
     left: 12,
-    color: "#0093D1",
     paddingHorizontal: 4,
     fontWeight: "bold",
     zIndex: 1,
@@ -82,5 +104,10 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 16,
+  },
+  errorMessage: {
+    color: "#FF0000",
+    fontSize: 12,
+    marginLeft: 12,
   },
 });

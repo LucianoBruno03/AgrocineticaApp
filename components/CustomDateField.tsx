@@ -5,11 +5,11 @@ import {
   Text,
   TextInput,
   View,
-  TouchableOpacity,
   Modal,
   Platform,
   Animated,
   TextInputProps,
+  Pressable,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { FieldError, Noop } from "react-hook-form";
@@ -29,6 +29,7 @@ interface CustomDateFieldProps {
   startAdorment?: React.ReactNode;
   inputProps?: TextInputProps;
   type?: "date" | "time";
+  disabled?: boolean;
 }
 
 export const CustomDateField: React.FC<CustomDateFieldProps> = ({
@@ -42,6 +43,7 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
   startAdorment,
   inputProps,
   type = "date",
+  disabled = false,
 }) => {
   const colorScheme = useColorScheme() ?? "light";
 
@@ -198,7 +200,7 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
       paddingStart: 20,
       height: 48,
       borderRadius: 12,
-      backgroundColor: "#0093D110",
+      backgroundColor: "#0093D120",
     },
     endAdornment: {
       position: "absolute",
@@ -267,16 +269,30 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
           {Boolean(startAdorment) && (
             <View style={styles.startAdornment}>{startAdorment}</View>
           )}
-          <TouchableOpacity onPress={openDatePicker}>
-            <Animated.Text style={[styles.label, labelStyle]}>
+          <Pressable onPress={openDatePicker} disabled={disabled}>
+            <Animated.Text
+              style={[
+                styles.label,
+                labelStyle,
+                disabled && {
+                  color: colorScheme === "light" ? "#28282880" : "#555555",
+                  zIndex: 1,
+                },
+              ]}
+            >
               {label}
             </Animated.Text>
-          </TouchableOpacity>
+          </Pressable>
           <TextInput
             style={[
               styles.input,
               Boolean(startAdorment) && { paddingLeft: 40 },
               inputProps?.style,
+              disabled && {
+                backgroundColor:
+                  colorScheme === "light" ? "#33333325" : "#AAAAAA20",
+                zIndex: 1,
+              },
             ]}
             value={
               value
@@ -287,20 +303,29 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
             }
             onFocus={handleFocus}
             onBlur={handleBlur}
-            onPress={openDatePicker}
+            onPress={() => {
+              !disabled && openDatePicker();
+            }}
             editable={false}
             placeholder=""
           />
-          <TouchableOpacity
+          <Pressable
             style={styles.endAdornment}
             onPress={openDatePicker}
+            disabled={disabled}
           >
             <Ionicons
               name={type === "date" ? "calendar-outline" : "time-outline"}
               size={24}
-              color="#0093D1"
+              color={
+                disabled
+                  ? colorScheme === "light"
+                    ? "#28282880"
+                    : "#555555"
+                  : "#0093D1"
+              }
             />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
       {error && <Text style={styles.errorMessage}>{error.message}</Text>}
@@ -327,18 +352,12 @@ export const CustomDateField: React.FC<CustomDateFieldProps> = ({
                 />
               </View>
               <View style={styles.modalButtons}>
-                <TouchableOpacity
-                  onPress={handleCancel}
-                  style={styles.modalButton}
-                >
+                <Pressable onPress={handleCancel} style={styles.modalButton}>
                   <ThemedText>Cancelar</ThemedText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={handleAccept}
-                  style={styles.modalButton}
-                >
+                </Pressable>
+                <Pressable onPress={handleAccept} style={styles.modalButton}>
                   <ThemedText>Aceptar</ThemedText>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
           </Animated.View>

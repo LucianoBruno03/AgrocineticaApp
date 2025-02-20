@@ -25,4 +25,5 @@ export interface UnloadingPoints {
   geoLongitude: number;
   observation: any;
   active: boolean;
+  businessId?: string;
 }

@@ -69,7 +69,7 @@ export default function SearchScreen() {
     const newFormValues = {
       ...parsedForm,
       businessesUnitTypes: selectedItems.map((item) => ({
-        businessId: parsedForm.businessId || "string",
+        businessId: "00000000-0000-0000-0000-000000000000",
         typeUnitId: item.id,
         typeUnitName: item.name,
       })),

@@ -1,0 +1,71 @@
+import { ThemedText } from "@/components/ThemedText";
+import BusinessDetailsTableList from "@/components/ui/tables/BusinessDetailsTableList";
+import { router } from "expo-router";
+import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+
+type Props = {};
+
+const ViewBusiness = (props: Props) => {
+  return (
+    <View style={styles.formContainer}>
+      <Pressable
+        style={styles.newButton}
+        onPress={() => {
+          router.push("/business/new-business");
+        }}
+      >
+        <Text style={styles.textButton}>+</Text>
+      </Pressable>
+      <ThemedText style={styles.titlePage}>Gestiona los cupos</ThemedText>
+
+      <View style={{ width: "100%", flex: 1 }}>
+        <BusinessDetailsTableList />
+      </View>
+    </View>
+  );
+};
+
+export default ViewBusiness;
+
+const styles = StyleSheet.create({
+  formContainer: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    padding: 20,
+    width: "100%",
+  },
+  newButton: {
+    position: "absolute",
+    bottom: 14,
+    right: 14,
+    backgroundColor: "#ABCA48",
+    borderRadius: 100,
+    width: 60,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    fontWeight: "bold",
+    zIndex: 100,
+  },
+  textButton: {
+    fontSize: 60,
+    color: "white",
+    fontWeight: "bold",
+    lineHeight: 62,
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 0,
+    padding: 0,
+    textAlign: "center",
+    width: 60,
+    height: 60,
+    borderRadius: 100,
+  },
+  titlePage: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+});

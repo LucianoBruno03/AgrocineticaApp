@@ -36,6 +36,8 @@ export default function SearchScreen() {
   const handleSelect = (item: Scales) => {
     const parsedForm = JSON.parse(currentFormData);
 
+    console.log("parsedForm", item.name);
+
     const newFormValues = {
       ...parsedForm,
 
