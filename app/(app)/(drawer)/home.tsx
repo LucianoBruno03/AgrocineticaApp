@@ -1,5 +1,4 @@
-import { Button, Image, Text, View } from "react-native";
-import { StyleSheet, Dimensions } from "react-native";
+import { Dimensions, Image, StyleSheet, View } from "react-native";
 
 const { width } = Dimensions.get("window");
 

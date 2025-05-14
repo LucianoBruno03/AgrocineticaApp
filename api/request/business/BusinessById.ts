@@ -1,5 +1,4 @@
 import { api } from "@/api/axios/api";
-import { BusinessById } from "@/types/business/BusinessById";
 import { Business } from "@/types/business/SearchBusiness";
 import { QueryKey } from "@tanstack/react-query";
 
@@ -9,7 +8,7 @@ export const fetchBusinessById = async ({
   queryKey,
 }: {
   queryKey: QueryKey;
-}): Promise<BusinessById> => {
+}): Promise<Business> => {
   const id = queryKey[1] as string;
 
   const response = await api.get(`v1/businesses/${id}`, {

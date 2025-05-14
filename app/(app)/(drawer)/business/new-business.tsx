@@ -1,23 +1,16 @@
 import { fetchNewBusiness } from "@/api/request/business/NewBusiness";
-import { CustomDateField } from "@/components/CustomDateField";
-import CustomRadioButton from "@/components/CustomRadioButton";
-import { CustomTextField } from "@/components/CustomTextField";
+import Autocomplete from "@/components/customs/CustomAutocomplete";
+import CustomCheckboxList from "@/components/customs/CustomCheckboxList";
+import { CustomDateField } from "@/components/customs/CustomDateField";
+import CustomRadioButton from "@/components/customs/CustomRadioButton";
+import { CustomTextField } from "@/components/customs/CustomTextField";
 import { KeyboardView } from "@/components/KeyboardAvoidingView";
 import { ThemedLabeledView } from "@/components/ThemedLabeledView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import BusinessCustomerAutoComplete from "@/components/ui/autocomplete/BusinessCustomerAutocomplete";
-import CustomerAutoComplete from "@/components/ui/autocomplete/CustomerAutocomplete";
-import GatheringAutoComplete from "@/components/ui/autocomplete/GatheringAutocomplete";
-import ItemsAutocomplete from "@/components/ui/autocomplete/ItemsAutocomplete";
-import ScalesAutoComplete from "@/components/ui/autocomplete/ScalesAutocomplete";
-import ShipperAutoComplete from "@/components/ui/autocomplete/ShipperAutocomplete";
-import LoadingPointsList from "@/components/ui/checkboxList/LoadingPoints";
-import UnitTypesList from "@/components/ui/checkboxList/UnitTypes";
-import UnloadingPointsList from "@/components/ui/checkboxList/UnloadingPoints";
-import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import { BusinessSchema } from "@/schemas/newBusiness";
-import { ParsedForm } from "@/types/business/NewBusiness";
+import { CreateBusiness } from "@/types/business/NewBusiness";
 import { useAuthStore } from "@/zustand/authStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -58,7 +51,7 @@ const NewBusiness = (props: Props) => {
     currentFormData?: string;
   }>();
 
-  const parsedForm: ParsedForm | null = currentFormData
+  const parsedForm: CreateBusiness | null = currentFormData
     ? JSON.parse(currentFormData)
     : null;
 
@@ -72,7 +65,8 @@ const NewBusiness = (props: Props) => {
       itemName: parsedForm?.itemName || "",
       customerRate: parsedForm?.customerRate || undefined,
       transportRate: parsedForm?.transportRate || undefined,
-      quantity: parsedForm?.quantity || 1,
+      quantity: parsedForm?.quantity || undefined,
+
       businessUserId: parsedForm?.businessUserId || "",
       businessUserName: parsedForm?.businessUserName || "",
 
@@ -90,7 +84,11 @@ const NewBusiness = (props: Props) => {
       shipperId: parsedForm?.shipperId || "",
       shipperName: parsedForm?.shipperName || "" || "",
 
-      commission: parsedForm?.commission || 8,
+      commission:
+        parsedForm && parsedForm.commission !== undefined
+          ? parsedForm.commission
+          : 8,
+
       isKilograms: parsedForm?.isKilograms || false,
       isKilometers: parsedForm?.isKilometers || false,
       isOrigin: parsedForm?.isOrigin || false,
@@ -124,9 +122,6 @@ const NewBusiness = (props: Props) => {
     mutationFn: fetchNewBusiness,
     onSuccess: async (data) => {
       try {
-        // Uncomment these lines when you have the storage functionality ready
-        // await SecureStoreSetItemAsync("token", data.token);
-        // await SecureStoreSetItemAsync("user", JSON.stringify(data.user));
         Toast.show({
           type: "success",
           text1: "Éxito",
@@ -134,11 +129,10 @@ const NewBusiness = (props: Props) => {
         });
         router.replace("/business");
       } catch (error) {
-        console.error("Error saving auth data:", error);
         Toast.show({
           type: "error",
           text1: "Error",
-          text2: "Error al guardar los datos de autenticación",
+          text2: "Error al guardar los datos de negocio",
         });
       }
     },
@@ -161,17 +155,35 @@ const NewBusiness = (props: Props) => {
           });
           return;
         }
-      }
 
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Hubo un error inesperado",
-      });
+        if (error.response?.status === 400) {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: error.response?.data.message || "Hubo un error inesperado",
+          });
+          return;
+        }
+
+        if (error.response?.status === 404) {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: `${
+              error.response?.data.exception || "Hubo un error inesperado"
+            }`,
+          });
+          return;
+        }
+
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Hubo un error inesperado",
+        });
+      }
     },
   });
-
-  console.log(currentFormData);
 
   const onSubmit = (data: z.infer<typeof BusinessSchema>) => {
     // los datos que sean "" o null, los eliminamos
@@ -186,461 +198,571 @@ const NewBusiness = (props: Props) => {
   return (
     <KeyboardView>
       <ThemedView style={{ flex: 1 }}>
-        <ScrollView>
-          <View style={styles.formContainer}>
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <CustomDateField
-                  label="Fecha de carga"
-                  value={value ? value : undefined}
-                  onBlur={onBlur}
-                  onChange={onChange}
-                  error={error}
-                  placeholder="Selecciona una fecha"
-                  inputProps={{
-                    style: [styles.textInput, { color: color }],
-                  }}
-                />
-              )}
-              name="loadDate"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <CustomDateField
-                  label="Hora de carga"
-                  value={value ? value : undefined}
-                  onBlur={onBlur}
-                  onChange={onChange}
-                  error={error}
-                  placeholder="Selecciona una fecha"
-                  inputProps={{
-                    style: [styles.textInput, { color: color }],
-                  }}
-                  type="time"
-                />
-              )}
-              name="loadTime"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <CustomDateField
-                  label="Fecha de descarga"
-                  value={value ? value : undefined}
-                  onBlur={onBlur}
-                  onChange={onChange}
-                  error={error}
-                  placeholder="Selecciona una fecha"
-                  inputProps={{
-                    style: [styles.textInput, { color: color }],
-                  }}
-                />
-              )}
-              name="unloadDate"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <CustomDateField
-                  label="Hora de descarga"
-                  value={value ? value : undefined}
-                  onBlur={onBlur}
-                  onChange={onChange}
-                  error={error}
-                  placeholder="Selecciona una fecha"
-                  inputProps={{
-                    style: [styles.textInput, { color: color }],
-                  }}
-                  type="time"
-                />
-              )}
-              name="unloadTime"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => <ItemsAutocomplete form={form} error={error} />}
-              name="itemId"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <CustomTextField
-                  value={value ? value : ""}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  error={error}
-                  type="number"
-                  placeholder="Cupos"
-                  inputProps={{
-                    style: [styles.textInput, { color: color }],
-                  }}
-                />
-              )}
-              name="quantity"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <CustomTextField
-                  value={value ? value : ""}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  error={error}
-                  type="number"
-                  placeholder="Tarifa transporte"
-                  inputProps={{
-                    style: [styles.textInput, { color: color }],
-                  }}
-                />
-              )}
-              name="transportRate"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <CustomTextField
-                  value={value ? value : ""}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  error={error}
-                  type="number"
-                  placeholder="Tarifa cliente"
-                  inputProps={{
-                    style: [styles.textInput, { color: color }],
-                  }}
-                />
-              )}
-              name="customerRate"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <CustomTextField
-                  value={value ? String(value) : ""}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  error={error}
-                  type="number"
-                  placeholder="Comisión"
-                  inputProps={{
-                    style: [styles.textInput, { color: color }],
-                  }}
-                />
-              )}
-              name="commission"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => <BusinessCustomerAutoComplete form={form} error={error} />}
-              name="businessUserId"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => <CustomerAutoComplete form={form} error={error} />}
-              name="entityId"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => <GatheringAutoComplete form={form} error={error} />}
-              name="gatheringId"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 8,
-                  }}
-                >
-                  <Switch
-                    value={value}
-                    onValueChange={onChange}
-                    // onBlur={onBlur}
-                    // thumbColor={isDarkMode ? "#f4f3f4" : "#f4f3f4"}
-                    trackColor={{ false: "#767577", true: "#0093D1" }}
-                  />
-                  <ThemedText style={{ color: color }}>
-                    Mostrar en la web
-                  </ThemedText>
-                </View>
-              )}
-              name="showOnWeb"
-            />
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 8,
-                  }}
-                >
-                  <Switch
-                    value={value}
-                    onValueChange={onChange}
-                    // onBlur={onBlur}
-                    // thumbColor={isDarkMode ? "#f4f3f4" : "#f4f3f4"}
-                    trackColor={{ false: "#767577", true: "#0093D1" }}
-                  />
-                  <ThemedText style={{ color: color }}>
-                    ¿Seleccionar balanza?
-                  </ThemedText>
-                </View>
-              )}
-              name="isScale"
-            />
-
-            <ScalesAutoComplete form={form} />
-
-            <ThemedLabeledView label="Calcular por">
-              <CustomRadioButton
-                options={[
-                  { value: "Kilogramos", label: "Kilogramos" },
-                  { value: "Kilómetros", label: "Kilómetros" },
-                ]}
-                selectedValue={
-                  form.watch("isKilograms") ? "Kilogramos" : "Kilómetros"
-                }
-                onSelect={(value) => {
-                  if (value === "Kilogramos") {
-                    form.setValue("isKilograms", true);
-                    form.setValue("isKilometers", false);
-                  } else {
-                    form.setValue("isKilometers", true);
-                    form.setValue("isKilograms", false);
-                  }
+        <View style={styles.formContainer}>
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <CustomDateField
+                label="Fecha de carga"
+                value={value ? value : undefined}
+                onBlur={onBlur}
+                onChange={onChange}
+                error={error}
+                placeholder="Selecciona una fecha"
+                inputProps={{
+                  style: [styles.textInput, { color: color }],
                 }}
-                selectedButtonStyle={{ backgroundColor: "transparent" }}
-                selectedTextStyle={{ color: "#0093D1" }}
               />
+            )}
+            name="loadDate"
+          />
 
-              <CustomRadioButton
-                options={[
-                  { value: "Origen", label: "Origen" },
-                  { value: "Destino", label: "Destino" },
-                ]}
-                selectedValue={form.watch("isOrigin") ? "Origen" : "Destino"}
-                onSelect={(value) => {
-                  if (value === "Origen") {
-                    form.setValue("isOrigin", true);
-                    form.setValue("isDestination", false);
-                  } else {
-                    form.setValue("isDestination", true);
-                    form.setValue("isOrigin", false);
-                  }
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <CustomDateField
+                label="Hora de carga"
+                value={value ? value : undefined}
+                onBlur={onBlur}
+                onChange={onChange}
+                error={error}
+                placeholder="Selecciona una fecha"
+                inputProps={{
+                  style: [styles.textInput, { color: color }],
                 }}
-                selectedButtonStyle={{ backgroundColor: "transparent" }}
-                selectedTextStyle={{ color: "#0093D1" }}
+                type="time"
               />
-            </ThemedLabeledView>
+            )}
+            name="loadTime"
+          />
 
-            <ThemedLabeledView label="Peso en balanza en origen">
-              <CustomRadioButton
-                options={[
-                  { value: "true", label: "Si" },
-                  { value: "false", label: "No" },
-                ]}
-                selectedValue={
-                  form.watch("isWeightScaleOrigin") ? "true" : "false"
-                }
-                onSelect={(value) => {
-                  if (value === "true") {
-                    form.setValue("isWeightScaleOrigin", true);
-                  } else {
-                    form.setValue("isWeightScaleOrigin", false);
-                  }
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <CustomDateField
+                label="Fecha de descarga"
+                value={value ? value : undefined}
+                onBlur={onBlur}
+                onChange={onChange}
+                error={error}
+                placeholder="Selecciona una fecha"
+                inputProps={{
+                  style: [styles.textInput, { color: color }],
                 }}
-                selectedButtonStyle={{ backgroundColor: "transparent" }}
-                selectedTextStyle={{ color: "#0093D1" }}
               />
-            </ThemedLabeledView>
+            )}
+            name="unloadDate"
+          />
 
-            <ThemedLabeledView label="Peso en balanza en destino">
-              <CustomRadioButton
-                options={[
-                  { value: "true", label: "Si" },
-                  { value: "false", label: "No" },
-                ]}
-                selectedValue={
-                  form.watch("isWeightScaleDestination") ? "true" : "false"
-                }
-                onSelect={(value) => {
-                  if (value === "true") {
-                    form.setValue("isWeightScaleDestination", true);
-                  } else {
-                    form.setValue("isWeightScaleDestination", false);
-                  }
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <CustomDateField
+                label="Hora de descarga"
+                value={value ? value : undefined}
+                onBlur={onBlur}
+                onChange={onChange}
+                error={error}
+                placeholder="Selecciona una fecha"
+                inputProps={{
+                  style: [styles.textInput, { color: color }],
                 }}
-                selectedButtonStyle={{ backgroundColor: "transparent" }}
-                selectedTextStyle={{ color: "#0093D1" }}
+                type="time"
               />
-            </ThemedLabeledView>
+            )}
+            name="unloadTime"
+          />
 
-            <ThemedLabeledView label="Papeles físicos">
-              <CustomRadioButton
-                options={[
-                  { value: "true", label: "Si" },
-                  { value: "false", label: "No" },
-                ]}
-                selectedValue={
-                  form.watch("isPhysicalPapers") ? "true" : "false"
-                }
-                onSelect={(value) => {
-                  if (value === "true") {
-                    form.setValue("isPhysicalPapers", true);
-                  } else {
-                    form.setValue("isPhysicalPapers", false);
-                  }
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <Autocomplete
+                form={form}
+                formField="itemId"
+                displayField="itemName"
+                label="Item"
+                navigationPath="/shared/Items"
+                error={error}
+              />
+            )}
+            name="itemId"
+          />
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <CustomTextField
+                value={value ? value : ""}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                error={error}
+                type="number"
+                placeholder="Cupos"
+                inputProps={{
+                  style: [styles.textInput, { color: color }],
                 }}
-                selectedButtonStyle={{ backgroundColor: "transparent" }}
-                selectedTextStyle={{ color: "#0093D1" }}
               />
-            </ThemedLabeledView>
+            )}
+            name="quantity"
+          />
 
-            <ShipperAutoComplete form={form} />
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <CustomTextField
+                value={value ? value : ""}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                error={error}
+                type="number"
+                placeholder="Tarifa transporte"
+                inputProps={{
+                  style: [styles.textInput, { color: color }],
+                }}
+              />
+            )}
+            name="transportRate"
+          />
 
-            <UnitTypesList form={form} />
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <CustomTextField
+                value={value ? value : ""}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                error={error}
+                type="number"
+                placeholder="Tarifa cliente"
+                inputProps={{
+                  style: [styles.textInput, { color: color }],
+                }}
+              />
+            )}
+            name="customerRate"
+          />
 
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => <LoadingPointsList form={form} error={error} />}
-              name="businessesLoadingPoints"
-            />
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <CustomTextField
+                value={value ? String(value) : ""}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                error={error}
+                type="number"
+                placeholder="Comisión"
+                inputProps={{
+                  style: [styles.textInput, { color: color }],
+                }}
+              />
+            )}
+            name="commission"
+          />
 
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => <UnloadingPointsList form={form} error={error} />}
-              name="businessesUnloadingPoint"
-            />
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <Autocomplete
+                form={form}
+                formField="businessUserId"
+                displayField="businessUserName"
+                label="Comercial cliente"
+                navigationPath="/shared/BusinessCustomer"
+                error={error}
+              />
+            )}
+            name="businessUserId"
+          />
 
-            <Pressable
-              style={[
-                styles.SubmitButton,
-                newBusinessMutation.isPending && { opacity: 0.7 },
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <Autocomplete
+                form={form}
+                formField="entityId"
+                displayField="entityBusinessName"
+                label="Cliente"
+                navigationPath="/shared/Customer"
+                error={error}
+              />
+            )}
+            name="entityId"
+          />
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <Autocomplete
+                form={form}
+                formField="gatheringId"
+                displayField="gatheringName"
+                label="Acopio"
+                navigationPath="/shared/Gathering"
+                error={error}
+                enableCondition="entityId"
+              />
+            )}
+            name="gatheringId"
+          />
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <Switch
+                  value={value}
+                  onValueChange={onChange}
+                  // onBlur={onBlur}
+                  // thumbColor={isDarkMode ? "#f4f3f4" : "#f4f3f4"}
+                  trackColor={{ false: "#767577", true: "#0093D1" }}
+                />
+                <ThemedText style={{ color: color }}>
+                  Mostrar en la web
+                </ThemedText>
+              </View>
+            )}
+            name="showOnWeb"
+          />
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <Switch
+                  value={value}
+                  onValueChange={() => {
+                    onChange(!value);
+                    form.setValue("scaleName", "");
+                    form.setValue("scaleId", "");
+                  }}
+                  // onBlur={onBlur}
+                  // thumbColor={isDarkMode ? "#f4f3f4" : "#f4f3f4"}
+                  trackColor={{ false: "#767577", true: "#0093D1" }}
+                />
+                <ThemedText style={{ color: color }}>
+                  ¿Seleccionar balanza?
+                </ThemedText>
+              </View>
+            )}
+            name="isScale"
+          />
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <Autocomplete
+                form={form}
+                formField="scaleName"
+                label="Balanza"
+                navigationPath="/shared/Scales"
+                enableCondition="isScale"
+                error={error}
+              />
+            )}
+            name="scaleId"
+          />
+
+          <ThemedLabeledView label="Calcular por">
+            <CustomRadioButton
+              options={[
+                { value: "Kilogramos", label: "Kilogramos" },
+                { value: "Kilómetros", label: "Kilómetros" },
               ]}
-              onPress={handleSubmit(onSubmit)}
-              disabled={newBusinessMutation.isPending}
-            >
-              <ThemedText style={{ color: "#fff", fontWeight: "bold" }}>
-                Guardar
-              </ThemedText>
-            </Pressable>
-          </View>
-        </ScrollView>
+              selectedValue={
+                form.watch("isKilograms") ? "Kilogramos" : "Kilómetros"
+              }
+              onSelect={(value) => {
+                if (value === "Kilogramos") {
+                  form.setValue("isKilograms", true);
+                  form.setValue("isKilometers", false);
+                } else {
+                  form.setValue("isKilometers", true);
+                  form.setValue("isKilograms", false);
+                }
+              }}
+              selectedButtonStyle={{ backgroundColor: "transparent" }}
+              selectedTextStyle={{ color: "#0093D1" }}
+            />
+
+            <CustomRadioButton
+              options={[
+                { value: "Origen", label: "Origen" },
+                { value: "Destino", label: "Destino" },
+              ]}
+              selectedValue={form.watch("isOrigin") ? "Origen" : "Destino"}
+              onSelect={(value) => {
+                if (value === "Origen") {
+                  form.setValue("isOrigin", true);
+                  form.setValue("isDestination", false);
+                } else {
+                  form.setValue("isDestination", true);
+                  form.setValue("isOrigin", false);
+                }
+              }}
+              selectedButtonStyle={{ backgroundColor: "transparent" }}
+              selectedTextStyle={{ color: "#0093D1" }}
+            />
+          </ThemedLabeledView>
+
+          <ThemedLabeledView label="Peso en balanza en origen">
+            <CustomRadioButton
+              options={[
+                { value: "true", label: "Si" },
+                { value: "false", label: "No" },
+              ]}
+              selectedValue={
+                form.watch("isWeightScaleOrigin") ? "true" : "false"
+              }
+              onSelect={(value) => {
+                if (value === "true") {
+                  form.setValue("isWeightScaleOrigin", true);
+                } else {
+                  form.setValue("isWeightScaleOrigin", false);
+                }
+              }}
+              selectedButtonStyle={{ backgroundColor: "transparent" }}
+              selectedTextStyle={{ color: "#0093D1" }}
+            />
+          </ThemedLabeledView>
+
+          <ThemedLabeledView label="Peso en balanza en destino">
+            <CustomRadioButton
+              options={[
+                { value: "true", label: "Si" },
+                { value: "false", label: "No" },
+              ]}
+              selectedValue={
+                form.watch("isWeightScaleDestination") ? "true" : "false"
+              }
+              onSelect={(value) => {
+                if (value === "true") {
+                  form.setValue("isWeightScaleDestination", true);
+                } else {
+                  form.setValue("isWeightScaleDestination", false);
+                }
+              }}
+              selectedButtonStyle={{ backgroundColor: "transparent" }}
+              selectedTextStyle={{ color: "#0093D1" }}
+            />
+          </ThemedLabeledView>
+
+          <ThemedLabeledView label="Papeles físicos">
+            <CustomRadioButton
+              options={[
+                { value: "true", label: "Si" },
+                { value: "false", label: "No" },
+              ]}
+              selectedValue={form.watch("isPhysicalPapers") ? "true" : "false"}
+              onSelect={(value) => {
+                if (value === "true") {
+                  form.setValue("isPhysicalPapers", true);
+                } else {
+                  form.setValue("isPhysicalPapers", false);
+                }
+              }}
+              selectedButtonStyle={{ backgroundColor: "transparent" }}
+              selectedTextStyle={{ color: "#0093D1" }}
+            />
+          </ThemedLabeledView>
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <Autocomplete
+                form={form}
+                formField="shipperId"
+                displayField="shipperName"
+                label="Dador de carga"
+                navigationPath="/shared/Shipper"
+                error={error}
+              />
+            )}
+            name="shipperId"
+          />
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <CustomCheckboxList
+                form={form}
+                error={error}
+                title="Tipos de Unidades"
+                route="/shared/UnitTypes"
+                fieldName="businessesUnitTypes"
+              />
+            )}
+            name="businessesUnitTypes"
+          />
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <CustomCheckboxList
+                form={form}
+                error={error}
+                title="Puntos de carga"
+                route="/shared/LoadingPoints"
+                fieldName="businessesLoadingPoints"
+                isDisabled={!form.getValues().entityId}
+              />
+            )}
+            name="businessesLoadingPoints"
+          />
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <CustomCheckboxList
+                form={form}
+                error={error}
+                title="Puntos de descarga"
+                route="/shared/UnloadingPoints"
+                fieldName="businessesUnloadingPoint"
+              />
+            )}
+            name="businessesUnloadingPoint"
+          />
+
+          <Pressable
+            style={[
+              styles.SubmitButton,
+              newBusinessMutation.isPending && { opacity: 0.7 },
+            ]}
+            onPress={handleSubmit(onSubmit)}
+            disabled={newBusinessMutation.isPending}
+          >
+            <ThemedText style={{ color: "#fff", fontWeight: "bold" }}>
+              Guardar
+            </ThemedText>
+          </Pressable>
+        </View>
       </ThemedView>
     </KeyboardView>
   );

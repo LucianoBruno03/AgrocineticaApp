@@ -28,5 +28,12 @@ export const fetchListCategoriesType = async ({
     },
   });
 
+  if (response.status == 200) {
+    // quitar chasis de la respuesta
+    response.data.data = response.data.data.filter(
+      (item: any) => item.name !== "CHASIS"
+    );
+  }
+
   return response.data;
 };

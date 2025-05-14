@@ -62,7 +62,9 @@ export default function CustomDrawer(props: any) {
             router.push("/business");
           }}
           icon={({ focused, color, size }) => {
-            return <IconSymbol size={28} name="house.fill" color={color} />;
+            return (
+              <IconSymbol size={28} name="rectangle.grid.2x2" color={color} />
+            );
           }}
         />
 
@@ -79,10 +81,56 @@ export default function CustomDrawer(props: any) {
             );
           }}
           onPress={() => {
-            router.push("/business");
+            router.push("/loadingOrders");
           }}
           icon={({ focused, color, size }) => {
-            return <IconSymbol size={28} name="house.fill" color={color} />;
+            return (
+              <IconSymbol size={28} name="rectangle.grid.2x2" color={color} />
+            );
+          }}
+        />
+
+        <DrawerItem
+          label={({ focused }) => {
+            return (
+              <ThemedText
+                style={{
+                  fontSize: 12,
+                }}
+              >
+                Cambiar estado de ordenes de carga
+              </ThemedText>
+            );
+          }}
+          onPress={() => {
+            router.push("/loadingOrders/changeStatus");
+          }}
+          icon={({ focused, color, size }) => {
+            return (
+              <IconSymbol size={28} name="rectangle.grid.2x2" color={color} />
+            );
+          }}
+        />
+
+        <DrawerItem
+          label={({ focused }) => {
+            return (
+              <ThemedText
+                style={{
+                  fontSize: 12,
+                }}
+              >
+                Ordenes de compra
+              </ThemedText>
+            );
+          }}
+          onPress={() => {
+            router.push("/purchaseOrders");
+          }}
+          icon={({ focused, color, size }) => {
+            return (
+              <IconSymbol size={28} name="rectangle.grid.2x2" color={color} />
+            );
           }}
         />
 

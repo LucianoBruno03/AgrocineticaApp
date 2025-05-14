@@ -66,11 +66,12 @@ export default function RootLayout() {
               headerBackVisible: false,
               headerTintColor: "#fff",
               gestureEnabled: false, // Deshabilita el gesto de retroceso
+              headerBackButtonDisplayMode: "minimal",
             }}
           >
             {/* Auth Group */}
             <Stack.Screen
-              name="login"
+              name="(authStack)/login"
               options={{
                 headerShown: false,
                 headerBackVisible: false,
@@ -79,7 +80,7 @@ export default function RootLayout() {
               }}
             />
             <Stack.Screen
-              name="register"
+              name="(authStack)/register"
               options={{
                 headerShown: false,
                 gestureEnabled: false,
@@ -102,7 +103,7 @@ export default function RootLayout() {
           /> */}
 
             <Stack.Screen
-              name="(drawer)"
+              name="(app)/(drawer)"
               options={{
                 headerShown: false,
                 gestureEnabled: false,
@@ -111,7 +112,7 @@ export default function RootLayout() {
 
             {/* Error Handling */}
             <Stack.Screen
-              name="[...not-found]"
+              name="+not-found"
               options={{
                 title: "Not Found",
               }}

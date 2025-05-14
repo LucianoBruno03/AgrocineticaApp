@@ -1,39 +1,38 @@
-import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import React from "react";
-import {
-  Button,
-  Linking,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 
+import ChangeState from "@/components/business/ChangeState";
+import { CustomModal } from "@/components/customs/CustomModal";
 import { Colors } from "@/constants/Colors";
-import { Business } from "@/types/business/SearchBusiness";
-import dayjs from "dayjs";
-import { router } from "expo-router";
 import { BusinessDetails } from "@/types/business/SearchBusinessDetails";
+import { router, useLocalSearchParams } from "expo-router";
 
 const BusinessDetailsCardList = ({ item }: { item: BusinessDetails }) => {
   const colorScheme = useColorScheme() ?? "light";
   const [showButtons, setShowButtons] = React.useState(false);
+  const [modalEdit, setModalEdit] = React.useState(false);
 
-  const handleEdit = () => {
-    router.navigate(`/business/edit/${item.id}`);
-  };
+  const { idBusiness, idBusinessDetail } = useLocalSearchParams<{
+    idBusiness: string;
+    idBusinessDetail: string;
+  }>();
 
   const handleView = () => {
-    router.navigate(`/business/details/viewById/${item.id}`);
+    setShowButtons(false);
+    router.navigate(`/business/${item.businessId}/${item.id}`);
   };
 
-  const handleShare = () => {
-    const url = `https://api.whatsapp.com/send?text=https%3A%2F%2Fwww.google.com%2Fmaps%2Fdir%2F%3Fapi%3D1%26origin%3D0.000000000000000%2C0.000000000000000%26destination%3D0.000000000000000%2C0.000000000000000%26waypoints%3D0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000`;
-    Linking.openURL(url).catch((err) =>
-      console.error("No se pudo abrir la URL", err)
-    );
+  const handleEdit = () => {
+    setShowButtons(false);
+    setModalEdit(true);
+  };
+
+  const handleAssign = () => {
+    setShowButtons(false);
+    router.navigate(`/business/${item.businessId}/${item.id}/Assign`);
   };
 
   return (
@@ -51,7 +50,6 @@ const BusinessDetailsCardList = ({ item }: { item: BusinessDetails }) => {
         ]}
         key={item.id}
         onPress={() => setShowButtons(!showButtons)}
-        disabled={item.businessDetailStatusName == "CANCELADO"}
       >
         <View
           style={[
@@ -123,19 +121,71 @@ const BusinessDetailsCardList = ({ item }: { item: BusinessDetails }) => {
         </ThemedText>
       </Pressable>
       {showButtons && (
-        <View style={styles.buttonContainer}>
+        <CustomModal
+          title="Opciones"
+          visible={showButtons}
+          onClose={() => setShowButtons(false)}
+          withHeader={false}
+        >
           <View style={styles.buttonList}>
-            <Button title="Ver" onPress={() => handleView()} />
-            <Button title="Asignar" onPress={() => alert("Error")} />
-            <Button title="Editar estado" onPress={() => alert("Error")} />
-            <Button
-              title="Cerrar"
+            <Pressable onPress={() => handleView()} style={styles.buttons}>
+              <ThemedText style={{ fontWeight: "medium", color: "#007AFF" }}>
+                Ver
+              </ThemedText>
+            </Pressable>
+            {item.businessDetailStatusName == "ACTIVO" && (
+              <>
+                <Pressable
+                  onPress={() => handleAssign()}
+                  style={styles.buttons}
+                >
+                  <ThemedText
+                    style={{ fontWeight: "medium", color: "#007AFF" }}
+                  >
+                    Asignar
+                  </ThemedText>
+                </Pressable>
+                <Pressable onPress={() => handleEdit()} style={styles.buttons}>
+                  <ThemedText
+                    style={{ fontWeight: "medium", color: "#007AFF" }}
+                  >
+                    Editar estado
+                  </ThemedText>
+                </Pressable>
+              </>
+            )}
+            <Pressable
               onPress={() => setShowButtons(false)}
-              color={"red"}
-            />
+              style={[styles.buttons]}
+            >
+              <ThemedText style={{ fontWeight: "medium", color: "red" }}>
+                Cerrar
+              </ThemedText>
+            </Pressable>
           </View>
-        </View>
+        </CustomModal>
       )}
+
+      <CustomModal
+        title="Cambiar estado del detalle"
+        visible={modalEdit}
+        onClose={() => setModalEdit(false)}
+      >
+        <ChangeState
+          // getCategoriesTypesListQueryKey="yourQueryKeyHere"
+          businessId={item.businessId}
+          id={item.id}
+          businessDetailStatusId={item.businessDetailStatusId}
+          businessDetailStatusName={item.businessDetailStatusName}
+          // onStateChange={(statusId, statusName) => {
+          //   setModalEdit(false);
+          //   // Actualizar el estado del item en la lista
+          //   // Esto es solo un ejemplo, deberías hacerlo de acuerdo a tu lógica
+          //   item.businessDetailStatusId = statusId;
+          //   item.businessDetailStatusName = statusName;
+          // }}
+        />
+      </CustomModal>
     </View>
   );
 };
@@ -147,16 +197,14 @@ const styles = StyleSheet.create({
     position: "relative", // Asegura que el botón flotante se posicione relativo a este contenedor
     overflow: "hidden", // Para que el botón flotante no se vea fuera del contenedor
   },
-  // businessCard: {
-  //   padding: 16,
-  //   borderRadius: 12,
-  //   gap: 8,
-  //   elevation: 2, // Sombra en Android
-  //   shadowColor: "#000",
-  //   shadowOffset: { width: 0, height: 2 },
-  //   shadowOpacity: 0.1,
-  //   shadowRadius: 4,
-  // },
+  buttons: {
+    padding: 8,
+    borderRadius: 12,
+    color: "blue",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 5,
+  },
   disabledCard: {
     opacity: 0.6,
   },
@@ -175,28 +223,9 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     textAlign: "center",
   },
-  buttonContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 10,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    borderRadius: 12,
-  },
+
   buttonList: {
-    width: "80%",
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 10,
-    elevation: 3, // Para sombra en Android
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    width: "100%",
     flexDirection: "column",
     gap: 5,
   },

@@ -4,17 +4,18 @@ import { QueryKey } from "@tanstack/react-query";
 
 export const TENANT = process.env.EXPO_PUBLIC_TENANT;
 
-export const fetchListCustomer = async ({
+export const fetchListEntities = async ({
   queryKey,
 }: {
   queryKey: QueryKey;
 }): Promise<CustomerListResponse> => {
   const searchedWord = queryKey[1] as string;
+  const resource = queryKey[2] as string;
 
   const raw = {
-    resource: "Negocios",
+    resource: resource || "",
     pageNumber: 0,
-    pageSize: 10,
+    pageSize: 100,
     advancedSearch: {
       fields: ["businessName"],
       keyword: searchedWord || "",

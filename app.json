@@ -5,19 +5,23 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "Agrocinetica",
+    "scheme": "agrocinetica",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lucianodev03.testapp52",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-        
-      }
+      },
+      "package": "com.lucianodev03.testapp52"
     },
     "web": {
       "bundler": "metro",
@@ -38,7 +42,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
-    
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6ec9d6b7-7819-46e7-8d4f-f9a80a3d35d2"
+      }
+    },
+    "owner": "lucianodev03"
   }
 }

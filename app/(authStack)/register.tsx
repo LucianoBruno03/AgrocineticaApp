@@ -1,15 +1,18 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
-import { fetchAfipQuery } from "@/api/request/arca/SearchCuit";
-import { CustomTextField } from "@/components/CustomTextField";
-import { KeyboardView } from "@/components/KeyboardAvoidingView";
+import { fetchSearchCuitQuery } from "@/api/request/arca/SearchCuit";
+import { CustomTextField } from "@/components/customs/CustomTextField";
+import {
+  KeyboardLoginView,
+  KeyboardView,
+} from "@/components/KeyboardAvoidingView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import CountriesDropdown from "@/components/ui/dropdown/CountriesDropdown";
 import LocalitiesDropdown from "@/components/ui/dropdown/LocalitiesDropdown";
 import ProvincesDropdown from "@/components/ui/dropdown/ProvincesDropdown";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import { RegisterSchema } from "@/schemas/register";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -29,7 +32,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const color = colorScheme === "light" ? "#000" : "#fff";
 
-  const searchAfip = () => {
+  const searchArca = () => {
     const cuit = form.getValues("cuit");
 
     if (!cuit || cuit.length !== 11) {
@@ -41,11 +44,11 @@ export default function Register() {
       return;
     }
 
-    mutationAfip.mutate({ cuit });
+    mutationArca.mutate({ cuit });
   };
 
-  const mutationAfip = useMutation({
-    mutationFn: fetchAfipQuery,
+  const mutationArca = useMutation({
+    mutationFn: fetchSearchCuitQuery,
     onSuccess: (data) => {
       form.setValue("businessName", data.fullName);
       form.setValue("categoryTypeId", data.taxpayerTypeId);
@@ -70,30 +73,51 @@ export default function Register() {
       form.setValue("address", data.address || "");
     },
     onError: (error: Error | AxiosError) => {
-      if (axios.isAxiosError(error) && error.response) {
-        if (error.response.status === 401) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
           Toast.show({
             type: "error",
             text1: "Error",
-            text2: "Usuario o contraseña incorrecto",
+            text2: "Usuario o contraseña incorrectos",
           });
-
-          return;
-        } else if (error.response.status === 403) {
-          Toast.show({
-            type: "error",
-            text1: "Error",
-            text2: error.response.data.message,
-          });
-
           return;
         }
-      }
 
-      Toast.show({
-        type: "error",
-        text1: "Hubo un error inesperado",
-      });
+        if (error.response?.status === 403) {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: error.response?.data.message || "Acceso denegado",
+          });
+          return;
+        }
+
+        if (error.response?.status === 400) {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: error.response?.data.message || "Hubo un error inesperado",
+          });
+          return;
+        }
+
+        if (error.response?.status === 404) {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: `${
+              error.response?.data.exception || "Hubo un error inesperado"
+            }`,
+          });
+          return;
+        }
+
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Hubo un error inesperado",
+        });
+      }
     },
   });
 
@@ -194,7 +218,7 @@ export default function Register() {
     //   ]}
     // >
     // <GestureHandlerRootView style={{ flex: 1 }}>
-    <KeyboardView>
+    <KeyboardLoginView>
       <ThemedView style={{ flex: 1, paddingTop: 40 }}>
         <View style={styles.imageContainer}>
           <Image
@@ -238,7 +262,7 @@ export default function Register() {
                   )}
                   name="cuit"
                 />
-                <Pressable style={styles.cuitSearchButton} onPress={searchAfip}>
+                <Pressable style={styles.cuitSearchButton} onPress={searchArca}>
                   <IconSymbol
                     size={28}
                     name="magnifyingglass"
@@ -372,9 +396,9 @@ export default function Register() {
               />
             </View>
             <Pressable style={styles.buttonRegister} onPress={() => {}}>
-              <Text style={{ color: "white", fontWeight: "bold" }}>
+              <ThemedText style={{ color: "white", fontWeight: "bold" }}>
                 Registrarse
-              </Text>
+              </ThemedText>
             </Pressable>
             <View style={{ flexDirection: "row", gap: 8 }}>
               <ThemedText type="default" style={styles.subTitle}>
@@ -396,7 +420,7 @@ export default function Register() {
           </View>
         </ScrollView>
       </ThemedView>
-    </KeyboardView>
+    </KeyboardLoginView>
     // {/* </ThemedView> */}
   );
 }

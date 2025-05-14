@@ -1,37 +1,39 @@
-import { useColorScheme } from "@/hooks/useColorScheme.web";
-import React from "react";
-import {
-  Button,
-  Linking,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useState } from "react";
+import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 
-import { Colors } from "@/constants/Colors";
+import { CustomModal } from "@/components/customs/CustomModal";
+import { Colors, statusColors } from "@/constants/Colors";
 import { Business } from "@/types/business/SearchBusiness";
 import dayjs from "dayjs";
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
 
 const BusinessCardList = ({ item }: { item: Business }) => {
   const colorScheme = useColorScheme() ?? "light";
-  const [showButtons, setShowButtons] = React.useState(false);
+  const [showButtons, setShowButtons] = useState(false);
 
   const handleEdit = () => {
+    setShowButtons(false);
     router.navigate(`/business/edit/${item.id}`);
   };
 
   const handleView = () => {
-    router.navigate(`/business/details/${item.id}`);
+    setShowButtons(false);
+    router.navigate(`/business/${item.id}`);
   };
 
   const handleShare = () => {
+    setShowButtons(false);
     const url = `https://api.whatsapp.com/send?text=https%3A%2F%2Fwww.google.com%2Fmaps%2Fdir%2F%3Fapi%3D1%26origin%3D0.000000000000000%2C0.000000000000000%26destination%3D0.000000000000000%2C0.000000000000000%26waypoints%3D0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000%7C0.000000000000000%2C0.000000000000000`;
     Linking.openURL(url).catch((err) =>
-      console.error("No se pudo abrir la URL", err)
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "No se pudo abrir la URL",
+      })
     );
   };
 
@@ -50,7 +52,6 @@ const BusinessCardList = ({ item }: { item: Business }) => {
         ]}
         key={item.id}
         onPress={() => setShowButtons(!showButtons)}
-        disabled={item.businessStatusName == "CANCELADO"}
       >
         <View
           style={[
@@ -73,22 +74,7 @@ const BusinessCardList = ({ item }: { item: Business }) => {
               borderRadius: 12,
               borderColor: "#79797950",
               borderWidth: 0.5,
-              backgroundColor:
-                item.businessStatusName == "CANCELADO"
-                  ? "red"
-                  : item.businessStatusName == "ACTIVO"
-                  ? "blue"
-                  : item.businessStatusName == "GENERADO"
-                  ? "yellow"
-                  : item.businessStatusName == "ASIGNADO"
-                  ? "orange"
-                  : item.businessStatusName == "CUBIERTO"
-                  ? "green"
-                  : item.businessStatusName == "CUBIERTO PARCIAL"
-                  ? "lightgreen"
-                  : item.businessStatusName == "CUBIERTO POR EL CLIENTE"
-                  ? "darkgreen"
-                  : "gray",
+              backgroundColor: statusColors[item.businessStatusName] || "gray",
             }}
           ></View>
         </View>
@@ -177,18 +163,38 @@ const BusinessCardList = ({ item }: { item: Business }) => {
         </ThemedText>
       </Pressable>
       {showButtons && (
-        <View style={styles.buttonContainer}>
+        <CustomModal
+          title="Opciones"
+          visible={showButtons}
+          onClose={() => setShowButtons(false)}
+          withHeader={false}
+        >
           <View style={styles.buttonList}>
-            <Button title="Ver" onPress={handleView} />
-            <Button title="Compartir ruta" onPress={handleShare} />
-            <Button title="Editar" onPress={handleEdit} />
-            <Button
-              title="Cerrar"
+            <Pressable onPress={() => handleView()} style={styles.buttons}>
+              <ThemedText style={{ fontWeight: "medium", color: "#007AFF" }}>
+                Ver
+              </ThemedText>
+            </Pressable>
+            <Pressable onPress={handleShare} style={styles.buttons}>
+              <ThemedText style={{ fontWeight: "medium", color: "#007AFF" }}>
+                Compartir ruta
+              </ThemedText>
+            </Pressable>
+            <Pressable onPress={handleEdit} style={styles.buttons}>
+              <ThemedText style={{ fontWeight: "medium", color: "#007AFF" }}>
+                Editar
+              </ThemedText>
+            </Pressable>
+            <Pressable
               onPress={() => setShowButtons(false)}
-              color={"red"}
-            />
+              style={[styles.buttons]}
+            >
+              <ThemedText style={{ fontWeight: "medium", color: "red" }}>
+                Cerrar
+              </ThemedText>
+            </Pressable>
           </View>
-        </View>
+        </CustomModal>
       )}
     </View>
   );
@@ -203,16 +209,19 @@ const styles = StyleSheet.create({
     position: "relative", // Asegura que el botón flotante se posicione relativo a este contenedor
     overflow: "hidden", // Para que el botón flotante no se vea fuera del contenedor
   },
-  // businessCard: {
-  //   padding: 16,
-  //   borderRadius: 12,
-  //   gap: 8,
-  //   elevation: 2, // Sombra en Android
-  //   shadowColor: "#000",
-  //   shadowOffset: { width: 0, height: 2 },
-  //   shadowOpacity: 0.1,
-  //   shadowRadius: 4,
-  // },
+  buttons: {
+    padding: 8,
+    borderRadius: 12,
+    color: "blue",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 5,
+  },
+  buttonList: {
+    width: "100%",
+    flexDirection: "column",
+    gap: 5,
+  },
   disabledCard: {
     opacity: 0.6,
   },
@@ -243,19 +252,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     borderRadius: 12,
   },
-  buttonList: {
-    width: "80%",
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 10,
-    elevation: 3, // Para sombra en Android
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    flexDirection: "column",
-    gap: 5,
-  },
+
   businessCard: {
     // backgroundColor:
     //   colorScheme === "light"

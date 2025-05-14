@@ -1,14 +1,23 @@
 import { fetchSearchBusiness } from "@/api/request/business/SearchBusiness";
-import { CustomTextField } from "@/components/CustomTextField";
-import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { CustomTextField } from "@/components/customs/CustomTextField";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from "react-native";
 import { z } from "zod";
-import { IconSymbol } from "../IconSymbol";
-import BusinessCardList from "../cards/BusinessCardList";
 import useDebounce from "@/hooks/useDebounce";
+import BusinessCardList from "../cards/BusinessCardList";
+import { ThemedText } from "@/components/ThemedText";
 
 const SearchSchema = z.object({
   search: z.string().optional(),
@@ -18,13 +27,13 @@ const SearchSchema = z.object({
 const BusinessTableList = () => {
   const colorScheme = useColorScheme() ?? "light";
   const color = colorScheme === "light" ? "#000" : "#fff";
+
   const [searchQuery, setSearchQuery] = useState<string>("");
   const searchedWord = useDebounce(searchQuery, 500);
-
-  const getBusinessQuery = useQuery({
-    queryKey: ["getBusinessListQuery", searchedWord],
-    queryFn: fetchSearchBusiness,
-  });
+  const [refreshing, setRefreshing] = useState(false);
+  const [page, setPage] = useState(0);
+  const [businessList, setBusinessList] = useState<any[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
 
   const form = useForm<z.infer<typeof SearchSchema>>({
     defaultValues: {
@@ -34,6 +43,52 @@ const BusinessTableList = () => {
   });
 
   const { control } = form;
+
+  const getBusinessQuery = useQuery({
+    queryKey: ["getBusinessListQuery", searchedWord, page],
+    queryFn: fetchSearchBusiness,
+    staleTime: 5000,
+  });
+
+  useEffect(() => {
+    if (getBusinessQuery.data?.data) {
+      const newData = getBusinessQuery.data.data;
+      const newTotal = getBusinessQuery.data.totalCount;
+
+      if (page === 0) {
+        setBusinessList(newData);
+      } else {
+        const currentIds = new Set(businessList.map((item) => item.id));
+        const uniqueNewItems = newData.filter(
+          (item) => !currentIds.has(item.id)
+        );
+        setBusinessList((prev) => [...prev, ...uniqueNewItems]);
+      }
+
+      setTotalCount(newTotal);
+    }
+  }, [getBusinessQuery.data]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setPage(0);
+    setTotalCount(0);
+    await getBusinessQuery.refetch();
+    setRefreshing(false);
+  };
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+
+    const isCloseToBottom =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 100;
+
+    const hasMoreToLoad = businessList.length < totalCount;
+
+    if (isCloseToBottom && !getBusinessQuery.isFetching && hasMoreToLoad) {
+      setPage((prev) => prev + 1);
+    }
+  };
 
   return (
     <>
@@ -50,6 +105,8 @@ const BusinessTableList = () => {
                 onBlur={onBlur}
                 onChangeText={(value) => {
                   setSearchQuery(value);
+                  setPage(0);
+                  setTotalCount(0);
                   onChange(value);
                 }}
                 error={error}
@@ -62,33 +119,48 @@ const BusinessTableList = () => {
             )}
             name="search"
           />
-          {/* <Pressable style={styles.searchButton} onPress={() => {}}>
-            <IconSymbol size={28} name="magnifyingglass" color="white" />
-          </Pressable> */}
         </View>
       </View>
 
-      {getBusinessQuery.isLoading ? (
-        <View style={styles.noDataContainer}>
-          <Text style={styles.noDataText}>Cargando...</Text>
-        </View>
-      ) : (
-        <ScrollView contentContainerStyle={styles.containerList}>
-          <>
-            {getBusinessQuery.data && getBusinessQuery.data.data?.length > 0 ? (
-              getBusinessQuery.data.data.map((business: any) => (
-                <BusinessCardList key={business.id} item={business} />
-              ))
-            ) : (
-              <View style={styles.noDataContainer}>
-                <Text style={styles.noDataText}>
-                  No hay negocios para mostrar.
-                </Text>
-              </View>
-            )}
-          </>
-        </ScrollView>
-      )}
+      <ScrollView
+        contentContainerStyle={styles.containerList}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        onScroll={handleScroll}
+        scrollEventThrottle={400}
+      >
+        {businessList.length > 0 ? (
+          businessList.map((business, index) => (
+            <BusinessCardList
+              key={`business-${business.id}-${index}`}
+              item={business}
+            />
+          ))
+        ) : getBusinessQuery.isFetching ? (
+          <View style={styles.noDataContainer}>
+            <ActivityIndicator size="large" style={{ marginVertical: 16 }} />
+          </View>
+        ) : (
+          <View style={styles.noDataContainer}>
+            <ThemedText style={styles.noDataText}>
+              No hay negocios para mostrar.
+            </ThemedText>
+          </View>
+        )}
+
+        {getBusinessQuery.isFetching && page > 0 && (
+          <ActivityIndicator size="large" style={{ marginVertical: 16 }} />
+        )}
+
+        {businessList.length >= totalCount && businessList.length > 0 && (
+          <View style={styles.endListContainer}>
+            <ThemedText style={styles.endListText}>
+              No hay más datos para mostrar.
+            </ThemedText>
+          </View>
+        )}
+      </ScrollView>
     </>
   );
 };
@@ -98,22 +170,14 @@ export default BusinessTableList;
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    marginBottom: 16,
+    paddingInline: 20,
   },
   containerList: {
     width: "100%",
     gap: 16,
+    paddingInline: 20,
+    paddingBottom: 28,
   },
-  searchButton: {
-    position: "absolute",
-    right: 4,
-    top: "50%",
-    transform: [{ translateY: "-50%" }],
-    backgroundColor: "#0093D1",
-    borderRadius: 50,
-    padding: 8,
-  },
-
   searcher: {
     display: "flex",
     flexDirection: "column",
@@ -121,27 +185,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-  buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
+  textInput: {
+    padding: 10,
+    paddingStart: 20,
+    height: 48,
   },
-  button: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 4,
-  },
-  clearButton: {
-    backgroundColor: "#ccc",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-
   noDataContainer: {
     alignItems: "center",
     padding: 16,
@@ -150,11 +198,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#888",
   },
-  textInput: {
-    padding: 10,
-    paddingStart: 20,
-    height: 48,
-    // borderRadius: 30,
-    // backgroundColor: "#0093D120",
+  endListContainer: {
+    alignItems: "center",
+    padding: 16,
+  },
+  endListText: {
+    fontSize: 12,
+    color: "#aaa",
   },
 });

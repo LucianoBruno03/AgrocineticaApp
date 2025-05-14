@@ -9,12 +9,12 @@ export const fetchSearchBusinessDetails = async ({
 }: {
   queryKey: QueryKey;
 }): Promise<SearchBusinessDetailsResponse> => {
-  const [, businessId] = queryKey;
+  const [, idBusiness, page] = queryKey;
 
   const raw = {
-    businessId: businessId || "",
-    pageNumber: 0,
-    pageSize: 50,
+    businessId: idBusiness || "",
+    pageNumber: page || 0,
+    pageSize: 10,
   };
 
   const response = await api.post("v1/businessdetails/search", raw, {

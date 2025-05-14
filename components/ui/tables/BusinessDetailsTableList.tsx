@@ -1,86 +1,124 @@
 import { fetchSearchBusinessDetails } from "@/api/request/business/SearchBusinessDetails";
-import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import useDebounce from "@/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { z } from "zod";
+import React, { useEffect, useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from "react-native";
 import BusinessDetailsCardList from "../cards/BusinessDetailsCardList";
-
-const SearchSchema = z.object({
-  search: z.string().optional(),
-  type: z.string().optional(),
-});
+import { ThemedText } from "@/components/ThemedText";
 
 const BusinessDetailsTableList = () => {
   const colorScheme = useColorScheme() ?? "light";
   const color = colorScheme === "light" ? "#000" : "#fff";
+
   const [searchQuery, setSearchQuery] = useState<string>("");
   const searchedWord = useDebounce(searchQuery, 500);
+  const [page, setPage] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+  const [detailsList, setDetailsList] = useState<any[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
 
   const { idBusiness } = useLocalSearchParams<{ idBusiness: string }>();
 
   const getBusinessDetailsQuery = useQuery({
-    queryKey: ["getBusinessDetailsListQuery", idBusiness],
+    queryKey: ["getBusinessDetailsListQuery", idBusiness, page],
     queryFn: fetchSearchBusinessDetails,
+    staleTime: 5000,
   });
+
+  useEffect(() => {
+    if (getBusinessDetailsQuery.data?.data) {
+      const newData = getBusinessDetailsQuery.data.data;
+      const newTotal = getBusinessDetailsQuery.data.totalCount;
+
+      if (page === 0) {
+        setDetailsList(newData);
+      } else {
+        const currentIds = new Set(detailsList.map((item) => item.id));
+        const uniqueNewItems = newData.filter(
+          (item) => !currentIds.has(item.id)
+        );
+        setDetailsList((prev) => [...prev, ...uniqueNewItems]);
+      }
+
+      setTotalCount(newTotal);
+    }
+  }, [getBusinessDetailsQuery.data]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setPage(0);
+    setTotalCount(0);
+    await getBusinessDetailsQuery.refetch();
+    setRefreshing(false);
+  };
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const isCloseToBottom =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 100;
+
+    const hasMoreToLoad = detailsList.length < totalCount;
+
+    if (
+      isCloseToBottom &&
+      !getBusinessDetailsQuery.isFetching &&
+      hasMoreToLoad
+    ) {
+      setPage((prev) => prev + 1);
+    }
+  };
 
   return (
     <>
-      {/* <View style={styles.container}>
-        <View style={styles.searcher}>
-          <Controller
-            control={control}
-            render={({
-              field: { onChange, onBlur, value },
-              fieldState: { error },
-            }) => (
-              <CustomTextField
-                value={value}
-                onBlur={onBlur}
-                onChangeText={(value) => {
-                  setSearchQuery(value);
-                  onChange(value);
-                }}
-                error={error}
-                type="text"
-                placeholder="Buscar por negocios"
-                inputProps={{
-                  style: [styles.textInput, { color: color }],
-                }}
-              />
-            )}
-            name="search"
-          /> */}
-      {/* <Pressable style={styles.searchButton} onPress={() => {}}>
-            <IconSymbol size={28} name="magnifyingglass" color="white" />
-          </Pressable> */}
-      {/* </View>
-      </View> */}
+      <ScrollView
+        contentContainerStyle={styles.containerList}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        onScroll={handleScroll}
+        scrollEventThrottle={400}
+      >
+        {detailsList.length > 0 ? (
+          detailsList.map((detail, index) => (
+            <BusinessDetailsCardList
+              key={`detail-${detail.id}-${index}`}
+              item={detail}
+            />
+          ))
+        ) : getBusinessDetailsQuery.isFetching ? (
+          <View style={styles.noDataContainer}>
+            <ActivityIndicator size="large" style={{ marginVertical: 16 }} />
+          </View>
+        ) : (
+          <View style={styles.noDataContainer}>
+            <ThemedText style={styles.noDataThemedText}>
+              No hay negocios para mostrar.
+            </ThemedText>
+          </View>
+        )}
 
-      {getBusinessDetailsQuery.isLoading ? (
-        <View style={styles.noDataContainer}>
-          <Text style={styles.noDataText}>Cargando...</Text>
-        </View>
-      ) : (
-        <ScrollView contentContainerStyle={styles.containerList}>
-          <>
-            {getBusinessDetailsQuery.data &&
-            getBusinessDetailsQuery.data.data?.length > 0 ? (
-              getBusinessDetailsQuery.data.data.map((business: any) => (
-                <BusinessDetailsCardList key={business.id} item={business} />
-              ))
-            ) : (
-              <View style={styles.noDataContainer}>
-                <Text style={styles.noDataText}>
-                  No hay negocios para mostrar.
-                </Text>
-              </View>
-            )}
-          </>
-        </ScrollView>
-      )}
+        {getBusinessDetailsQuery.isFetching && page > 0 && (
+          <ActivityIndicator size="large" style={{ marginVertical: 16 }} />
+        )}
+
+        {detailsList.length >= totalCount && detailsList.length > 0 && (
+          <View style={styles.endListContainer}>
+            <ThemedText style={styles.endListThemedText}>
+              No hay más datos para mostrar.
+            </ThemedText>
+          </View>
+        )}
+      </ScrollView>
     </>
   );
 };
@@ -88,65 +126,26 @@ const BusinessDetailsTableList = () => {
 export default BusinessDetailsTableList;
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    marginBottom: 16,
-  },
   containerList: {
     width: "100%",
     gap: 16,
+    paddingInline: 20,
+    paddingBottom: 28,
   },
-  searchButton: {
-    position: "absolute",
-    right: 4,
-    top: "50%",
-    transform: [{ translateY: "-50%" }],
-    backgroundColor: "#0093D1",
-    borderRadius: 50,
-    padding: 8,
-  },
-
-  searcher: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-  },
-  buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-  button: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 4,
-  },
-  clearButton: {
-    backgroundColor: "#ccc",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-
   noDataContainer: {
     alignItems: "center",
     padding: 16,
   },
-  noDataText: {
+  noDataThemedText: {
     fontSize: 18,
     color: "#888",
   },
-  textInput: {
-    padding: 10,
-    paddingStart: 20,
-    height: 48,
-    // borderRadius: 30,
-    // backgroundColor: "#0093D120",
+  endListContainer: {
+    alignItems: "center",
+    padding: 16,
+  },
+  endListThemedText: {
+    fontSize: 12,
+    color: "#aaa",
   },
 });

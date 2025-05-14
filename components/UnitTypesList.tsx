@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
-import CustomRadioButton from "./CustomRadioButton";
+import CustomRadioButton from "./customs/CustomRadioButton";
 import { usePagination } from "@/hooks/usePagination";
 import { fetchListCategoriesType } from "@/api/request/search/CategoriesTypes";
 import { UseFormReturn } from "react-hook-form";

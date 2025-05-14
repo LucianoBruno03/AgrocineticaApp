@@ -91,3 +91,48 @@ export const Colors = {
     // chart5: "#d83d6b",
   },
 };
+
+export const statusColors: { [key: string]: string } = {
+  // Business States (ESTADOS DEL NEGOCIO)
+  GENERADO: "#fbbf24", // amarillo-400
+  ACTIVO: "#2563eb", // azul-600 (más visible en modo oscuro)
+  ASIGNADO: "#ea580c", // naranja-600 (más fuerte)
+  CANCELADO: "#dc2626", // rojo-600 (más contrastado)
+  CUBIERTO: "#16a34a", // verde-600
+  "CUBIERTO POR EL CLIENTE": "#14532d", // verde-900
+  "CUBIERTO PARCIAL": "#4ade80", // verde-400 (más fuerte para visibilidad)
+
+  // Loading Order States (ESTADOS ORDEN DE CARGA)
+  "INICIO DE VIAJE": "#3b82f6", // azul-500
+  ARRIBADO: "#38bdf8", // sky-400
+  DESCARGADO: "#15803d", // verde-700 (mejor contraste)
+  "DESCARGADO PARCIAL": "#34d399", // verde-400
+  LIQUIDADO: "#064e3b", // verde-900 (más oscuro para diferencia)
+  "NO DESCARGADO": "#6b7280", // gris-500 (mejor contraste)
+  ANULADO: "#991b1b", // rojo-800 (más oscuro para diferenciar de "CANCELADO")
+  "FINALIZADO PARA LP": "#7c3aed", // púrpura-500
+  PENDIENTE: "#71717a", // gris-600 (más contraste con “FINALIZADO”)
+  DEMORADO: "#d97706", // ámbar-600 (más fuerte)
+  FINALIZADO: "#4b5563", // gris-700 (más oscuro para no confundirse con PENDIENTE)
+
+  // Purchase Order States (ESTADOS ORDEN DE COMPRA)
+  "SIN ASIGNAR": "#9ca3af", // gris-400
+  GENERADA: "#fbbf24", // amarillo-400
+  AUTORIZADA: "#2563eb", // azul-600 (más fuerte)
+  LIQUIDADA: "#16a34a", // verde-600
+  RECHAZADA: "#dc2626", // rojo-600
+  FINALIZADA: "#4b5563", // gris-700
+
+  // Document States (ESTADOS DE DOCUMENTO)
+  FACTURADO: "#22c55e", // verde-500
+  "FACTURADO PARCIAL": "#34d399", // verde-400
+  COBRADO: "#064e3b", // verde-900 (mejor contraste)
+  "COBRADO PARCIAL": "#16a34a", // verde-600
+  ENTREGADO: "#06b6d4", // cyan-500 (mejor visibilidad)
+  "ENTREGADO PARCIAL": "#22d3ee", // cyan-400
+  DEVUELTO: "#ea580c", // naranja-600 (más fuerte)
+  "DEVUELTO PARCIAL": "#f97316", // naranja-500
+  CONFIRMADO: "#2563eb", // azul-600
+  PAGADO: "#15803d", // verde-700
+  "COBRADO PENDIENTE PAGO": "#d97706", // ámbar-600
+};

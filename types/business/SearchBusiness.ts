@@ -26,8 +26,9 @@ export interface Business {
   userId: string;
   userName: string;
   entityId: string;
-  shipperId: string;
   entityBusinessName: string;
+  shipperId: string;
+  shipperBusinessName: string;
   commission: number;
   isKilograms: boolean;
   isKilometers: boolean;
@@ -48,6 +49,7 @@ export interface Business {
   showOnWeb: boolean;
   businessLoadingPoints: BusinessLoadingPoint[];
   businessUnloadingPoints: BusinessUnloadingPoint[];
+  businessesUnitTypes: BusinessesUnitType[];
   firstLoadingPoint: string;
   lastUnloadingPoint: string;
 }
@@ -84,4 +86,11 @@ export interface BusinessUnloadingPoint {
   isUnloaded: boolean;
   unloadingPointGeoLatitude: number;
   unloadingPointGeoLongitude: number;
+}
+
+export interface BusinessesUnitType {
+  id: string;
+  businessId: string;
+  typeUnitId: string;
+  typeUnitName: string;
 }

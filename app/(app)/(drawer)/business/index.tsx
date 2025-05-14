@@ -9,6 +9,10 @@ type Props = {};
 const business = (props: Props) => {
   return (
     <View style={styles.formContainer}>
+      <View style={styles.titleContainer}>
+        <ThemedText style={styles.titlePage}>Gestiona los negocios</ThemedText>
+      </View>
+
       <Pressable
         style={styles.newButton}
         onPress={() => {
@@ -17,9 +21,8 @@ const business = (props: Props) => {
       >
         <Text style={styles.textButton}>+</Text>
       </Pressable>
-      <ThemedText style={styles.titlePage}>Gestiona los negocios</ThemedText>
 
-      <View style={{ width: "100%", flex: 1 }}>
+      <View style={styles.tableContainer}>
         <BusinessTableList />
       </View>
     </View>
@@ -31,10 +34,12 @@ export default business;
 const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
+    width: "100%",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    padding: 20,
-    width: "100%",
+    padding: 0,
+    paddingTop: 20,
+    gap: 12,
   },
   newButton: {
     position: "absolute",
@@ -66,6 +71,14 @@ const styles = StyleSheet.create({
   titlePage: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 16,
+  },
+  titleContainer: {
+    paddingInline: 20,
+    width: "100%",
+  },
+  tableContainer: {
+    width: "100%",
+    flex: 1,
+    gap: 12,
   },
 });

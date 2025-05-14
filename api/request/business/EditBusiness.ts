@@ -1,6 +1,6 @@
 import { api } from "@/api/axios/api";
 import { EditBusinessSchema } from "@/schemas/newBusiness";
-import { ParsedForm } from "@/types/business/NewBusiness";
+import { CreateBusiness } from "@/types/business/NewBusiness";
 import * as z from "zod";
 
 export const TENANT = process.env.EXPO_PUBLIC_TENANT;
@@ -11,7 +11,7 @@ export const fetchEditBusiness = async ({
 }: {
   data: z.infer<typeof EditBusinessSchema>;
   id: string;
-}): Promise<ParsedForm> => {
+}): Promise<CreateBusiness> => {
   const formatedData = {
     ...data,
   } as z.infer<typeof EditBusinessSchema>;

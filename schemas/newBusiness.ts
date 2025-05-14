@@ -41,13 +41,15 @@ export const BusinessSchema = z
     isScale: z.boolean(),
     cancellationReasonId: z.null().nullable(),
     showOnWeb: z.boolean(),
-    businessesUnitTypes: z.array(
-      z.object({
-        businessId: z.string(),
-        typeUnitId: z.string(),
-        typeUnitName: z.string(),
-      })
-    ),
+    businessesUnitTypes: z
+      .array(
+        z.object({
+          businessId: z.string(),
+          typeUnitId: z.string(),
+          typeUnitName: z.string(),
+        })
+      )
+      .nonempty("Selecciona al menos un tipo de unidad"),
     businessesLoadingPoints: z
       .array(
         z.object({
@@ -83,6 +85,10 @@ export const BusinessSchema = z
     message:
       "La tarifa cliente debe ser igual o menor a la tarifa de transporte",
     path: ["customerRate"],
+  })
+  .refine((data) => !data.isScale || (data.scaleId && data.scaleName), {
+    message: "Debes seleccionar una balanza o desactivar la opción",
+    path: ["scaleId"],
   });
 
 export const EditBusinessSchema = z
@@ -170,4 +176,15 @@ export const EditBusinessSchema = z
     message:
       "La tarifa cliente debe ser igual o menor a la tarifa de transporte",
     path: ["customerRate"],
+  })
+  .refine((data) => !data.isScale || (data.scaleId && data.scaleName), {
+    message: "Debes seleccionar una balanza o desactivar la opción",
+    path: ["scaleId"],
   });
+
+export const ChangeStateSchema = z.object({
+  id: z.string().optional(),
+  businessId: z.string().optional(),
+  businessDetailStatusId: z.string(),
+  businessDetailStatusName: z.string().optional(),
+});

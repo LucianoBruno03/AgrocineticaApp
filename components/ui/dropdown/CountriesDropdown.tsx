@@ -1,6 +1,6 @@
 import { StyleSheet, View, Animated, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchListCountries } from "@/api/request/search/CountriesDropdown";

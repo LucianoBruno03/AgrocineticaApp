@@ -154,6 +154,22 @@ export default function Layout() {
             headerShown: false, // Ocultamos el header para usar el del Stack
           }}
         />
+
+        <Drawer.Screen
+          name="loadingOrders"
+          options={{
+            drawerLabel: "Ordenes de carga",
+            headerShown: false, // Ocultamos el header para usar el del Stack
+          }}
+        />
+
+        <Drawer.Screen
+          name="purchaseOrders"
+          options={{
+            drawerLabel: "Ordenes de compra",
+            headerShown: false, // Ocultamos el header para usar el del Stack
+          }}
+        />
       </Drawer>
     </GestureHandlerRootView>
   );

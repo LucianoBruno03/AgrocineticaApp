@@ -14,7 +14,7 @@ export const fetchListShipper = async ({
   const raw = {
     resource: "Negocios",
     pageNumber: 0,
-    pageSize: 10,
+    pageSize: 100,
     advancedSearch: {
       fields: ["businessName"],
       keyword: searchedWord || "",

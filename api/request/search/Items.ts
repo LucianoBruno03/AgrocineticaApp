@@ -5,9 +5,10 @@ export const TENANT = process.env.EXPO_PUBLIC_TENANT;
 
 export const fetchListItems = async ({ queryKey }: { queryKey: QueryKey }) => {
   const searchedWord = queryKey[1] as string;
+  const resource = queryKey[2] as string;
 
   const raw = {
-    resource: "Negocios",
+    resource: resource || "Negocios",
     pageNumber: 0,
     pageSize: 100,
     advancedSearch: {

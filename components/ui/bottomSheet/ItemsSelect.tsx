@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import {
   BottomSheetModal,
   BottomSheetView,
@@ -18,6 +18,7 @@ import {
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { ThemedText } from "@/components/ThemedText";
 
 interface SelectItem {
   label: string;
@@ -132,7 +133,7 @@ export const ItemsSelect: React.FC<ItemsSelectProps> = ({
         </View>
       </View>
       {error?.message && (
-        <Text style={styles.errorMessage}>{error.message}</Text>
+        <ThemedText style={styles.errorMessage}>{error.message}</ThemedText>
       )}
 
       <BottomSheetModal

@@ -1,4 +1,4 @@
-export interface ParsedForm {
+export interface CreateBusiness {
   loadDate: string;
   loadTime: string;
   unloadDate: string;

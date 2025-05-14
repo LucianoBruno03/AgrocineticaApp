@@ -30,22 +30,84 @@ const _layout = (props: Props) => {
       />
 
       <Stack.Screen
-        name="details/[idBusiness]"
+        name="(detail)/[idBusiness]/index"
         options={{ gestureEnabled: false, title: "Detalles del negocio" }}
       />
 
       <Stack.Screen
-        name="details/viewById/[idBusinessDetail]"
-        options={{ gestureEnabled: false, title: "Detalles del negocio" }}
+        name="(detail)/[idBusiness]/[idBusinessDetail]/index"
+        options={{
+          gestureEnabled: false,
+          title: "Detalle del cupo",
+          headerBackButtonDisplayMode: "minimal",
+        }}
+      />
+
+      <Stack.Screen
+        name="(detail)/[idBusiness]/[idBusinessDetail]/Assign"
+        options={{
+          gestureEnabled: false,
+          title: "Asignar cupo",
+          headerBackButtonDisplayMode: "minimal",
+        }}
       />
 
       <Stack.Screen
         name="edit/[idBusiness]"
-        options={{ gestureEnabled: false, title: "Editar negocio" }}
+        options={{
+          gestureEnabled: false,
+          title: "Editar negocio",
+          headerBackButtonDisplayMode: "minimal",
+        }}
+      />
+
+      {/* <Stack.Screen
+        name="Items"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
       />
 
       <Stack.Screen
-        name="Items"
+        name="TransportCustomer"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="TransportEntity"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="Chauffeur"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="MainUnits"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="SecondaryUnits"
         options={{
           presentation: "card",
           animation: "slide_from_bottom",
@@ -123,7 +185,7 @@ const _layout = (props: Props) => {
           animation: "slide_from_bottom",
           title: "Selección",
         }}
-      />
+      /> */}
     </Stack>
   );
 };

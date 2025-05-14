@@ -7,19 +7,24 @@ import axios, { AxiosError } from "axios";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
-import { KeyboardView } from "@/components/KeyboardAvoidingView";
+import {
+  KeyboardLoginView,
+  KeyboardView,
+} from "@/components/KeyboardAvoidingView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { CustomTextField } from "@/components/CustomTextField";
+import { CustomTextField } from "@/components/customs/CustomTextField";
 import { LoginSchema } from "@/schemas/login";
 import { login } from "@/api/request/login";
 import { SecureStoreSetItemAsync } from "@/lib/SecureStorageHelpers";
-import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { ScrollView } from "react-native";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const colorScheme = useColorScheme() ?? "light";
   const color = colorScheme === "light" ? "#000" : "#fff";
+  const accentColor = "#0093D1";
 
   const {
     control,
@@ -42,7 +47,6 @@ export default function Login() {
         // await SecureStoreSetItemAsync("user", JSON.stringify(data.user));
         router.replace("/home");
       } catch (error) {
-        console.error("Error saving auth data:", error);
         Toast.show({
           type: "error",
           text1: "Error",
@@ -69,13 +73,33 @@ export default function Login() {
           });
           return;
         }
-      }
 
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Hubo un error inesperado",
-      });
+        if (error.response?.status === 400) {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: error.response?.data.message || "Hubo un error inesperado",
+          });
+          return;
+        }
+
+        if (error.response?.status === 404) {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: `${
+              error.response?.data.exception || "Hubo un error inesperado"
+            }`,
+          });
+          return;
+        }
+
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Hubo un error inesperado",
+        });
+      }
     },
   });
 
@@ -84,112 +108,134 @@ export default function Login() {
       await loginMutation.mutateAsync(data);
     } catch (error) {
       // Error handling is managed in mutation callbacks
-      console.error("Login error:", error);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Hubo un error inesperado",
+      });
     }
   };
 
   return (
-    <KeyboardView>
+    <KeyboardLoginView>
       <ThemedView style={{ flex: 1 }}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={require("../../assets/images/agrocinetica/wave.png")}
-            style={{ width: "100%", height: 200 }}
-          />
-        </View>
-
-        <View style={styles.container}>
-          <View style={styles.headerContainer}>
-            <ThemedText type="title" style={styles.firstTitle}>
-              Hola
-            </ThemedText>
-            <ThemedText style={styles.subTitle}>
-              Inicia sesión en tu cuenta
-            </ThemedText>
-          </View>
-
-          <View style={styles.formContainer}>
-            <Controller
-              control={control}
-              name="email"
-              rules={{ required: true }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <CustomTextField
-                  label="Email"
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  error={error}
-                  type="email"
-                  placeholder="Email"
-                  inputProps={{
-                    style: [styles.textInput, { color: color }],
-                  }}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="password"
-              rules={{ required: true }}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <CustomTextField
-                  label="Contraseña"
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  error={error}
-                  type="password"
-                  placeholder="Contraseña"
-                  // secureTextEntry={!showPassword}
-                  inputProps={{
-                    style: [styles.textInput, { color: color }],
-                  }}
-                />
-              )}
+        <ScrollView
+          style={{ flex: 1 }}
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.imageContainer}>
+            <Image
+              source={require("../../assets/images/agrocinetica/wave.png")}
+              style={{ width: "100%", height: 200, resizeMode: "cover" }}
             />
           </View>
 
-          <Pressable
-            style={[styles.buttonLogin, isSubmitting && { opacity: 0.7 }]}
-            onPress={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
-          >
-            <ThemedText type="default">
-              {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
-            </ThemedText>
-          </Pressable>
-          <View style={{ flexDirection: "row", gap: 8 }}>
-            <ThemedText type="default" style={styles.subTitle}>
-              ¿No tienes una cuenta?
-            </ThemedText>
+          <View style={styles.container}>
+            <View style={styles.headerContainer}>
+              <ThemedText type="title" style={styles.firstTitle}>
+                Bienvenido
+              </ThemedText>
+              <ThemedText style={styles.subTitle}>
+                Ingrese sus credenciales para comenzar.
+              </ThemedText>
+            </View>
+
+            <View style={styles.formContainer}>
+              <Controller
+                control={control}
+                name="email"
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, onBlur, value },
+                  fieldState: { error },
+                }) => (
+                  <CustomTextField
+                    label="Email"
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    error={error}
+                    type="email"
+                    placeholder="Email"
+                    inputProps={{
+                      style: [styles.textInput, { color: color }],
+                    }}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="password"
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, onBlur, value },
+                  fieldState: { error },
+                }) => (
+                  <CustomTextField
+                    label="Contraseña"
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    error={error}
+                    type="password"
+                    placeholder="Contraseña"
+                    // secureTextEntry={!showPassword}
+                    inputProps={{
+                      style: [styles.textInput, { color: color }],
+                    }}
+                  />
+                )}
+              />
+            </View>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.buttonLogin,
+                isSubmitting && { opacity: 0.7 },
+                pressed && { opacity: 0.85 },
+              ]}
+              onPress={handleSubmit(onSubmit)}
+              disabled={isSubmitting}
+            >
+              <ThemedText type="default" style={styles.buttonText}>
+                {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
+              </ThemedText>
+            </Pressable>
+
+            <View style={styles.registerContainer}>
+              <ThemedText type="default" style={styles.subTitle}>
+                ¿No tienes una cuenta?
+              </ThemedText>
+              <Pressable
+                onPress={() => {
+                  router.push("/register");
+                }}
+              >
+                <ThemedText type="default" style={styles.linkText}>
+                  Regístrate
+                </ThemedText>
+              </Pressable>
+            </View>
+
             <Pressable
               onPress={() => {
-                router.push("/register");
+                // Handle forgot password
               }}
+              style={({ pressed }) => [
+                styles.forgotPasswordContainer,
+                pressed && { opacity: 0.7 },
+              ]}
             >
-              <ThemedText
-                type="default"
-                style={(styles.subTitle, { color: "#0093D1" })}
-              >
-                Regístrate
+              <ThemedText type="default" style={styles.linkText}>
+                ¿Olvidaste tu contraseña?
               </ThemedText>
             </Pressable>
           </View>
-
-          <ThemedText type="default" style={styles.subTitle}>
-            ¿Olvidaste tu contraseña?
-          </ThemedText>
-        </View>
+        </ScrollView>
       </ThemedView>
-    </KeyboardView>
+    </KeyboardLoginView>
   );
 }
 
@@ -197,52 +243,87 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    gap: 16,
-    paddingTop: 40,
-    paddingInline: 20,
+    gap: 20,
+    paddingTop: 30,
+    paddingHorizontal: 24,
     width: "100%",
-    marginInline: "auto",
+    marginHorizontal: "auto",
   },
   imageContainer: {
     width: "100%",
     justifyContent: "flex-start",
-    alignItems: "center",
+    alignItems: "flex-start",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   headerContainer: {
     alignItems: "flex-start",
     justifyContent: "center",
-    width: "auto",
+    width: "100%",
+    marginBottom: 16,
   },
   firstTitle: {
-    fontSize: 80,
+    fontSize: 52,
     fontWeight: "bold",
-    lineHeight: 80,
+    lineHeight: 52,
+    letterSpacing: -0.5,
   },
   subTitle: {
-    fontSize: 20,
+    fontSize: 16,
+    opacity: 0.8,
   },
   textInput: {
-    padding: 10,
+    padding: 12,
     paddingStart: 20,
-    height: 48,
+    height: 54,
     borderRadius: 30,
-    backgroundColor: "#0093D120",
+    backgroundColor: "#0093D110",
+    fontSize: 16,
   },
   formContainer: {
     width: "100%",
-    gap: 12,
+    gap: 16,
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
+    marginBottom: 8,
   },
   buttonLogin: {
-    width: "80%",
-    height: 50,
+    width: "100%",
+    height: 56,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 8,
     borderRadius: 30,
     backgroundColor: "#0093D1",
+    shadowColor: "#0093D1",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  registerContainer: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 16,
+    alignItems: "center",
+  },
+  linkText: {
+    color: "#0093D1",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  forgotPasswordContainer: {
+    marginTop: 8,
+    padding: 8,
   },
 });

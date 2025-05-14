@@ -5,7 +5,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 
 import { Colors } from "@/constants/Colors";
 import { ThemedView } from "./ThemedView";
-import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
 export type ThemedLabeledViewProps = ViewProps & {
   lightColor?: string;
