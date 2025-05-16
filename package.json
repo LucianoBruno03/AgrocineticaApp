@@ -1,5 +1,5 @@
 {
-  "name": "Agrocinetica",
+  "name": "agrocinetica",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -55,7 +55,8 @@
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
     "zod": "^3.24.4",
-    "zustand": "^5.0.4"
+    "zustand": "^5.0.4",
+    "expo-dev-client": "~5.1.8"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

@@ -8,7 +8,7 @@
     "scheme": "agrocinetica",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-   "ios": {
+    "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.lucianodev03.testapp52",
       "infoPlist": {
@@ -19,7 +19,7 @@
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/agrocinetica/simpleLogo.png",
-        "backgroundColor": "#ffffff00"
+        "backgroundColor": "#ffffff"
       },
       "package": "com.lucianodev03.testapp52",
       "edgeToEdgeEnabled": false
@@ -37,12 +37,18 @@
           "image": "./assets/images/agrocinetica/simpleLogo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff00"
+          "backgroundColor": "#ffffff"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0053d651-73ca-4566-93a5-8123406f3621"
+      }
     }
   }
 }
