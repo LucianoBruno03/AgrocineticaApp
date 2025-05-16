@@ -1,5 +1,5 @@
-import { Link, Stack } from "expo-router";
-import { StyleSheet, Image, View, SafeAreaView } from "react-native";
+import { Link } from "expo-router";
+import { Image, SafeAreaView, StyleSheet, View } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";

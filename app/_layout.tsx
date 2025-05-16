@@ -1,65 +1,64 @@
+import { AxiosInterceptor } from "@/api/axios/axios.interceptors";
+import GlobalSafeAreaView from "@/components/customs/GlobalSafeAreaView/GlobalSafeAreaView.android";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { SecureStoreGetItemAsync } from "@/lib/SecureStorageHelpers";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { Stack, useRouter, useSegments } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
-import "react-native-reanimated";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AxiosInterceptor } from "@/api/axios/axios.interceptors";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import Toast from "react-native-toast-message";
+import { useFonts } from "expo-font";
+import { SplashScreen, Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useCallback, useEffect } from "react";
+import { Appearance } from "react-native";
 
 AxiosInterceptor();
 
 const queryClient = new QueryClient();
 
-// Esta función evita que la pantalla de inicio se oculte automáticamente osea que se muestre hasta que se cargue la fuente SpaceMono y se oculte la pantalla de inicio SplashScreen
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const router = useRouter();
-  const segments = useSegments();
-
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+  const onAppReady = useCallback(async () => {
+    try {
+      if (loaded) {
+        const mode = (await SecureStoreGetItemAsync("colorMode")) as
+          | "light"
+          | "dark"
+          | null;
+        if (mode) {
+          Appearance.setColorScheme(mode);
+        }
+      }
+    } catch (error) {
+      console.warn("Error loading colorMode:", error);
+    } finally {
+      await SplashScreen.hideAsync();
     }
   }, [loaded]);
 
-  // Verificar el segmento actual y redirigir si es necesario
   useEffect(() => {
-    const inAuthGroup = segments[0] === "(auth)";
-    const inTabsGroup = segments[0] === "(tabs)";
-
-    // Aquí puedes agregar tu lógica para verificar si el usuario está autenticado
-    const isAuthenticated = true; // Reemplaza esto con tu lógica real de autenticación
-
-    if (isAuthenticated && inAuthGroup) {
-      // Si está autenticado y trata de acceder a rutas de auth, redirigir a home
-      router.replace("/(tabs)/home");
-    }
-  }, [segments]);
+    onAppReady();
+  }, [onAppReady]);
 
   if (!loaded) {
+    // Async font loading only occurs in development.
     return null;
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <GlobalSafeAreaView>
       <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
           <Stack
             screenOptions={{
               headerShown: false,
@@ -118,10 +117,16 @@ export default function RootLayout() {
               }}
             />
           </Stack>
-          <StatusBar backgroundColor="transparent" style="auto" />
-        </GestureHandlerRootView>
+
+          {/* <StatusBar
+            barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
+            backgroundColor={
+              colorScheme === "dark" ? "#000" : "rgba(255, 255, 255, 0.8)"
+            }
+          /> */}
+          <StatusBar style="auto" />
+        </ThemeProvider>
       </QueryClientProvider>
-      <Toast />
-    </ThemeProvider>
+    </GlobalSafeAreaView>
   );
 }

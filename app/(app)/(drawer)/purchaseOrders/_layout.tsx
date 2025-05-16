@@ -1,4 +1,4 @@
-import { DrawerToggleButton } from "@react-navigation/drawer";
+import CustomDrawerToggleButton from "@/components/customs/CustomDrawerToggleButton";
 import { Stack, useLocalSearchParams } from "expo-router";
 import React from "react";
 
@@ -19,7 +19,7 @@ const _layout = (props: Props) => {
         name="index"
         options={{
           title: "Ordenes de compra",
-          headerLeft: () => <DrawerToggleButton />, // Botón de Drawer
+          headerLeft: () => <CustomDrawerToggleButton />, // Botón de Drawer
         }}
       />
 

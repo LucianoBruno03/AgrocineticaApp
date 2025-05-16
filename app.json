@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "test-app-52",
-    "slug": "test-app-52",
+    "name": "Agrocinetica",
+    "slug": "Agrocinetica",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/agrocinetica/simpleLogo.png",
     "scheme": "agrocinetica",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "ios": {
+   "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.lucianodev03.testapp52",
       "infoPlist": {
@@ -18,39 +18,31 @@
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/agrocinetica/simpleLogo.png",
+        "backgroundColor": "#ffffff00"
       },
-      "package": "com.lucianodev03.testapp52"
+      "package": "com.lucianodev03.testapp52",
+      "edgeToEdgeEnabled": false
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/agrocinetica/simpleLogo.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/agrocinetica/simpleLogo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#ffffff00"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "6ec9d6b7-7819-46e7-8d4f-f9a80a3d35d2"
-      }
-    },
-    "owner": "lucianodev03"
+    }
   }
 }

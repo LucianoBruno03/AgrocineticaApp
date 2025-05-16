@@ -1,18 +1,12 @@
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Drawer } from "expo-router/drawer";
 import CustomDrawer from "@/components/customs/CustomDrawer";
-import { useAuthStore } from "@/zustand/authStore";
-import {
-  SecureStoreGetItemAsync,
-  SecureStoreSetItemAsync,
-} from "@/lib/SecureStorageHelpers";
-import { jwtDecode, JwtPayload } from "jwt-decode";
-import { api } from "@/api/axios/api";
-import { Text } from "react-native";
-import { useQuery } from "@tanstack/react-query";
-import { AxiosInterceptor } from "@/api/axios/axios.interceptors";
-import { getInfoData } from "@/api/request/auth/get-user-info";
+import CustomDrawerToggleButton from "@/components/customs/CustomDrawerToggleButton";
+import { SecureStoreGetItemAsync } from "@/lib/SecureStorageHelpers";
 import { IUserInfo } from "@/types/auth/auth";
+import { useAuthStore } from "@/zustand/authStore";
+import { useQuery } from "@tanstack/react-query";
+import { Drawer } from "expo-router/drawer";
+import { jwtDecode } from "jwt-decode";
+import { Text, View } from "react-native";
 
 const getUserInfo = async () => {
   try {
@@ -145,32 +139,42 @@ export default function Layout() {
     return <Text>Cagando...</Text>;
   }
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer drawerContent={CustomDrawer} screenOptions={{ title: "" }}>
-        <Drawer.Screen
-          name="business"
-          options={{
-            drawerLabel: "Negicios",
-            headerShown: false, // Ocultamos el header para usar el del Stack
-          }}
-        />
+    // <GestureHandlerRootView style={{ flex: 1 }}> {/* ESTO LO HABIA COMENTADO NOSE XQ */}
+    <Drawer
+      drawerContent={CustomDrawer}
+      screenOptions={{
+        title: "",
+        headerLeft: () => (
+          <View style={{ marginLeft: 16 }}>
+            <CustomDrawerToggleButton />
+          </View>
+        ), // Botón de Drawer
+      }}
+    >
+      <Drawer.Screen
+        name="business"
+        options={{
+          drawerLabel: "Negocios",
+          headerShown: false, // Ocultamos el header para usar el del Stack
+        }}
+      />
 
-        <Drawer.Screen
-          name="loadingOrders"
-          options={{
-            drawerLabel: "Ordenes de carga",
-            headerShown: false, // Ocultamos el header para usar el del Stack
-          }}
-        />
+      <Drawer.Screen
+        name="loadingOrders"
+        options={{
+          drawerLabel: "Ordenes de carga",
+          headerShown: false, // Ocultamos el header para usar el del Stack
+        }}
+      />
 
-        <Drawer.Screen
-          name="purchaseOrders"
-          options={{
-            drawerLabel: "Ordenes de compra",
-            headerShown: false, // Ocultamos el header para usar el del Stack
-          }}
-        />
-      </Drawer>
-    </GestureHandlerRootView>
+      <Drawer.Screen
+        name="purchaseOrders"
+        options={{
+          drawerLabel: "Ordenes de compra",
+          headerShown: false, // Ocultamos el header para usar el del Stack
+        }}
+      />
+    </Drawer>
+    // </GestureHandlerRootView>
   );
 }

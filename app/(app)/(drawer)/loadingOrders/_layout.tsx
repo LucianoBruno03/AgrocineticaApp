@@ -1,7 +1,6 @@
-import { View, Text } from "react-native";
-import React from "react";
+import CustomDrawerToggleButton from "@/components/customs/CustomDrawerToggleButton";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { DrawerToggleButton } from "@react-navigation/drawer";
+import React from "react";
 
 type Props = {};
 
@@ -20,7 +19,7 @@ const _layout = (props: Props) => {
         name="index"
         options={{
           title: "Ordenes de carga",
-          headerLeft: () => <DrawerToggleButton />, // Botón de Drawer
+          headerLeft: () => <CustomDrawerToggleButton />, // Botón de Drawer
         }}
       />
 
@@ -37,7 +36,7 @@ const _layout = (props: Props) => {
         name="changeStatus"
         options={{
           title: "Cambiar estado de orden de carga",
-          headerLeft: () => <DrawerToggleButton />, // Botón de Drawer
+          headerLeft: () => <CustomDrawerToggleButton />, // Botón de Drawer
         }}
       />
     </Stack>

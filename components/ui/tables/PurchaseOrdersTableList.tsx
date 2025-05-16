@@ -1,27 +1,22 @@
-import { fetchSearchCategoriesTypes } from "@/api/request/categoriesTypes/SearchCategoriesTypes";
 import { fetchSearchPurchaseOrders } from "@/api/request/purchaseOrders/SearchPurchaseOrders";
 import { CustomTextField } from "@/components/customs/CustomTextField";
 import { ThemedText } from "@/components/ThemedText";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import useDebounce from "@/hooks/useDebounce";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   ActivityIndicator,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
   View,
 } from "react-native";
 import { z } from "zod";
-import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
-import Toast from "react-native-toast-message";
-import axios, { AxiosError } from "axios";
 import PurchaseOrdersCardList from "../cards/PurchaseOrdersCardList";
 
 const SearchSchema = z.object({
@@ -38,7 +33,7 @@ const PurchaseOrdersTableList = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const searchedWord = useDebounce(searchQuery, 500);
-  const [selectedIds, setSelectedIds] = useState<Array<any>>([]);
+  const [selectedIds, setSelectedIds] = useState<any[]>([]);
 
   const form = useForm<z.infer<typeof SearchSchema>>({
     defaultValues: {
@@ -155,40 +150,57 @@ const PurchaseOrdersTableList = () => {
         onScroll={handleScroll}
         scrollEventThrottle={400}
       >
-        {!getPurchaseOrdersQuery.isRefetching && purchaseOrders.length === 0 ? (
-          <View style={styles.noDataContainer}>
-            <ThemedText style={styles.noDataText}>
-              No hay ordenes de compra para mostrar.
-            </ThemedText>
-          </View>
+        {/* Si está cargando (primera carga o refetch), y no hay datos aún, mostrar loader */}
+        {getPurchaseOrdersQuery.isFetching && purchaseOrders.length === 0 ? (
+          // <ActivityIndicator size="large" style={{ marginVertical: 16 }} />
+          <></>
         ) : (
           <>
-            {purchaseOrders.map((item, index) => (
-              <PurchaseOrdersCardList
-                key={`order-${item.id}-${index}`}
-                item={item}
-                isSelected={selectedIds.some(
-                  (selected) =>
-                    selected === item.id ||
-                    selected === item.purchaseOrderstatusName
+            {/* Solo mostrar mensaje si no hay datos y NO está cargando/refetching */}
+            {purchaseOrders.length === 0 &&
+            !getPurchaseOrdersQuery.isFetching &&
+            !getPurchaseOrdersQuery.isRefetching ? (
+              <View style={styles.noDataContainer}>
+                <ThemedText style={styles.noDataText}>
+                  No hay órdenes de compra para mostrar.
+                </ThemedText>
+              </View>
+            ) : (
+              <>
+                {purchaseOrders.map((item, index) => (
+                  <PurchaseOrdersCardList
+                    key={`order-${item.id}-${index}`}
+                    item={item}
+                    isSelected={selectedIds.some(
+                      (selected) =>
+                        selected === item.id ||
+                        selected === item.purchaseOrderstatusName
+                    )}
+                    isSelectionMode={selectedIds.length > 0}
+                  />
+                ))}
+
+                {/* Loader al hacer scroll para paginación */}
+                {getPurchaseOrdersQuery.isFetching && page > 0 && (
+                  <ActivityIndicator
+                    size="large"
+                    style={{ marginVertical: 16 }}
+                  />
                 )}
-                // onLongPress={() => handleSelect(item)}
-                isSelectionMode={selectedIds.length > 0}
-              />
-            ))}
 
-            {getPurchaseOrdersQuery.isFetching && page > 0 && (
-              <ActivityIndicator size="large" style={{ marginVertical: 16 }} />
+                {/* Fin de la lista solo si se cargaron datos suficientes */}
+                {purchaseOrders.length >= totalCount &&
+                  purchaseOrders.length > 0 &&
+                  !getPurchaseOrdersQuery.isFetching &&
+                  !getPurchaseOrdersQuery.isRefetching && (
+                    <View style={styles.endListContainer}>
+                      <ThemedText style={styles.endListText}>
+                        No hay más datos para mostrar.
+                      </ThemedText>
+                    </View>
+                  )}
+              </>
             )}
-
-            {purchaseOrders.length >= totalCount &&
-              purchaseOrders.length > 0 && (
-                <View style={styles.endListContainer}>
-                  <ThemedText style={styles.endListText}>
-                    No hay más datos para mostrar.
-                  </ThemedText>
-                </View>
-              )}
           </>
         )}
       </ScrollView>

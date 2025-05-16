@@ -1,4 +1,4 @@
-import { Link, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -9,7 +9,7 @@ export default function Logout() {
     <>
       <Stack.Screen options={{ title: "Oops!" }} />
       <ThemedView style={styles.container}>
-        <ThemedText type="title">This screen doesn't exist.</ThemedText>
+        <ThemedText type="title">{`This screen doesn't exist.`}</ThemedText>
       </ThemedView>
     </>
   );

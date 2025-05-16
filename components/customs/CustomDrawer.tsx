@@ -1,195 +1,271 @@
-import { Image, View } from "react-native";
+import { useAuthStore } from "@/zustand/authStore";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { useRouter } from "expo-router";
-import { ThemedText } from "../ThemedText";
-import { IconSymbol } from "../ui/IconSymbol";
-import { Switch } from "react-native-gesture-handler";
-import { Appearance } from "react-native";
 import { useState } from "react";
-import { useAuthStore } from "@/zustand/authStore";
+import {
+  Appearance,
+  Image,
+  Pressable,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from "react-native";
+import { Switch } from "react-native-gesture-handler";
+import { ThemedText } from "../ThemedText";
+import { IconSymbol, IconSymbolName } from "../ui/IconSymbol";
+import BusIcon from "../ui/icons/BusIcon";
+import { ItemsGridIcon } from "../ui/icons/ItemsGridIcon";
+import LogoutIcon from "../ui/icons/LogoutIcon";
+import { PackageIcon } from "../ui/icons/PackageIcon";
+
+// Collapsible Section Component
+const CollapsibleSection = ({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  // icon name props
+  // icon: IconSymbolName; sera un componente
+  icon: React.ReactNode | IconSymbolName;
+  children: React.ReactNode;
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <View style={styles.collapsibleContainer}>
+      <Pressable
+        style={styles.sectionHeader}
+        onPress={() => setIsExpanded(!isExpanded)}
+      >
+        <View style={styles.sectionTitle}>
+          {typeof icon === "string" ? (
+            <IconSymbol size={24} name={icon as any} color="#666" />
+          ) : (
+            icon
+          )}
+          <ThemedText style={styles.sectionTitleText}>{title}</ThemedText>
+        </View>
+        <IconSymbol
+          size={20}
+          name={isExpanded ? "chevron.down" : "chevron.right"}
+          color="#666"
+        />
+      </Pressable>
+
+      {isExpanded && <View style={styles.sectionContent}>{children}</View>}
+    </View>
+  );
+};
 
 export default function CustomDrawer(props: any) {
   const router = useRouter();
-  const { user, decodedClaims } = useAuthStore();
+  const {
+    // user,
+    decodedClaims,
+  } = useAuthStore();
 
-  const [isDarkMode, setIsDarkMode] = useState(
-    Appearance.getColorScheme() === "dark"
-  );
+  const colorScheme = useColorScheme();
 
   const toggleTheme = (value: boolean) => {
-    setIsDarkMode(value);
     Appearance.setColorScheme(value ? "dark" : "light");
   };
 
   return (
-    <View style={{ flex: 1, flexDirection: "column", flexGrow: 1 }}>
+    <View style={styles.container}>
       <DrawerContentScrollView {...props}>
-        <View>
+        <View style={styles.profileContainer}>
           <Image
             source={{
               uri: process.env.EXPO_PUBLIC_WEB_URL! + decodedClaims?.image_url,
             }}
-            style={{
-              width: 160,
-              height: 160,
-              borderRadius: 160,
-              marginInline: "auto",
-            }}
+            style={styles.profileImage}
           />
-          <ThemedText
-            style={{
-              fontSize: 16,
-              textAlign: "center",
-              marginTop: 8,
-            }}
-          >
+          <ThemedText style={styles.profileName}>
             {decodedClaims?.fullName}
           </ThemedText>
         </View>
-        <DrawerItem
-          label={({ focused }) => {
-            return (
-              <ThemedText
-                style={{
-                  fontSize: 12,
-                }}
-              >
-                Negocios
-              </ThemedText>
-            );
-          }}
-          onPress={() => {
-            router.push("/business");
-          }}
-          icon={({ focused, color, size }) => {
-            return (
-              <IconSymbol size={28} name="rectangle.grid.2x2" color={color} />
-            );
-          }}
-        />
 
-        <DrawerItem
-          label={({ focused }) => {
-            return (
-              <ThemedText
-                style={{
-                  fontSize: 12,
-                }}
-              >
+        {/* Gestión de Fletes Collapsible Section */}
+        <CollapsibleSection
+          title="Gestión de Fletes"
+          icon={
+            <>
+              <PackageIcon width={24} height={24} color={"#666"} />
+            </>
+          }
+        >
+          <DrawerItem
+            label={() => (
+              <ThemedText style={styles.menuItemText}>Negocios</ThemedText>
+            )}
+            onPress={() => router.push("/business")}
+            icon={({ color }) => (
+              <ItemsGridIcon width={16} height={16} color={color} />
+            )}
+            style={styles.nestedItem}
+          />
+
+          <DrawerItem
+            label={() => (
+              <ThemedText style={styles.menuItemText}>
                 Ordenes de carga
               </ThemedText>
-            );
-          }}
-          onPress={() => {
-            router.push("/loadingOrders");
-          }}
-          icon={({ focused, color, size }) => {
-            return (
-              <IconSymbol size={28} name="rectangle.grid.2x2" color={color} />
-            );
-          }}
-        />
+            )}
+            onPress={() => router.push("/loadingOrders")}
+            icon={({ color }) => (
+              <ItemsGridIcon width={16} height={16} color={color} />
+            )}
+            style={styles.nestedItem}
+          />
 
-        <DrawerItem
-          label={({ focused }) => {
-            return (
-              <ThemedText
-                style={{
-                  fontSize: 12,
-                }}
-              >
+          <DrawerItem
+            label={() => (
+              <ThemedText style={styles.menuItemText}>
                 Cambiar estado de ordenes de carga
               </ThemedText>
-            );
-          }}
-          onPress={() => {
-            router.push("/loadingOrders/changeStatus");
-          }}
-          icon={({ focused, color, size }) => {
-            return (
-              <IconSymbol size={28} name="rectangle.grid.2x2" color={color} />
-            );
-          }}
-        />
+            )}
+            onPress={() => router.push("/loadingOrders/changeStatus")}
+            icon={({ color }) => (
+              <ItemsGridIcon width={16} height={16} color={color} />
+            )}
+            style={styles.nestedItem}
+          />
 
-        <DrawerItem
-          label={({ focused }) => {
-            return (
-              <ThemedText
-                style={{
-                  fontSize: 12,
-                }}
-              >
+          <DrawerItem
+            label={() => (
+              <ThemedText style={styles.menuItemText}>
                 Ordenes de compra
               </ThemedText>
-            );
-          }}
-          onPress={() => {
-            router.push("/purchaseOrders");
-          }}
-          icon={({ focused, color, size }) => {
-            return (
-              <IconSymbol size={28} name="rectangle.grid.2x2" color={color} />
-            );
-          }}
-        />
+            )}
+            onPress={() => router.push("/purchaseOrders")}
+            icon={({ color }) => (
+              <ItemsGridIcon width={16} height={16} color={color} />
+            )}
+            style={styles.nestedItem}
+          />
+        </CollapsibleSection>
 
-        {/* <DrawerItem
-          label={({ focused }) => {
-            return (
-              <ThemedText
-                style={{
-                  fontSize: 12,
-                }}
-              >
-                Explore
-              </ThemedText>
-            );
-          }}
-          onPress={() => {
-            router.push("/explore");
-          }}
-          icon={({ focused, color, size }) => {
-            return (
-              <IconSymbol size={28} name="paperplane.fill" color={color} />
-            );
-          }}
-        /> */}
+        {/* Transporte Collapsible Section */}
+        <CollapsibleSection
+          title="Transporte"
+          icon={
+            <>
+              <BusIcon width={24} height={24} color={"#666"} />
+            </>
+          }
+        >
+          <DrawerItem
+            label={() => (
+              <ThemedText style={styles.menuItemText}>Unidades</ThemedText>
+            )}
+            onPress={() => router.push("/+not-found")}
+            icon={({ color }) => (
+              <ItemsGridIcon width={16} height={16} color={color} />
+            )}
+            style={styles.nestedItem}
+          />
+
+          <DrawerItem
+            label={() => (
+              <ThemedText style={styles.menuItemText}>Choferes</ThemedText>
+            )}
+            onPress={() => router.push("/+not-found")}
+            icon={({ color }) => (
+              <ItemsGridIcon width={16} height={16} color={color} />
+            )}
+            style={styles.nestedItem}
+          />
+        </CollapsibleSection>
 
         <DrawerItem
-          label={({ focused }) => {
-            return (
-              <ThemedText
-                style={{
-                  fontSize: 12,
-                }}
-              >
-                Cerrar sesión
-              </ThemedText>
-            );
-          }}
-          onPress={() => {
-            router.push("/login");
-          }}
-          icon={({ focused, color, size }) => {
-            return (
-              <IconSymbol size={28} name="paperplane.fill" color={color} />
-            );
-          }}
+          label={() => (
+            <ThemedText style={styles.logoutText}>Cerrar sesión</ThemedText>
+          )}
+          onPress={() => router.push("/login")}
+          icon={({ color }) => (
+            <>
+              <LogoutIcon width={24} height={24} color={"#666"} />
+            </>
+          )}
         />
       </DrawerContentScrollView>
 
-      <View style={{ padding: 20, flexDirection: "row", alignItems: "center" }}>
+      <View style={styles.themeToggleContainer}>
         <ThemedText style={{ marginRight: 8, fontSize: 16 }}>
-          {isDarkMode ? "Modo oscuro" : "Modo claro"}
+          {colorScheme ? "Modo oscuro" : "Modo claro"}
         </ThemedText>
         <Switch
-          value={isDarkMode}
+          value={colorScheme === "dark"}
           onValueChange={toggleTheme}
-          thumbColor={isDarkMode ? "#f4f3f4" : "#f4f3f4"}
+          thumbColor={colorScheme === "dark" ? "#f4f3f4" : "#f4f3f4"}
           trackColor={{ false: "#767577", true: "#81b0ff" }}
         />
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    flexGrow: 1,
+  },
+  profileContainer: {
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 160,
+    height: 160,
+    borderRadius: 160,
+    marginInline: "auto",
+  },
+  profileName: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 8,
+  },
+  collapsibleContainer: {
+    marginBottom: 8,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 4,
+  },
+  sectionTitle: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  sectionTitleText: {
+    fontSize: 14,
+    fontWeight: "500",
+    marginLeft: 10,
+  },
+  logoutText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  sectionContent: {
+    paddingLeft: 8,
+  },
+  nestedItem: {
+    marginVertical: 0,
+  },
+  menuItemText: {
+    fontSize: 12,
+  },
+  themeToggleContainer: {
+    padding: 20,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  themeToggleText: {
+    marginRight: 8,
+    fontSize: 16,
+  },
+});

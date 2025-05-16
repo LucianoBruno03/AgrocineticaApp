@@ -12,8 +12,18 @@ const MAPPING = {
   "house.fill": "home",
   "paperplane.fill": "send",
   "chevron.left.forwardslash.chevron.right": "code",
-  "chevron.right": "chevron-right",
+  // "chevron.right": "chevron-right",
   "line.3.horizontal": "menu",
+  // door.left.hand.open
+  "door.left.hand.open": "exit-to-app",
+  "rectangle.grid.2x2": "grid-view",
+  "chevron.down": "expand-more",
+  "chevron.up": "expand-less",
+  "chevron.right": "chevron-right",
+  "chevron.left": "chevron-left",
+  "shippingbox.fill": "square",
+  "bus.fill": "directions-bus",
+  trash: "delete",
   magnifyingglass: "search",
 } as Partial<
   Record<
