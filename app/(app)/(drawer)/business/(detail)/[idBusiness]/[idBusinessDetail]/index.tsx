@@ -1,7 +1,6 @@
 import { fetchBusinessById } from "@/api/request/business/BusinessById";
 import { fetchBusinessDetailById } from "@/api/request/business/BusinessDetailById";
 import Autocomplete from "@/components/customs/CustomAutocomplete";
-import CustomCheckboxList from "@/components/customs/CustomCheckboxList";
 import { CustomDateField } from "@/components/customs/CustomDateField";
 import CustomRadioButton from "@/components/customs/CustomRadioButton";
 import { CustomTextField } from "@/components/customs/CustomTextField";
@@ -18,7 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Pressable, ScrollView, StyleSheet, Switch, View } from "react-native";
+import { StyleSheet, Switch, View } from "react-native";
 import { z } from "zod";
 
 const ViewBusinessDetail = () => {
@@ -729,7 +728,6 @@ const styles = StyleSheet.create({
     paddingStart: 20,
     height: 48,
     borderRadius: 10,
-    // backgroundColor: "#0093D120",
   },
   SubmitButton: {
     width: "100%",

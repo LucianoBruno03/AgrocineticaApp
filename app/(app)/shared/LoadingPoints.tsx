@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Fragment, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Pressable,
   StyleSheet,
@@ -14,14 +13,13 @@ import {
   View,
 } from "react-native";
 
+import { fetchListLoadingPoints } from "@/api/request/search/LoadingPoints";
+import LoaderWithText from "@/components/ui/loaders/LoaderWithText";
 import {
   LoadingPoints,
   LoadingPointsListResponse,
 } from "@/types/search/LoadingPoints";
 import Checkbox from "expo-checkbox";
-import { fetchListLoadingPoints } from "@/api/request/search/LoadingPoints";
-import { ScrollView } from "react-native-gesture-handler";
-import LoaderWithText from "@/components/ui/loaders/LoaderWithText";
 
 export default function SearchScreen() {
   const colorScheme = useColorScheme() ?? "light";

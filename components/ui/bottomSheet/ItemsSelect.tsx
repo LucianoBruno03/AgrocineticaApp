@@ -17,7 +17,6 @@ import {
   BottomSheetModalProvider,
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemedText } from "@/components/ThemedText";
 
 interface SelectItem {
@@ -139,11 +138,13 @@ export const ItemsSelect: React.FC<ItemsSelectProps> = ({
       <BottomSheetModal
         ref={bottomSheetModalRef}
         index={0}
-        snapPoints={["40%"]} // Ajusta la altura para que no suba demasiado
+        // Ajusta la altura para que no suba demasiado
         onChange={handleSheetChanges}
         enablePanDownToClose
         backgroundStyle={styles.bottomSheetBackground}
-        backdropComponent={(props) => (
+        backdropComponent={(
+          props: React.ComponentProps<typeof BottomSheetBackdrop>
+        ) => (
           <BottomSheetBackdrop
             {...props}
             appearsOnIndex={0}

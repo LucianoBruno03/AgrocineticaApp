@@ -1,7 +1,6 @@
 import { fetchSearchCancellationReasons } from "@/api/request/categoriesTypes/SearchCancellationReasons";
 import { fetchSearchCategoriesTypes } from "@/api/request/categoriesTypes/SearchCategoriesTypes";
 import { fetchCategoriesTypesByName } from "@/api/request/categoriesTypes/SearchCategoriesTypesByName";
-import { fetchAddPurchaseOrderFile } from "@/api/request/purchaseOrders/AddPurchaseOrderFile";
 import { fetchEditPurchaseOrders } from "@/api/request/purchaseOrders/EditPurchaseOrders";
 import { fetchPurchaseOrderById } from "@/api/request/purchaseOrders/PurchaseOrderById";
 import Autocomplete from "@/components/customs/CustomAutocomplete";
@@ -23,7 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Pressable, StyleSheet, Switch, View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -909,7 +908,6 @@ const styles = StyleSheet.create({
     paddingStart: 20,
     height: 48,
     borderRadius: 10,
-    // backgroundColor: "#0093D120",
   },
   SubmitButton: {
     width: "100%",

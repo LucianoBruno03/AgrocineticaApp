@@ -1,20 +1,23 @@
 import CustomDrawerToggleButton from "@/components/customs/CustomDrawerToggleButton";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack } from "expo-router";
 import React from "react";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type Props = {};
 
 // TODO: Revisar el rooteo y los stacks para que me slga el bton de back en new busisnes o edit cuando venga desde business y cuando swipees no se abra el drawer
 
-const _layout = (props: Props) => {
-  const { currentFormData } = useLocalSearchParams<{
-    currentFormData: string;
-  }>();
-
-  const parsedForm = currentFormData ? JSON.parse(currentFormData) : {};
+const Layout = (props: Props) => {
+  // const { currentFormData } = useLocalSearchParams<{
+  //   currentFormData: string;
+  // }>();
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShown: true,
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{
@@ -57,136 +60,11 @@ const _layout = (props: Props) => {
           gestureEnabled: false,
           title: "Editar negocio",
           headerBackButtonDisplayMode: "minimal",
+          // headerLeft: () => <CustomBackButton />,
         }}
       />
-
-      {/* <Stack.Screen
-        name="Items"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Búsqueda",
-        }}
-      />
-
-      <Stack.Screen
-        name="TransportCustomer"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Búsqueda",
-        }}
-      />
-
-      <Stack.Screen
-        name="TransportEntity"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Búsqueda",
-        }}
-      />
-
-      <Stack.Screen
-        name="Chauffeur"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Búsqueda",
-        }}
-      />
-
-      <Stack.Screen
-        name="MainUnits"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Búsqueda",
-        }}
-      />
-
-      <Stack.Screen
-        name="SecondaryUnits"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Búsqueda",
-        }}
-      />
-
-      <Stack.Screen
-        name="BusinessCustomer"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Búsqueda",
-        }}
-      />
-
-      <Stack.Screen
-        name="Customer"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Búsqueda",
-        }}
-      />
-
-      <Stack.Screen
-        name="Gathering"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Búsqueda",
-        }}
-      />
-
-      <Stack.Screen
-        name="Scales"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Búsqueda",
-        }}
-      />
-
-      <Stack.Screen
-        name="Shipper"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Búsqueda",
-        }}
-      />
-
-      <Stack.Screen
-        name="UnitTypes"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Selección",
-        }}
-      />
-
-      <Stack.Screen
-        name="LoadingPoints"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Selección",
-        }}
-      />
-
-      <Stack.Screen
-        name="UnloadingPoints"
-        options={{
-          presentation: "card",
-          animation: "slide_from_bottom",
-          title: "Selección",
-        }}
-      /> */}
     </Stack>
   );
 };
 
-export default _layout;
+export default Layout;

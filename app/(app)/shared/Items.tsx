@@ -1,22 +1,13 @@
-import { useState, useEffect } from "react";
-import {
-  View,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
 import { fetchListItems } from "@/api/request/search/Items";
-import { Items, ItemsListResponse } from "@/types/search/Items";
-import useDebounce from "@/hooks/useDebounce";
 import { ThemedText } from "@/components/ThemedText";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import LoaderWithText from "@/components/ui/loaders/LoaderWithText";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import useDebounce from "@/hooks/useDebounce";
+import { Items, ItemsListResponse } from "@/types/search/Items";
+import { useQuery } from "@tanstack/react-query";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
+import { FlatList, Pressable, StyleSheet, TextInput, View } from "react-native";
 
 export default function SearchScreen() {
   const colorScheme = useColorScheme() ?? "light";
@@ -44,7 +35,7 @@ export default function SearchScreen() {
 
     const newFormData = JSON.stringify(newFormValues);
 
-    router.back();
+    // router.back();
 
     router.replace({
       pathname: redirect as any,

@@ -32,6 +32,12 @@ const CustomDrawerToggleButton = ({
       {...rest}
       accessibilityLabel={accessibilityLabel}
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+      style={{
+        backgroundColor: "transparent",
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+      }}
     >
       <MenuIcon width={24} height={24} color={color} />
     </HeaderButton>

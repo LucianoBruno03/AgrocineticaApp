@@ -4,5 +4,9 @@ import React from "react";
 const result = false; // Variable dice si redirigir
 
 export default function HomeScreen() {
-  return result ? <Redirect href="/home" /> : <Redirect href="/login" />;
+  return result ? (
+    <Redirect href="/(app)/(drawer)/home/index" />
+  ) : (
+    <Redirect href="/(authStack)/login" />
+  );
 }

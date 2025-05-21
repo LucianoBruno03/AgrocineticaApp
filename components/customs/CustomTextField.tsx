@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     width: "100%",
     position: "relative",
-    // backgroundColor: "#0093D120",
   },
   inputError: {
     backgroundColor: "#FF000015",

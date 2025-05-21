@@ -9,7 +9,10 @@ type Props = {
 const GlobalSafeAreaView = ({ children }: Props) => {
   return (
     <SafeAreaView
-      style={{ flex: 1 }}
+      style={{
+        flex: 1,
+        backgroundColor: "#282828",
+      }}
       edges={Platform.OS === "android" ? ["bottom"] : []}
     >
       {children}

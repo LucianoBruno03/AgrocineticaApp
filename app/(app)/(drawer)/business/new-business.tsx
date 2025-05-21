@@ -18,18 +18,13 @@ import axios, { AxiosError } from "axios";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Switch,
-  View,
-  ViewProps,
-} from "react-native";
+import { Pressable, StyleSheet, Switch, View, ViewProps } from "react-native";
 import Toast from "react-native-toast-message";
 import { z } from "zod";
 
-type Props = {};
+type Props = {
+  params?: SearchParams;
+};
 
 export interface SearchParams {
   currentFormData: string;
@@ -45,7 +40,10 @@ const NewBusiness = (props: Props) => {
 
   const color = colorScheme === "light" ? "#000" : "#fff";
 
-  const { user, decodedClaims } = useAuthStore();
+  const {
+    // user,
+    decodedClaims,
+  } = useAuthStore();
 
   const { currentFormData } = useLocalSearchParams<{
     currentFormData?: string;
@@ -55,7 +53,9 @@ const NewBusiness = (props: Props) => {
     ? JSON.parse(currentFormData)
     : null;
 
-  const form = useForm<z.infer<typeof BusinessSchema>>({
+  type BusinessFormType = z.infer<typeof BusinessSchema>;
+
+  const form = useForm<BusinessFormType>({
     defaultValues: {
       loadDate: parsedForm?.loadDate || "",
       loadTime: parsedForm?.loadTime || "",
@@ -115,7 +115,7 @@ const NewBusiness = (props: Props) => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    // formState: { errors },
   } = form;
 
   const newBusinessMutation = useMutation({
@@ -784,7 +784,6 @@ const styles = StyleSheet.create({
     paddingStart: 20,
     height: 48,
     borderRadius: 10,
-    // backgroundColor: "#0093D120",
   },
   SubmitButton: {
     width: "100%",

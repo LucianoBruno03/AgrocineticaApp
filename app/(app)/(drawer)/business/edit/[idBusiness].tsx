@@ -1,13 +1,16 @@
 import { fetchBusinessById } from "@/api/request/business/BusinessById";
 import { fetchEditBusiness } from "@/api/request/business/EditBusiness";
+import { fetchSearchCancellationReasons } from "@/api/request/categoriesTypes/SearchCancellationReasons";
+import { fetchSearchCategoriesTypes } from "@/api/request/categoriesTypes/SearchCategoriesTypes";
+import { fetchCategoriesTypesByName } from "@/api/request/categoriesTypes/SearchCategoriesTypesByName";
 import Autocomplete from "@/components/customs/CustomAutocomplete";
 import { CustomDateField } from "@/components/customs/CustomDateField";
+import CustomDropdown from "@/components/customs/CustomDropdown";
 import CustomRadioButton from "@/components/customs/CustomRadioButton";
 import { CustomTextField } from "@/components/customs/CustomTextField";
 import { KeyboardView } from "@/components/KeyboardAvoidingView";
 import { ThemedLabeledView } from "@/components/ThemedLabeledView";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { EditBusinessSchema } from "@/schemas/newBusiness";
 import { useAuthStore } from "@/zustand/authStore";
@@ -17,21 +20,9 @@ import axios, { AxiosError } from "axios";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  KeyboardAvoidingView,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Switch,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Switch, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { z } from "zod";
-import BusinessDetailStatusDropdown from "@/components/ui/dropdown/BusinessDetailStatusDropdown";
-import { fetchSearchCancellationReasons } from "@/api/request/categoriesTypes/SearchCancellationReasons";
-import { fetchCategoriesTypesByName } from "@/api/request/categoriesTypes/SearchCategoriesTypesByName";
-import { fetchSearchCategoriesTypes } from "@/api/request/categoriesTypes/SearchCategoriesTypes";
-import CustomDropdown from "@/components/customs/CustomDropdown";
 
 const EditBusiness = () => {
   const colorScheme = useColorScheme() ?? "light";
@@ -289,7 +280,7 @@ const EditBusiness = () => {
 
   return (
     <KeyboardView>
-      <ThemedView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <View style={styles.formContainer}>
           <CustomDropdown
             form={form}
@@ -902,7 +893,7 @@ const EditBusiness = () => {
             </ThemedText>
           </Pressable>
         </View>
-      </ThemedView>
+      </View>
     </KeyboardView>
   );
 };
@@ -923,7 +914,6 @@ const styles = StyleSheet.create({
     paddingStart: 20,
     height: 48,
     borderRadius: 10,
-    // backgroundColor: "#0093D120",
   },
   SubmitButton: {
     width: "100%",

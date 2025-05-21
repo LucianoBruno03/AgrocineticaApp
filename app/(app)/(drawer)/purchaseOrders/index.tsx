@@ -1,8 +1,9 @@
 import { ThemedText } from "@/components/ThemedText";
+import { AddIcon } from "@/components/ui/icons/AddIcon";
 import PurchaseOrdersTableList from "@/components/ui/tables/PurchaseOrdersTableList";
 import { router } from "expo-router";
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 type Props = {};
 
@@ -21,7 +22,12 @@ const purchaseOrders = (props: Props) => {
           router.push("/purchaseOrders/new");
         }}
       >
-        <Text style={styles.textButton}>+</Text>
+        <AddIcon
+          width={40}
+          height={40}
+          color="white"
+          style={styles.textButton}
+        />
       </Pressable>
 
       <View style={styles.tableContainer}>
@@ -57,17 +63,13 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   textButton: {
-    fontSize: 60,
     color: "white",
     fontWeight: "bold",
-    lineHeight: 62,
     alignItems: "center",
     justifyContent: "center",
     margin: 0,
     padding: 0,
     textAlign: "center",
-    width: 60,
-    height: 60,
     borderRadius: 100,
   },
   titlePage: {

@@ -1,10 +1,10 @@
 import AddAvailablePlaces from "@/components/business/AddAvailablePlaces";
 import { CustomModal } from "@/components/customs/CustomModal";
 import { ThemedText } from "@/components/ThemedText";
+import { AddIcon } from "@/components/ui/icons/AddIcon";
 import BusinessDetailsTableList from "@/components/ui/tables/BusinessDetailsTableList";
-import { router } from "expo-router";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 type Props = {};
 
@@ -23,7 +23,12 @@ const ViewBusiness = (props: Props) => {
           setOpen(true);
         }}
       >
-        <Text style={styles.textButton}>+</Text>
+        <AddIcon
+          width={40}
+          height={40}
+          color="white"
+          style={styles.textButton}
+        />
       </Pressable>
 
       <CustomModal
@@ -69,17 +74,13 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   textButton: {
-    fontSize: 60,
     color: "white",
     fontWeight: "bold",
-    lineHeight: 62,
     alignItems: "center",
     justifyContent: "center",
     margin: 0,
     padding: 0,
     textAlign: "center",
-    width: 60,
-    height: 60,
     borderRadius: 100,
   },
   titlePage: {

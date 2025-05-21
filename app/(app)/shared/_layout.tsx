@@ -1,30 +1,33 @@
-import { View, Text, Pressable } from "react-native";
+import CustomBackButton from "@/components/customs/CustomBackButton";
+import { Stack, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { router, Stack, useLocalSearchParams } from "expo-router";
-import { DrawerToggleButton } from "@react-navigation/drawer";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import CustomBackButton from "@/components/ui/CustomBackButton";
+import { Platform } from "react-native";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type Props = {};
 
 // TODO: Revisar el rooteo y los stacks para que me slga el bton de back en new busisnes o edit cuando venga desde business y cuando swipees no se abra el drawer
 
-const _layout = (props: Props) => {
+const Layout = (props: Props) => {
   const { currentFormData } = useLocalSearchParams<{
     currentFormData: string;
   }>();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const parsedForm = currentFormData ? JSON.parse(currentFormData) : {};
 
-  const goBack = () => {
-    router.back();
-  };
+  // const goBack = () => {
+  //   router.back();
+  // };
 
   return (
     <Stack
       screenOptions={{
         headerShown: true,
-        headerLeft: () => <CustomBackButton />,
+        headerBackVisible: true,
+        headerLeft: () => (
+          <>{Platform.OS === "ios" ? <CustomBackButton /> : <></>}</>
+        ),
       }}
     >
       <Stack.Screen
@@ -174,4 +177,4 @@ const _layout = (props: Props) => {
   );
 };
 
-export default _layout;
+export default Layout;

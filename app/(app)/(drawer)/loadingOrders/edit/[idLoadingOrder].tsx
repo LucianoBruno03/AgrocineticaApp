@@ -1714,7 +1714,6 @@ const styles = StyleSheet.create({
     paddingStart: 20,
     height: 48,
     borderRadius: 10,
-    // backgroundColor: "#0093D120",
   },
   SubmitButton: {
     width: "100%",

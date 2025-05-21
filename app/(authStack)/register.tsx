@@ -1,11 +1,8 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 
 import { fetchSearchCuitQuery } from "@/api/request/arca/SearchCuit";
 import { CustomTextField } from "@/components/customs/CustomTextField";
-import {
-  KeyboardLoginView,
-  KeyboardView,
-} from "@/components/KeyboardAvoidingView";
+import { KeyboardLoginView } from "@/components/KeyboardAvoidingView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import CountriesDropdown from "@/components/ui/dropdown/CountriesDropdown";
@@ -16,16 +13,13 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { RegisterSchema } from "@/schemas/register";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
+import { router } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  GestureHandlerRootView,
-  ScrollView,
-} from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import * as z from "zod";
-import { CustomTextFieldMaps } from "@/components/CustomTextFieldMaps";
-import { router } from "expo-router";
+import { CustomTextFieldMaps } from "@/components/customs/CustomTextFieldMaps";
 
 export default function Register() {
   const colorScheme = useColorScheme() ?? "light";

@@ -10,7 +10,7 @@ import axios, { AxiosError } from "axios";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { z } from "zod";
 
@@ -368,7 +368,6 @@ const styles = StyleSheet.create({
     paddingStart: 20,
     height: 48,
     borderRadius: 10,
-    // backgroundColor: "#0093D120",
   },
   submitButton: {
     width: "100%",

@@ -4,13 +4,15 @@ const { width } = Dimensions.get("window");
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("@/assets/images/agrocinetica/logo.png")}
-        style={styles.imageContainer}
-        resizeMode="contain"
-      />
-    </View>
+    <>
+      <View style={styles.container}>
+        <Image
+          source={require("../../../../assets/images/agrocinetica/logo.png")}
+          style={styles.imageContainer}
+          resizeMode="contain"
+        />
+      </View>
+    </>
   );
 }
 

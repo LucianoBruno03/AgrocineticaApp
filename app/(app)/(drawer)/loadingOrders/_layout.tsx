@@ -1,20 +1,23 @@
 import CustomDrawerToggleButton from "@/components/customs/CustomDrawerToggleButton";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack } from "expo-router";
 import React from "react";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type Props = {};
 
 // TODO: Revisar el rooteo y los stacks para que me slga el bton de back en new busisnes o edit cuando venga desde business y cuando swipees no se abra el drawer
 
 const _layout = (props: Props) => {
-  const { currentFormData } = useLocalSearchParams<{
-    currentFormData: string;
-  }>();
-
-  const parsedForm = currentFormData ? JSON.parse(currentFormData) : {};
+  // const { currentFormData } = useLocalSearchParams<{
+  //   currentFormData: string;
+  // }>();
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShown: true,
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{

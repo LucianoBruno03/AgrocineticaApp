@@ -75,12 +75,12 @@ export default function CustomDrawer(props: any) {
     <View style={styles.container}>
       <DrawerContentScrollView {...props}>
         <View style={styles.profileContainer}>
-          <Image
+          {/* <Image
             source={{
               uri: process.env.EXPO_PUBLIC_WEB_URL! + decodedClaims?.image_url,
             }}
             style={styles.profileImage}
-          />
+          /> */}
           <ThemedText style={styles.profileName}>
             {decodedClaims?.fullName}
           </ThemedText>

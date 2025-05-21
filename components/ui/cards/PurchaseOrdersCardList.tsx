@@ -49,7 +49,7 @@ const PurchaseOrdersCardList = ({
   };
 
   const handleViewDoc = () => {
-    var url = `https://administracion.agrocinetica.com.ar/GenerarReporte.AShx?Tipo=25&ID_Orden=${item.incrementId}`;
+    let url = `https://administracion.agrocinetica.com.ar/GenerarReporte.AShx?Tipo=25&ID_Orden=${item.incrementId}`;
     Linking.openURL(url).catch((err) =>
       Toast.show({
         type: "error",
@@ -189,7 +189,7 @@ const PurchaseOrdersCardList = ({
         style={[
           styles.businessCard,
 
-          item.purchaseOrderStatusName == "CANCELADO" && styles.disabledCard,
+          item.purchaseOrderStatusName === "CANCELADO" && styles.disabledCard,
           {
             backgroundColor:
               colorScheme === "light"

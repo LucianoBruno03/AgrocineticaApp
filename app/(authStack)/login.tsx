@@ -1,23 +1,20 @@
-import { Image, Pressable, StyleSheet, View } from "react-native";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { router } from "expo-router";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
-import {
-  KeyboardLoginView,
-  KeyboardView,
-} from "@/components/KeyboardAvoidingView";
+import { login } from "@/api/request/login";
+import { KeyboardLoginView } from "@/components/KeyboardAvoidingView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { CustomTextField } from "@/components/customs/CustomTextField";
-import { LoginSchema } from "@/schemas/login";
-import { login } from "@/api/request/login";
-import { SecureStoreSetItemAsync } from "@/lib/SecureStorageHelpers";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { SecureStoreSetItemAsync } from "@/lib/SecureStorageHelpers";
+import { LoginSchema } from "@/schemas/login";
 import { ScrollView } from "react-native";
 
 export default function Login() {
@@ -104,6 +101,8 @@ export default function Login() {
   });
 
   const onSubmit = async (data = { email: "", password: "" }) => {
+    console.log("data", data);
+
     try {
       await loginMutation.mutateAsync(data);
     } catch (error) {
