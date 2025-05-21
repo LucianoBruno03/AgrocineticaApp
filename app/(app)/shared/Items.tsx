@@ -35,7 +35,7 @@ export default function SearchScreen() {
 
     const newFormData = JSON.stringify(newFormValues);
 
-    // router.back();
+    router.back();
 
     router.replace({
       pathname: redirect as any,

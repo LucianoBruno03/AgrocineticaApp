@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import { login } from "@/api/request/login";
@@ -15,7 +15,6 @@ import { CustomTextField } from "@/components/customs/CustomTextField";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { SecureStoreSetItemAsync } from "@/lib/SecureStorageHelpers";
 import { LoginSchema } from "@/schemas/login";
-import { ScrollView } from "react-native";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -101,8 +100,6 @@ export default function Login() {
   });
 
   const onSubmit = async (data = { email: "", password: "" }) => {
-    console.log("data", data);
-
     try {
       await loginMutation.mutateAsync(data);
     } catch (error) {

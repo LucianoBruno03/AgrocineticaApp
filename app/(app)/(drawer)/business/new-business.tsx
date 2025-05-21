@@ -7,7 +7,6 @@ import { CustomTextField } from "@/components/customs/CustomTextField";
 import { KeyboardView } from "@/components/KeyboardAvoidingView";
 import { ThemedLabeledView } from "@/components/ThemedLabeledView";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { BusinessSchema } from "@/schemas/newBusiness";
 import { CreateBusiness } from "@/types/business/NewBusiness";
@@ -197,7 +196,7 @@ const NewBusiness = (props: Props) => {
 
   return (
     <KeyboardView>
-      <ThemedView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <View style={styles.formContainer}>
           <Controller
             control={control}
@@ -763,7 +762,7 @@ const NewBusiness = (props: Props) => {
             </ThemedText>
           </Pressable>
         </View>
-      </ThemedView>
+      </View>
     </KeyboardView>
   );
 };

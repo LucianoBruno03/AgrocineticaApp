@@ -1,8 +1,7 @@
 import { LoginSchema } from "@/schemas/login";
-import axios from "axios";
+import { LoginResponse } from "@/types/auth/auth";
 import * as z from "zod";
 import { api } from "../axios/api";
-import { LoginResponse } from "@/types/auth/auth";
 
 export const TENANT = process.env.EXPO_PUBLIC_TENANT;
 

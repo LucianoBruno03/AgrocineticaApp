@@ -1,7 +1,6 @@
 import { fetchNewLoadingOrders } from "@/api/request/loadingOrders/NewLoadingOrders";
 import { KeyboardView } from "@/components/KeyboardAvoidingView";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import Autocomplete from "@/components/customs/CustomAutocomplete";
 import { LoadingOrdersSchema } from "@/schemas/LoadingOrders";
 import { useAuthStore } from "@/zustand/authStore";
@@ -198,7 +197,7 @@ const Assign = (props: Props) => {
 
   return (
     <KeyboardView>
-      <ThemedView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <View style={styles.formContainer}>
           <ThemedText style={{ fontSize: 24, fontWeight: "bold" }}>
             Crear orden de carga
@@ -347,7 +346,7 @@ const Assign = (props: Props) => {
             </ThemedText>
           </Pressable>
         </View>
-      </ThemedView>
+      </View>
     </KeyboardView>
   );
 };

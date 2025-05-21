@@ -9,8 +9,8 @@ import { KeyboardView } from "@/components/KeyboardAvoidingView";
 import PurchaseOrdersItemsModal from "@/components/purchaseOrders/PurchaseOrdersItemsModal";
 import { ThemedLabeledView } from "@/components/ThemedLabeledView";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import PurchaseOrderItemsCardList from "@/components/ui/cards/PurchaseOrderItemsCardList";
+import { AddIcon } from "@/components/ui/icons/AddIcon";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { PurchaseOrdersSchema } from "@/schemas/PurchaseOrders";
 import { useAuthStore } from "@/zustand/authStore";
@@ -20,7 +20,7 @@ import axios, { AxiosError } from "axios";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Pressable, StyleSheet, Text, View, ViewProps } from "react-native";
+import { Pressable, StyleSheet, View, ViewProps } from "react-native";
 import Toast from "react-native-toast-message";
 import { z } from "zod";
 
@@ -208,7 +208,7 @@ const NewPurchaseOrder = (props: Props) => {
 
   return (
     <KeyboardView>
-      <ThemedView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <View style={styles.formContainer}>
           <Controller
             control={control}
@@ -411,7 +411,12 @@ const NewPurchaseOrder = (props: Props) => {
                   setOpen(true);
                 }}
               >
-                <Text style={styles.textButton}>+</Text>
+                <AddIcon
+                  width={32}
+                  height={32}
+                  color="white"
+                  style={styles.textButton}
+                />
               </Pressable>
             </View>
             <View style={styles.separator}></View>
@@ -467,7 +472,7 @@ const NewPurchaseOrder = (props: Props) => {
             </ThemedText>
           </Pressable>
         </View>
-      </ThemedView>
+      </View>
     </KeyboardView>
   );
 };

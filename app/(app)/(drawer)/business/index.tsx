@@ -1,13 +1,19 @@
 import { ThemedText } from "@/components/ThemedText";
 import { AddIcon } from "@/components/ui/icons/AddIcon";
 import BusinessTableList from "@/components/ui/tables/BusinessTableList";
+import { useAuthStore } from "@/zustand/authStore";
 import { router } from "expo-router";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 type Props = {};
 
-const business = (props: Props) => {
+const Business = (props: Props) => {
+  const {
+    // user,
+    decodedClaims,
+  } = useAuthStore();
+
   return (
     <View style={styles.formContainer}>
       <View style={styles.titleContainer}>
@@ -35,7 +41,7 @@ const business = (props: Props) => {
   );
 };
 
-export default business;
+export default Business;
 
 const styles = StyleSheet.create({
   formContainer: {

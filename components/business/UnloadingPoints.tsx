@@ -1,14 +1,15 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import PurchaseOrdersItemsModal from "./PurchaseOrdersItemsModal";
-import { ThemedText } from "../ThemedText";
-import Toast from "react-native-toast-message";
-import axios, { AxiosError } from "axios";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchAddPurchaseOrderItem } from "@/api/request/purchaseOrders/AddPurchaseOrderItem";
-import { fetchSearchPurchaseOrderItems } from "@/api/request/purchaseOrders/SearchPurchaseOrderItems";
-import PurchaseOrderItemsCardList from "../ui/cards/PurchaseOrderItemsCardList";
 import { fetchEditPurchaseOrderItem } from "@/api/request/purchaseOrders/EditPurchaseOrderItem";
+import { fetchSearchPurchaseOrderItems } from "@/api/request/purchaseOrders/SearchPurchaseOrderItems";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import React from "react";
+import { Pressable, StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
+import { ThemedText } from "../ThemedText";
+import PurchaseOrderItemsCardList from "../ui/cards/PurchaseOrderItemsCardList";
+import { AddIcon } from "../ui/icons/AddIcon";
+import PurchaseOrdersItemsModal from "./PurchaseOrdersItemsModal";
 
 type Props = {
   idPurchaseOrder: string;
@@ -131,7 +132,12 @@ const PurchaseOrdersItems = ({ idPurchaseOrder }: Props) => {
             style={styles.newButton}
             onPress={() => setAddModalOpen(true)}
           >
-            <Text style={styles.textButton}>+</Text>
+            <AddIcon
+              width={32}
+              height={32}
+              color="white"
+              style={styles.textButton}
+            />
           </Pressable>
         </View>
         <View style={styles.separator}></View>

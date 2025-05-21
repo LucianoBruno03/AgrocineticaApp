@@ -1,8 +1,10 @@
+"use client";
+
 import { ThemedText } from "@/components/ThemedText";
-import React from "react";
-import { StyleSheet, View, Pressable } from "react-native";
-import { IconSymbol } from "../IconSymbol";
 import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { IconSymbol } from "../IconSymbol";
 
 type PurchaseOrderItem = {
   id: string;
@@ -26,56 +28,95 @@ const PurchaseOrderItemsCardList = ({
   isEditable = false,
   isDeletable = false,
 }: Props) => {
-  // Empty functions that will be implemented later
+  // Animation value for press feedback
+  const scaleAnim = React.useRef(new Animated.Value(1)).current;
+
+  const animatePress = (pressed: boolean) => {
+    Animated.spring(scaleAnim, {
+      toValue: pressed ? 0.98 : 1,
+      friction: 5,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const handleEdit = () => {
     if (onEdit) onEdit(item);
-    // You can implement the edit functionality here later
   };
 
   const handleDelete = () => {
     if (onDelete) onDelete(item);
-    // You can implement the delete functionality here later
   };
 
+  // Determine if this is a cash item
+  const isCashItem = item.itemName === "EFECTIVO";
+
   return (
-    <View style={styles.container}>
+    <Animated.View
+      style={[styles.container, { transform: [{ scale: scaleAnim }] }]}
+    >
       <View style={styles.itemInfo}>
-        <ThemedText style={styles.itemName}>{item.itemName}</ThemedText>
-        <View style={styles.quantityContainer}>
-          <ThemedText style={styles.quantity}>
-            {item.itemName == "EFECTIVO" ? "$ " : ""}
+        <View style={styles.nameContainer}>
+          {/* Icon based on item type */}
+          <View style={styles.iconContainer}>
+            <Ionicons
+              name={isCashItem ? "cash-outline" : "water-sharp"}
+              size={18}
+              color="#0093D1"
+            />
+          </View>
+          <ThemedText style={styles.itemName}>{item.itemName}</ThemedText>
+        </View>
+        <View
+          style={[
+            styles.quantityContainer,
+            isCashItem && styles.cashQuantityContainer,
+          ]}
+        >
+          <ThemedText
+            style={[styles.quantity, isCashItem && styles.cashQuantity]}
+          >
+            {isCashItem ? "$ " : ""}
             {item.quantity.toLocaleString("es-ES")}
+            {item.unit ? ` ${item.unit}` : ""}
           </ThemedText>
         </View>
       </View>
 
-      <View style={styles.actions}>
-        {isEditable && (
-          <Pressable
-            style={({ pressed }) => [
-              styles.actionButton,
-              pressed && styles.buttonPressed,
-            ]}
-            onPress={handleEdit}
-          >
-            <Ionicons name="pencil-sharp" size={24} color="white" />
-          </Pressable>
-        )}
+      {(isEditable || isDeletable) && (
+        <View style={styles.actions}>
+          {isEditable && (
+            <Pressable
+              style={({ pressed }) => [
+                styles.actionButton,
+                styles.editButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={handleEdit}
+              onPressIn={() => animatePress(true)}
+              onPressOut={() => animatePress(false)}
+            >
+              <Ionicons name="pencil-sharp" size={18} color="white" />
+            </Pressable>
+          )}
 
-        {isDeletable && (
-          <Pressable
-            style={({ pressed }) => [
-              styles.actionButton,
-              styles.deleteButton,
-              pressed && styles.buttonPressed,
-            ]}
-            onPress={handleDelete}
-          >
-            <IconSymbol size={24} name="trash" color={"white"} />
-          </Pressable>
-        )}
-      </View>
-    </View>
+          {isDeletable && (
+            <Pressable
+              style={({ pressed }) => [
+                styles.actionButton,
+                styles.deleteButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={handleDelete}
+              onPressIn={() => animatePress(true)}
+              onPressOut={() => animatePress(false)}
+            >
+              <IconSymbol size={18} name="trash" color={"white"} />
+            </Pressable>
+          )}
+        </View>
+      )}
+    </Animated.View>
   );
 };
 
@@ -87,18 +128,24 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    paddingVertical: 4,
-    paddingHorizontal: 4,
-    borderRadius: 8,
-    marginVertical: 4,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    marginVertical: 6,
+    // backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    // elevation: 3,
+    borderRightColor: "#3C3C3C80",
+    borderBlockColor: "#3C3C3C80",
+    borderWidth: 1,
+    borderLeftWidth: 4,
+    borderLeftColor: "#0093D1",
   },
   itemInfo: {
     flex: 1,
@@ -106,22 +153,48 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  nameContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+    marginRight: 8,
+  },
+  iconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 40,
+    backgroundColor: "#61616160",
+    borderColor: "red",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+    overflow: "hidden",
+  },
   itemName: {
-    fontSize: 16,
-    fontWeight: "500",
+    fontSize: 10,
+    lineHeight: 16,
+    fontWeight: "600",
     flex: 1,
   },
   quantityContainer: {
-    backgroundColor: "#0093D120",
-    borderColor: "#0093D180",
+    borderColor: "#0093D1",
     borderWidth: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    minWidth: 80,
+    alignItems: "center",
+  },
+  cashQuantityContainer: {
+    borderColor: "#22C55E",
   },
   quantity: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#0093D1",
+  },
+  cashQuantity: {
+    color: "#22C55E",
   },
   actions: {
     flexDirection: "row",
@@ -129,15 +202,21 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     padding: 8,
-    borderRadius: 6,
-    backgroundColor: "#0093D1",
-    // backgroundColor: "#ABCA48",
+    borderRadius: 8,
+    width: 36,
+    height: 36,
+    justifyContent: "center",
+    alignItems: "center",
     marginLeft: 8,
+  },
+  editButton: {
+    backgroundColor: "#0093D1",
   },
   deleteButton: {
     backgroundColor: "#e63946",
   },
   buttonPressed: {
-    opacity: 0.7,
+    opacity: 0.8,
+    transform: [{ scale: 0.95 }],
   },
 });

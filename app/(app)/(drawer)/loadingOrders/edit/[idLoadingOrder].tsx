@@ -17,7 +17,6 @@ import PDFModalButton from "@/components/customs/PDFModalButton";
 import { KeyboardView } from "@/components/KeyboardAvoidingView";
 import { ThemedLabeledView } from "@/components/ThemedLabeledView";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import LoadingOrderDocuments from "@/components/ui/documents/LoadingOrderDocuments";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -328,6 +327,7 @@ const LoadingOrder = () => {
   });
 
   const searchArca = () => {
+    console.log("searchArca");
     const CTG = form.getValues("ctgNumber");
     // if (!CTG || CTG.length !== 11) {
     //   Toast.show({
@@ -565,7 +565,7 @@ const LoadingOrder = () => {
 
   return (
     <KeyboardView>
-      <ThemedView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <View style={styles.formContainer}>
           <CustomDropdown
             form={form}
@@ -1693,7 +1693,7 @@ const LoadingOrder = () => {
             </ThemedText>
           </Pressable>
         </View>
-      </ThemedView>
+      </View>
     </KeyboardView>
   );
 };

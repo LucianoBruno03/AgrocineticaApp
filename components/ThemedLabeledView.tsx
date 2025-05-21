@@ -1,10 +1,9 @@
-import React, { ReactNode } from "react";
-import { View, ViewProps, StyleSheet, TextStyle } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import React, { ReactNode } from "react";
+import { StyleSheet, TextStyle, View, ViewProps } from "react-native";
 
 import { Colors } from "@/constants/Colors";
-import { ThemedView } from "./ThemedView";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 export type ThemedLabeledViewProps = ViewProps & {
@@ -28,7 +27,7 @@ export function ThemedLabeledView({
   const colorScheme = useColorScheme() ?? "light";
 
   return (
-    <ThemedView
+    <View
       style={[
         styles.container,
         style,
@@ -40,12 +39,12 @@ export function ThemedLabeledView({
       {...otherProps}
     >
       {label && (
-        <ThemedView style={[styles.label]}>
+        <View style={[styles.label]}>
           <ThemedText>{label}</ThemedText>
-        </ThemedView>
+        </View>
       )}
       {children}
-    </ThemedView>
+    </View>
   );
 }
 

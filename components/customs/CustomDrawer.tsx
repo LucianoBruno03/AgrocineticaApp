@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/zustand/authStore";
+import { Ionicons } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -75,14 +76,24 @@ export default function CustomDrawer(props: any) {
     <View style={styles.container}>
       <DrawerContentScrollView {...props}>
         <View style={styles.profileContainer}>
-          {/* <Image
-            source={{
-              uri: process.env.EXPO_PUBLIC_WEB_URL! + decodedClaims?.image_url,
-            }}
-            style={styles.profileImage}
-          /> */}
+          {decodedClaims && decodedClaims.image_url ? (
+            <>
+              <Image
+                source={{
+                  uri:
+                    process.env.EXPO_PUBLIC_WEB_URL! + decodedClaims?.image_url,
+                }}
+                style={styles.profileImage}
+              />
+            </>
+          ) : (
+            <View style={{ margin: "auto" }}>
+              <Ionicons name="person-circle" size={200} color="#666" />
+            </View>
+          )}
+
           <ThemedText style={styles.profileName}>
-            {decodedClaims?.fullName}
+            {decodedClaims?.fullName ?? "Usuario desconocido"}
           </ThemedText>
         </View>
 

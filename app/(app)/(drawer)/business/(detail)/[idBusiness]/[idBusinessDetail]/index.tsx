@@ -8,7 +8,6 @@ import { KeyboardView } from "@/components/KeyboardAvoidingView";
 import BusinessDetailList from "@/components/others/BusinessDetailList";
 import { ThemedLabeledView } from "@/components/ThemedLabeledView";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { EditBusinessSchema } from "@/schemas/newBusiness";
 import { useAuthStore } from "@/zustand/authStore";
@@ -121,7 +120,7 @@ const ViewBusinessDetail = () => {
 
   return (
     <KeyboardView>
-      <ThemedView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         {/* <ScrollView> */}
         <View style={styles.formContainer}>
           <Controller
@@ -707,7 +706,7 @@ const ViewBusinessDetail = () => {
           /> */}
         </View>
         {/* </ScrollView> */}
-      </ThemedView>
+      </View>
     </KeyboardView>
   );
 };

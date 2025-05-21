@@ -1,11 +1,11 @@
 import { useGoogleAutocomplete } from "@appandflow/react-native-google-autocomplete";
 import React from "react";
 import {
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  StyleSheet,
 } from "react-native";
 
 export const MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -34,7 +34,7 @@ export const CustomTextFieldMaps = () => {
               style={styles.option}
               onPress={async () => {
                 const details = await searchDetails(el.place_id);
-                console.log(JSON.stringify(details, null, 2));
+                console.warn(JSON.stringify(details, null, 2));
               }}
             >
               <Text style={styles.optionText}>

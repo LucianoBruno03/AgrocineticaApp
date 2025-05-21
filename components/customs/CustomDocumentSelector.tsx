@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 import { ThemedText } from "../ThemedText";
+import { AddIcon } from "../ui/icons/AddIcon";
 import { CustomModal } from "./CustomModal";
 
 interface FileData {
@@ -289,7 +290,14 @@ const CustomDocumentSelector: React.FC<CustomDocumentSelectorProps> = ({
             ) : (
               <>
                 {/* <Ionicons name="add" size={24} color="white" /> */}
-                <ThemedText style={styles.buttonText}>+</ThemedText>
+                <ThemedText style={styles.buttonText}>
+                  <AddIcon
+                    width={32}
+                    height={32}
+                    color="white"
+                    // style={styles.buttonText}
+                  />
+                </ThemedText>
                 {buttonText && (
                   <ThemedText style={styles.buttonText}>
                     {buttonText}

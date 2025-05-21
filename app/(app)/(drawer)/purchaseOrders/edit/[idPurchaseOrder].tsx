@@ -13,7 +13,6 @@ import { KeyboardView } from "@/components/KeyboardAvoidingView";
 import PurchaseOrdersItems from "@/components/purchaseOrders/PurchaseOrdersItems";
 import { ThemedLabeledView } from "@/components/ThemedLabeledView";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import PurchaseOrderDocuments from "@/components/ui/documents/PurchaseOrderDocuments";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { EditPurchaseOrdersSchema } from "@/schemas/PurchaseOrders";
@@ -213,7 +212,6 @@ const PurchaseOrder = () => {
   });
 
   const onSubmit = (data: z.infer<typeof EditPurchaseOrdersSchema>) => {
-    console.log("Datos enviados:", data);
     const fieldsToCheck = [
       "RemittanceNumber",
       "expirationDate",
@@ -368,12 +366,9 @@ const PurchaseOrder = () => {
       }),
   });
 
-  console.log(form.getValues());
-  console.log(errors);
-
   return (
     <KeyboardView>
-      <ThemedView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <View style={styles.formContainer}>
           <Controller
             control={control}
@@ -887,7 +882,7 @@ const PurchaseOrder = () => {
             </ThemedText>
           </Pressable>
         </View>
-      </ThemedView>
+      </View>
     </KeyboardView>
   );
 };

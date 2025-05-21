@@ -25,6 +25,9 @@ const MAPPING = {
   "bus.fill": "directions-bus",
   trash: "delete",
   magnifyingglass: "search",
+
+  person: "person",
+  "person.fill": "person",
 } as Partial<
   Record<
     import("expo-symbols").SymbolViewProps["name"],

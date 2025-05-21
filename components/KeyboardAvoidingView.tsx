@@ -52,7 +52,7 @@ export const KeyboardView = ({
           keyboardShouldPersistTaps="handled"
           bounces={false}
           contentContainerStyle={{ flexGrow: 1 }} // Hace que el contenido se expanda
-          style={{ backgroundColor: "lightblue" }}
+          style={{ backgroundColor: "" }}
           ref={scrollViewRef}
         >
           {children}

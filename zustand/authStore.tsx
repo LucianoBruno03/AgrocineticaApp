@@ -52,7 +52,7 @@ export const useAuthStore = create<IAuthStore>((set) => ({
       set({ user: null, accessToken: null, isAuth: false });
       await SecureStore.deleteItemAsync("token");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 }));

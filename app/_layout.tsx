@@ -1,17 +1,17 @@
+import { AxiosInterceptor } from "@/api/axios/axios.interceptors";
+import GlobalSafeAreaView from "@/components/customs/GlobalSafeAreaView/GlobalSafeAreaView.android";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import "react-native-reanimated";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import GlobalSafeAreaView from "@/components/customs/GlobalSafeAreaView/GlobalSafeAreaView.android";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AxiosInterceptor } from "@/api/axios/axios.interceptors";
+import "react-native-reanimated";
 
 AxiosInterceptor();
 
@@ -40,7 +40,10 @@ export default function RootLayout() {
                 name="(authStack)"
                 options={{ animation: "fade" }}
               />
-              <Stack.Screen name="(app)" options={{ animation: "fade" }} />
+              <Stack.Screen
+                name="(app)/(drawer)"
+                options={{ animation: "fade" }}
+              />
               <Stack.Screen name="+not-found" />
             </Stack>
             {/* <StatusBar style="auto" /> */}
