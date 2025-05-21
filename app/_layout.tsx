@@ -12,6 +12,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
+import Toast from "react-native-toast-message";
 
 AxiosInterceptor();
 
@@ -48,6 +49,7 @@ export default function RootLayout() {
             </Stack>
             {/* <StatusBar style="auto" /> */}
             <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+            <Toast />
           </ThemeProvider>
         </QueryClientProvider>
       </GestureHandlerRootView>

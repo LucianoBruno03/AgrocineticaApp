@@ -327,7 +327,6 @@ const LoadingOrder = () => {
   });
 
   const searchArca = () => {
-    console.log("searchArca");
     const CTG = form.getValues("ctgNumber");
     // if (!CTG || CTG.length !== 11) {
     //   Toast.show({
