@@ -4,8 +4,8 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 
-import ChangeState from "@/components/business/ChangeState";
 import { CustomModal } from "@/components/customs/CustomModal";
+import ChangeState from "@/components/pages/business/ChangeState";
 import { Colors } from "@/constants/Colors";
 import { BusinessDetails } from "@/types/business/SearchBusinessDetails";
 import { router, useLocalSearchParams } from "expo-router";

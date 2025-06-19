@@ -1,25 +1,21 @@
-import { useState, useEffect } from "react";
+import { PurchaseOrderItemSchema } from "@/schemas/PurchaseOrders";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  Keyboard,
   Pressable,
   StyleSheet,
-  Text,
   useColorScheme,
   View,
 } from "react-native";
-import { CustomModal } from "../customs/CustomModal";
-import { CustomTextField } from "../customs/CustomTextField";
-import { PurchaseOrderItemSchema } from "@/schemas/PurchaseOrders";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import CustomDropdown from "../customs/CustomDropdown";
-import { useQuery } from "@tanstack/react-query";
-import { fetchSearchCategoriesTypes } from "@/api/request/categoriesTypes/SearchCategoriesTypes";
-import { ThemedText } from "../ThemedText";
-import { Keyboard } from "react-native";
-import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
-import Toast from "react-native-toast-message";
+import CustomDropdown from "../../customs/CustomDropdown";
+import { CustomModal } from "../../customs/CustomModal";
+import { CustomTextField } from "../../customs/CustomTextField";
+import { ThemedText } from "../../ThemedText";
+
 import { fetchListItems } from "@/api/request/search/Items";
 
 type PurchaseOrderItem = {

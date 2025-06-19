@@ -6,7 +6,7 @@ import CustomDropdown from "@/components/customs/CustomDropdown";
 import CustomRadioButton from "@/components/customs/CustomRadioButton";
 import { CustomTextArea } from "@/components/customs/CustomTextArea";
 import { KeyboardView } from "@/components/KeyboardAvoidingView";
-import PurchaseOrdersItemsModal from "@/components/purchaseOrders/PurchaseOrdersItemsModal";
+import PurchaseOrdersItemsModal from "@/components/pages/purchaseOrders/PurchaseOrdersItemsModal";
 import { ThemedLabeledView } from "@/components/ThemedLabeledView";
 import { ThemedText } from "@/components/ThemedText";
 import PurchaseOrderItemsCardList from "@/components/ui/cards/PurchaseOrderItemsCardList";

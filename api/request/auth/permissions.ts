@@ -1,3 +1,4 @@
+import { api } from "@/api/axios/api";
 import { SecureStoreGetItemAsync } from "@/lib/SecureStorageHelpers";
 import { IUserInfo } from "@/types/auth/auth";
 import { useAuthStore } from "@/zustand/authStore";
@@ -25,11 +26,11 @@ export const getUserInfo = async () => {
 
     useAuthStore.getState().setAccessToken(token);
 
-    // const response = await api.get("personal/permissions");
+    const response = await api.get("personal/permissions");
 
     //   guardar claims
 
-    // useAuthStore.getState().setClaims(response.data);
+    useAuthStore.getState().setClaims(response.data);
 
     const claimsDecoded = jwtDecode(token) as IUserInfo;
 
@@ -113,7 +114,8 @@ export const getUserInfo = async () => {
     // Guardar el expo token con el userId
 
     return true;
-  } catch (error) {
+  } catch {
+    //  (error)
     return false;
   }
 };

@@ -1,6 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 
-import { IUserInfo, User } from "@/types/auth/auth";
+import { Claims, IUserInfo, User } from "@/types/auth/auth";
 import { create } from "zustand";
 // import { TokenExpo } from "../interfaces/expoToken/expoToken.interface";
 // import { err } from "react-native-svg";
@@ -9,12 +9,14 @@ interface IAuthStore {
   user: User | null;
   accessToken: string | null;
   decodedClaims: IUserInfo | null;
+  claims: Claims | null;
   //   expoToken: string | null;
   isAuth: boolean;
   //   notifications: TokenExpo | null;
 
   setAccessToken: (token: string) => void;
   setDecodedClaims: (claims: IUserInfo) => void;
+  setClaims: (claims: Claims) => void;
   //   setNotificacions: (notifications: TokenExpo) => void;
   //   setExpoToken: (token: string) => void;
   setUser: (user: any) => void;
@@ -26,6 +28,7 @@ export const useAuthStore = create<IAuthStore>((set) => ({
   user: null,
   accessToken: null,
   decodedClaims: null,
+  claims: null,
   expoToken: null,
   isAuth: false,
   notifications: null,
@@ -43,8 +46,13 @@ export const useAuthStore = create<IAuthStore>((set) => ({
   setUser: (user) => {
     set({ user: user });
   },
+
   setDecodedClaims: (claims) => {
     set({ decodedClaims: claims });
+  },
+
+  setClaims: (claims: Claims) => {
+    set({ claims: claims });
   },
 
   logout: async () => {

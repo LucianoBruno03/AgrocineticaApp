@@ -1,79 +1,47 @@
-import { useState, useEffect, Fragment } from "react";
-import {
-  View,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
-import useDebounce from "@/hooks/useDebounce";
-import { ThemedText } from "@/components/ThemedText";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { fetchListCategoriesType } from "@/api/request/search/CategoriesTypes";
-import {
-  CategoryTypes,
-  CategoryTypesListResponse,
-} from "@/types/search/CategoriesTypes";
-import Checkbox from "expo-checkbox";
+import { ThemedText } from "@/components/ThemedText";
 import LoaderWithText from "@/components/ui/loaders/LoaderWithText";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import useDebounce from "@/hooks/useDebounce";
+import { Brands } from "@/types/brands/SearchBrands";
+import { CategoryTypesListResponse } from "@/types/search/CategoriesTypes";
+import { useAuthStore } from "@/zustand/authStore";
+import { useQuery } from "@tanstack/react-query";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
+import { FlatList, Pressable, StyleSheet, TextInput, View } from "react-native";
 
 export default function SearchScreen() {
   const colorScheme = useColorScheme() ?? "light";
   const router = useRouter();
-  const { redirect, currentFormData } = useLocalSearchParams<{
-    currentFormData: string;
-    redirect: string;
-  }>();
+  const { redirect, currentFormData, formFieldId, formFieldName } =
+    useLocalSearchParams<{
+      currentFormData: string;
+      redirect: string;
+      formFieldId: string;
+      formFieldName: string;
+    }>();
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedItems, setSelectedItems] = useState<CategoryTypes[]>([]);
   const searchedWord = useDebounce(searchQuery, 500);
 
+  const { claims } = useAuthStore();
+
   const getUnitsTypesQuery = useQuery<CategoryTypesListResponse>({
-    queryKey: ["getUnitsTypesQuery", "UNIDADES", searchedWord],
+    queryKey: ["getUnitsTypesQuery", "UNIDADES", searchedWord, true],
     queryFn: fetchListCategoriesType,
   });
 
-  useEffect(() => {
-    if (
-      currentFormData &&
-      getUnitsTypesQuery.data &&
-      selectedItems.length === 0
-    ) {
-      const parsedForm = JSON.parse(currentFormData);
-      const selectedItemsFromForm = parsedForm.businessesUnitTypes || [];
-      setSelectedItems(
-        getUnitsTypesQuery.data.data.filter((item) =>
-          selectedItemsFromForm.some(
-            (selected: any) => selected.typeUnitId === item.id
-          )
-        )
-      );
-    }
-  }, [getUnitsTypesQuery.data?.data]);
-
-  const handleSelect = (item: CategoryTypes) => {
-    setSelectedItems((current) =>
-      current.some((selected) => selected.id === item.id)
-        ? current.filter((selected) => selected.id !== item.id)
-        : [...current, item]
-    );
-  };
-
-  const saveAndGoBack = () => {
+  const handleSelect = (item: Brands) => {
     const parsedForm = JSON.parse(currentFormData);
 
     const newFormValues = {
       ...parsedForm,
-      businessesUnitTypes: selectedItems.map((item) => ({
-        businessId: "00000000-0000-0000-0000-000000000000",
-        typeUnitId: item.id,
-        typeUnitName: item.name,
-      })),
+
+      // businessUserId: item.id,
+      // businessUserName: item.fullName,
+
+      [formFieldId]: item.id,
+      [formFieldName]: item.name,
     };
 
     const newFormData = JSON.stringify(newFormValues);
@@ -111,7 +79,7 @@ export default function SearchScreen() {
       return (
         <View style={styles.centeredContainer}>
           <ThemedText type="default" style={styles.statusText}>
-            No se encontraron resultados para "{searchedWord}"
+            {`No se encontraron resultados para "${searchedWord}"`}
           </ThemedText>
         </View>
       );
@@ -120,25 +88,22 @@ export default function SearchScreen() {
     return (
       <FlatList
         data={getUnitsTypesQuery.data?.data}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => item.id ?? index.toString()}
         renderItem={({ item }) => (
-          <Fragment>
-            <Pressable
-              style={styles.section}
-              onPress={() => handleSelect(item)}
-            >
-              <Checkbox
-                style={styles.checkbox}
-                value={selectedItems.some(
-                  (selected) => selected.id === item.id
-                )}
-                onValueChange={() => handleSelect(item)}
-              />
-              <ThemedText type="default" style={styles.listItemText}>
-                {item.name}
-              </ThemedText>
-            </Pressable>
-          </Fragment>
+          <Pressable
+            onPress={() => handleSelect(item)}
+            style={[
+              styles.listItem,
+              {
+                borderBottomColor:
+                  colorScheme === "light" ? "#28282850" : "#444",
+              },
+            ]}
+          >
+            <ThemedText type="default" style={styles.listItemText}>
+              {item.name}
+            </ThemedText>
+          </Pressable>
         )}
       />
     );
@@ -146,27 +111,6 @@ export default function SearchScreen() {
 
   return (
     <View style={styles.container}>
-      <Pressable
-        onPress={saveAndGoBack}
-        style={[
-          styles.saveButton,
-          {
-            opacity: selectedItems.length > 0 ? 1 : 0.5,
-            backgroundColor: selectedItems.length > 0 ? "#0093D1" : "#a0a0a0",
-          },
-        ]}
-        disabled={selectedItems.length === 0}
-      >
-        <ThemedText
-          style={{
-            fontSize: 20,
-            fontWeight: "bold",
-            color: selectedItems.length > 0 ? "white" : "gray",
-          }}
-        >
-          Guardar ({selectedItems.length})
-        </ThemedText>
-      </Pressable>
       <TextInput
         placeholder="Escribe para buscar más opciones..."
         value={searchQuery}
@@ -182,6 +126,23 @@ export default function SearchScreen() {
       />
 
       {renderContent()}
+
+      {claims?.includes("Permissions.Tipos De Categorías.Create") && (
+        <></>
+        // <Pressable
+        //   style={styles.newButton}
+        //   onPress={() => {
+        //     router.push("/(app)/add/AddUnitType");
+        //   }}
+        // >
+        //   <AddIcon
+        //     width={40}
+        //     height={40}
+        //     color="white"
+        //     style={styles.textButton}
+        //   />
+        // </Pressable>
+      )}
     </View>
   );
 }
@@ -224,24 +185,27 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
   },
-  section: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  checkbox: {
-    margin: 8,
-  },
-  saveButton: {
+  newButton: {
     position: "absolute",
-    bottom: 20,
-    right: 20,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 48,
+    bottom: 14,
+    right: 14,
+    backgroundColor: "#ABCA48",
+    borderRadius: 100,
+    width: 60,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    fontWeight: "bold",
+    zIndex: 100,
+  },
+  textButton: {
+    color: "white",
+    fontWeight: "bold",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 16,
-    fontSize: 20,
-    zIndex: 1,
+    margin: 0,
+    padding: 0,
+    textAlign: "center",
+    borderRadius: 100,
   },
 });

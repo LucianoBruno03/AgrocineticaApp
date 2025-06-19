@@ -9,33 +9,37 @@ import { Pressable, StyleSheet, View } from "react-native";
 type Props = {};
 
 const Business = (props: Props) => {
-  const {
-    // user,
-    decodedClaims,
-  } = useAuthStore();
+  const { claims } = useAuthStore();
 
   return (
     <View style={styles.formContainer}>
       <View style={styles.titleContainer}>
         <ThemedText style={styles.titlePage}>Gestiona los negocios</ThemedText>
       </View>
-
-      <Pressable
-        style={styles.newButton}
-        onPress={() => {
-          router.push("/business/new-business");
-        }}
-      >
-        <AddIcon
-          width={40}
-          height={40}
-          color="white"
-          style={styles.textButton}
-        />
-      </Pressable>
+      {claims?.includes("Permissions.Negocios.Create") && (
+        <Pressable
+          style={styles.newButton}
+          onPress={() => {
+            router.push("/business/new-business");
+          }}
+        >
+          <AddIcon
+            width={40}
+            height={40}
+            color="white"
+            style={styles.textButton}
+          />
+        </Pressable>
+      )}
 
       <View style={styles.tableContainer}>
-        <BusinessTableList />
+        {claims?.includes("Permissions.Negocios.View") ? (
+          <BusinessTableList />
+        ) : (
+          <ThemedText style={{ textAlign: "center", marginTop: 20 }}>
+            No tienes permisos para ver esta sección.
+          </ThemedText>
+        )}
       </View>
     </View>
   );

@@ -13,9 +13,9 @@ import {
   FlatList,
   Pressable,
   StyleSheet,
+  Text,
   TextInput,
   View,
-  Text,
 } from "react-native";
 
 export default function SearchScreen() {
@@ -95,7 +95,7 @@ export default function SearchScreen() {
       return (
         <View style={styles.centeredContainer}>
           <ThemedText type="default" style={styles.statusText}>
-            No se encontraron resultados para "{searchedWord}"
+            {`No se encontraron resultados para "${searchedWord}"`}{" "}
           </ThemedText>
         </View>
       );

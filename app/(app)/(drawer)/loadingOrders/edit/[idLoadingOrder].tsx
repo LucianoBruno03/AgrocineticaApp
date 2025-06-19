@@ -1451,7 +1451,7 @@ const LoadingOrder = () => {
                   form={form}
                   error={error}
                   title="Tipos de Unidades"
-                  route="/shared/UnitTypes"
+                  route="/shared/SelectUnitTypes"
                   fieldName="businessesUnitTypes"
                 />
               )}

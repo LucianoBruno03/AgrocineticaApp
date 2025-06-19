@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Fragment, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Pressable,
   StyleSheet,
@@ -14,13 +13,13 @@ import {
   View,
 } from "react-native";
 
-import Checkbox from "expo-checkbox";
+import { fetchListUnloadingPoints } from "@/api/request/search/UnloadingPoints";
+import LoaderWithText from "@/components/ui/loaders/LoaderWithText";
 import {
   UnloadingPoints,
   UnloadingPointsListResponse,
 } from "@/types/search/UnloadingPoints";
-import { fetchListUnloadingPoints } from "@/api/request/search/UnloadingPoints";
-import LoaderWithText from "@/components/ui/loaders/LoaderWithText";
+import Checkbox from "expo-checkbox";
 
 export default function SearchScreen() {
   const colorScheme = useColorScheme() ?? "light";
@@ -131,7 +130,7 @@ export default function SearchScreen() {
       return (
         <View style={styles.centeredContainer}>
           <ThemedText type="default" style={styles.statusText}>
-            No se encontraron resultados para "{searchedWord}"
+            {`No se encontraron resultados para "${searchedWord}"`}{" "}
           </ThemedText>
         </View>
       );

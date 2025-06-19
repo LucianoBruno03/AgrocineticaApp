@@ -1,5 +1,5 @@
-import AddAvailablePlaces from "@/components/business/AddAvailablePlaces";
 import { CustomModal } from "@/components/customs/CustomModal";
+import AddAvailablePlaces from "@/components/pages/business/AddAvailablePlaces";
 import { ThemedText } from "@/components/ThemedText";
 import { AddIcon } from "@/components/ui/icons/AddIcon";
 import BusinessDetailsTableList from "@/components/ui/tables/BusinessDetailsTableList";

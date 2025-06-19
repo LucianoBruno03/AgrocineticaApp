@@ -29,6 +29,8 @@ export default function Login() {
   } = useForm({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
+      // email: "perrotti94@gmail.com",
+      // password: "30715751816",
       email: "daniela.centeno@agrocinetica.com",
       password: "dcenteno",
     },

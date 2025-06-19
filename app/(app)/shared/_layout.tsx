@@ -152,6 +152,15 @@ const Layout = (props: Props) => {
         options={{
           presentation: "card",
           animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="SelectUnitTypes"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
           title: "Selección",
         }}
       />
@@ -171,6 +180,33 @@ const Layout = (props: Props) => {
           presentation: "card",
           animation: "slide_from_bottom",
           title: "Selección",
+        }}
+      />
+
+      <Stack.Screen
+        name="Brands"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="Models"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
+        }}
+      />
+
+      <Stack.Screen
+        name="Scalables"
+        options={{
+          presentation: "card",
+          animation: "slide_from_bottom",
+          title: "Búsqueda",
         }}
       />
     </Stack>

@@ -6,9 +6,9 @@ import axios, { AxiosError } from "axios";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { ThemedText } from "../ThemedText";
-import PurchaseOrderItemsCardList from "../ui/cards/PurchaseOrderItemsCardList";
-import { AddIcon } from "../ui/icons/AddIcon";
+import { ThemedText } from "../../ThemedText";
+import PurchaseOrderItemsCardList from "../../ui/cards/PurchaseOrderItemsCardList";
+import { AddIcon } from "../../ui/icons/AddIcon";
 import PurchaseOrdersItemsModal from "./PurchaseOrdersItemsModal";
 
 type Props = {

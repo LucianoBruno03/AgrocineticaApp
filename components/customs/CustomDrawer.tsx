@@ -14,8 +14,8 @@ import {
 import { Switch } from "react-native-gesture-handler";
 import { ThemedText } from "../ThemedText";
 import { IconSymbol, IconSymbolName } from "../ui/IconSymbol";
+import { ArrowRightIcon } from "../ui/icons/ArrowRightIcon";
 import BusIcon from "../ui/icons/BusIcon";
-import { ItemsGridIcon } from "../ui/icons/ItemsGridIcon";
 import LogoutIcon from "../ui/icons/LogoutIcon";
 import { PackageIcon } from "../ui/icons/PackageIcon";
 
@@ -112,7 +112,7 @@ export default function CustomDrawer(props: any) {
             )}
             onPress={() => router.push("/business")}
             icon={({ color }) => (
-              <ItemsGridIcon width={16} height={16} color={color} />
+              <ArrowRightIcon width={16} height={16} color={color} />
             )}
             style={styles.nestedItem}
           />
@@ -125,7 +125,7 @@ export default function CustomDrawer(props: any) {
             )}
             onPress={() => router.push("/loadingOrders")}
             icon={({ color }) => (
-              <ItemsGridIcon width={16} height={16} color={color} />
+              <ArrowRightIcon width={16} height={16} color={color} />
             )}
             style={styles.nestedItem}
           />
@@ -138,7 +138,7 @@ export default function CustomDrawer(props: any) {
             )}
             onPress={() => router.push("/loadingOrders/changeStatus")}
             icon={({ color }) => (
-              <ItemsGridIcon width={16} height={16} color={color} />
+              <ArrowRightIcon width={16} height={16} color={color} />
             )}
             style={styles.nestedItem}
           />
@@ -151,7 +151,7 @@ export default function CustomDrawer(props: any) {
             )}
             onPress={() => router.push("/purchaseOrders")}
             icon={({ color }) => (
-              <ItemsGridIcon width={16} height={16} color={color} />
+              <ArrowRightIcon width={16} height={16} color={color} />
             )}
             style={styles.nestedItem}
           />
@@ -170,9 +170,9 @@ export default function CustomDrawer(props: any) {
             label={() => (
               <ThemedText style={styles.menuItemText}>Unidades</ThemedText>
             )}
-            onPress={() => router.push("/+not-found")}
+            onPress={() => router.push("/units")}
             icon={({ color }) => (
-              <ItemsGridIcon width={16} height={16} color={color} />
+              <ArrowRightIcon width={16} height={16} color={color} />
             )}
             style={styles.nestedItem}
           />
@@ -181,9 +181,9 @@ export default function CustomDrawer(props: any) {
             label={() => (
               <ThemedText style={styles.menuItemText}>Choferes</ThemedText>
             )}
-            onPress={() => router.push("/+not-found")}
+            onPress={() => router.push("/chauffeurs")}
             icon={({ color }) => (
-              <ItemsGridIcon width={16} height={16} color={color} />
+              <ArrowRightIcon width={16} height={16} color={color} />
             )}
             style={styles.nestedItem}
           />

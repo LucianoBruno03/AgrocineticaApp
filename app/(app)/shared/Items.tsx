@@ -67,7 +67,7 @@ export default function SearchScreen() {
       return (
         <View style={styles.centeredContainer}>
           <ThemedText type="default" style={styles.statusText}>
-            No se encontraron resultados para "{searchedWord}"
+            {`No se encontraron resultados para "${searchedWord}"`}{" "}
           </ThemedText>
         </View>
       );

@@ -1,17 +1,17 @@
+import { fetchChangeStateBusinessDetail } from "@/api/request/business/ChangeStateBusinessDetail";
 import { fetchSearchCategoriesTypes } from "@/api/request/categoriesTypes/SearchCategoriesTypes";
+import { ChangeStateSchema } from "@/schemas/newBusiness";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Pressable, StyleSheet, View } from "react-native";
-import { z } from "zod";
-import CustomDropdown from "../customs/CustomDropdown";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { router } from "expo-router";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Pressable, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { fetchChangeStateBusinessDetail } from "@/api/request/business/ChangeStateBusinessDetail";
-import { ThemedText } from "../ThemedText";
-import { ChangeStateSchema } from "@/schemas/newBusiness";
+import { z } from "zod";
+import CustomDropdown from "../../customs/CustomDropdown";
+import { ThemedText } from "../../ThemedText";
 
 // Constante para la clave de consulta
 const ESTADOS_DEL_NEGOCIO = "ESTADOS DEL NEGOCIO";

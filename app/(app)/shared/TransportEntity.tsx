@@ -1,26 +1,17 @@
-import { useState, useEffect } from "react";
-import {
-  View,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
+import { FlatList, Pressable, StyleSheet, TextInput, View } from "react-native";
 
-import useDebounce from "@/hooks/useDebounce";
+import { fetchListTransportEntity } from "@/api/request/search/TransportEntity";
 import { ThemedText } from "@/components/ThemedText";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import LoaderWithText from "@/components/ui/loaders/LoaderWithText";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import useDebounce from "@/hooks/useDebounce";
 import {
   TransportEntity,
   TransportEntityListResponse,
 } from "@/types/search/TransportEntity";
-import { fetchListTransportEntity } from "@/api/request/search/TransportEntity";
 
 export default function SearchScreen() {
   const colorScheme = useColorScheme() ?? "light";
@@ -90,7 +81,7 @@ export default function SearchScreen() {
       return (
         <View style={styles.centeredContainer}>
           <ThemedText type="default" style={styles.statusText}>
-            No se encontraron resultados para "{searchedWord}"
+            {`No se encontraron resultados para "${searchedWord}"`}{" "}
           </ThemedText>
         </View>
       );

@@ -59,3 +59,5 @@ export interface User {
   url: any;
   active: boolean;
 }
+
+export type Claims = string[];

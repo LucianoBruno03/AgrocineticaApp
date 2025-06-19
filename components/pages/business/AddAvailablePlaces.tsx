@@ -1,12 +1,11 @@
-import { fetchEditBusiness } from "@/api/request/business/EditBusiness";
+import { fetchAddBusinessDetail } from "@/api/request/business/AddBusinessDetail";
+import { ThemedText } from "@/components/ThemedText";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { ThemedText } from "../ThemedText";
-import { fetchAddBusinessDetail } from "@/api/request/business/AddBusinessDetail";
 
 type Props = {};
 

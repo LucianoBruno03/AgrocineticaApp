@@ -11,6 +11,7 @@ export const fetchListCategoriesType = async ({
 }): Promise<CategoryTypesListResponse> => {
   const categoryName = queryKey[1] as string;
   const searchWord = queryKey[2] as string;
+  const seeAll = queryKey[3] as boolean;
 
   const raw = {
     advancedSearch: {
@@ -28,11 +29,13 @@ export const fetchListCategoriesType = async ({
     },
   });
 
-  if (response.status == 200) {
-    // quitar chasis de la respuesta
-    response.data.data = response.data.data.filter(
-      (item: any) => item.name !== "CHASIS"
-    );
+  if (response.status === 200) {
+    if (!seeAll) {
+      // quitar chasis de la respuesta
+      response.data.data = response.data.data.filter(
+        (item: any) => item.name !== "CHASIS"
+      );
+    }
   }
 
   return response.data;

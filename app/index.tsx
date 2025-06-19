@@ -5,7 +5,7 @@ const result = false; // Variable dice si redirigir
 
 export default function HomeScreen() {
   return result ? (
-    <Redirect href="/(app)/(drawer)/home/index" />
+    <Redirect href="/(app)/(drawer)/home" />
   ) : (
     <Redirect href="/(authStack)/login" />
   );
